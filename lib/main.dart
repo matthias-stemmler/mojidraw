@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Mojidraw',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -26,13 +26,13 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Mojidraw', width: 11, height: 11),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title, this.width, this.height}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -44,74 +44,90 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final int width, height;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  _Emojis _emojis;
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+    _emojis = _Emojis(widget.width, widget.height);
+  }
+
+  void _toggleEmoji(int x, int y) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _emojis.toggle(x, y);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
+          child: SingleChildScrollView(
+              padding: EdgeInsets.all(20.0),
+              child: Table(
+                  border: TableBorder.all(color: Colors.grey),
+                  children: List.generate(
+                      widget.height,
+                      (y) => TableRow(
+                          children: List.generate(
+                              widget.width,
+                              (x) => _GridCell(
+                                  active: _emojis.isActive(x, y),
+                                  onTap: () {
+                                    _toggleEmoji(x, y);
+                                  }))))))),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
+}
+
+class _GridCell extends StatelessWidget {
+  final bool active;
+  final GestureTapCallback onTap;
+
+  const _GridCell({Key key, this.active, this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: onTap,
+        child: Container(
+            decoration: BoxDecoration(),
+            child: AspectRatio(
+                aspectRatio: 1.0,
+                child: Center(
+                    child:
+                        Text(active ? '🦔️' : '❤', textScaleFactor: 1.5)))));
+  }
+}
+
+class _Emojis {
+  final int _width;
+  final List<bool> _states;
+
+  _Emojis(this._width, height) : _states = List.filled(_width * height, false);
+
+  bool isActive(int x, int y) {
+    return _states[getIndex(x, y)];
+  }
+
+  void toggle(int x, int y) {
+    var index = getIndex(x, y);
+    _states[index] = !_states[index];
+  }
+
+  int getIndex(int x, int y) => y * _width + x;
 }
