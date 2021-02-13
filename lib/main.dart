@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'char_grid.dart';
+import 'text_renderer.dart';
 
 void main() {
   runApp(MojiDrawApp());
@@ -97,9 +98,9 @@ class EmojiGrid extends StatelessWidget {
 
 class GridPainter extends CustomPainter {
   final CharGrid _emojis;
-  final Map<String, TextEmoji> _textEmojis = {
-    '❤': TextEmoji('❤'),
-    '🦔': TextEmoji('🦔')
+  final Map<String, TextRenderer> _textEmojis = {
+    '❤': TextRenderer('❤'),
+    '🦔': TextRenderer('🦔')
   };
 
   GridPainter(this._emojis);
@@ -150,33 +151,4 @@ class GridCell {
   final int x, y;
 
   GridCell(this.x, this.y);
-}
-
-class TextEmoji {
-  final String _text;
-  double _widthFactor;
-
-  TextEmoji(this._text) {
-    _widthFactor = _getWidthFactor();
-  }
-
-  Paragraph render(double width) {
-    final builder =
-        ParagraphBuilder(ParagraphStyle(fontSize: width * _widthFactor));
-    builder.addText(_text);
-    final paragraph = builder.build();
-    paragraph.layout(ParagraphConstraints(width: width));
-
-    return paragraph;
-  }
-
-  double _getWidthFactor() {
-    final textStyle = TextStyle(fontSize: 14.0);
-    final textPainter = TextPainter(
-        textDirection: TextDirection.ltr,
-        text: TextSpan(text: _text, style: textStyle));
-    textPainter.layout();
-
-    return textStyle.fontSize / textPainter.width;
-  }
 }
