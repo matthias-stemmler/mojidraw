@@ -37,12 +37,12 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
   @override
   void initState() {
     super.initState();
-    _emojis = _Emojis(widget.width, widget.height);
+    _emojis = _Emojis(widget.width, widget.height, background: '❤');
   }
 
   void _activateEmoji(int x, int y) {
     setState(() {
-      _emojis.activate(x, y);
+      _emojis.set(x, y, '🦔');
     });
   }
 
@@ -95,8 +95,10 @@ class EmojiGrid extends StatelessWidget {
 
 class GridPainter extends CustomPainter {
   final _Emojis _emojis;
-  final TextEmoji _heart = TextEmoji('❤');
-  final TextEmoji _hedgehog = TextEmoji('🦔');
+  final Map<String, TextEmoji> _textEmojis = {
+    '❤': TextEmoji('❤'),
+    '🦔': TextEmoji('🦔')
+  };
 
   GridPainter(this._emojis);
 
@@ -104,12 +106,11 @@ class GridPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final layout = GridLayout(size, _emojis.width, _emojis.height);
     final cellWidth = layout.cellSize.width;
-    final heart = _heart.render(cellWidth);
-    final hedgehog = _hedgehog.render(cellWidth);
 
     for (final y in Iterable<int>.generate(_emojis.height)) {
       for (final x in Iterable<int>.generate(_emojis.width)) {
-        canvas.drawParagraph(this._emojis.isActive(x, y) ? hedgehog : heart,
+        canvas.drawParagraph(
+            _textEmojis[this._emojis.get(x, y)].render(cellWidth),
             layout.cellToOffset(GridCell(x, y)));
       }
     }
@@ -180,10 +181,10 @@ class TextEmoji {
 
 class _Emojis {
   final int _width, _height;
-  final List<bool> _states;
+  final List<String> _chars;
 
-  _Emojis(this._width, this._height)
-      : _states = List.filled(_width * _height, false);
+  _Emojis(this._width, this._height, {String background = ' '})
+      : _chars = List.filled(_width * _height, background);
 
   int get width => _width;
 
@@ -191,14 +192,9 @@ class _Emojis {
 
   double get aspectRatio => _width / _height;
 
-  bool isActive(int x, int y) {
-    return _states[getIndex(x, y)];
-  }
+  String get(int x, int y) => _chars[getIndex(x, y)];
 
-  void activate(int x, int y) {
-    var index = getIndex(x, y);
-    _states[index] = true;
-  }
+  void set(int x, int y, String char) => _chars[getIndex(x, y)] = char;
 
   int getIndex(int x, int y) => y * _width + x;
 }
