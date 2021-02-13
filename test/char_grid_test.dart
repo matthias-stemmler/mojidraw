@@ -3,19 +3,19 @@ import 'package:test/test.dart';
 
 void main() {
   test('width is returned correctly', () {
-    final CharGrid charGrid = CharGrid(2, 8);
+    final charGrid = CharGrid(2, 8);
 
     expect(charGrid.width, 2);
   });
 
   test('height is returned correctly', () {
-    final CharGrid charGrid = CharGrid(2, 8);
+    final charGrid = CharGrid(2, 8);
 
     expect(charGrid.height, 8);
   });
 
   test('aspect ratio is calculated correctly', () {
-    final CharGrid charGrid = CharGrid(2, 8);
+    final charGrid = CharGrid(2, 8);
 
     expect(charGrid.aspectRatio, 0.25);
   });
