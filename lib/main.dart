@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import 'char_grid.dart';
+
 void main() {
   runApp(MojiDrawApp());
 }
@@ -32,12 +34,12 @@ class MojiDrawPage extends StatefulWidget {
 }
 
 class _MojiDrawPageState extends State<MojiDrawPage> {
-  _CharGrid _emojis;
+  CharGrid _emojis;
 
   @override
   void initState() {
     super.initState();
-    _emojis = _CharGrid(widget.width, widget.height, background: '❤');
+    _emojis = CharGrid(widget.width, widget.height, background: '❤');
   }
 
   void _activateEmoji(int x, int y) {
@@ -65,7 +67,7 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
 }
 
 class EmojiGrid extends StatelessWidget {
-  final _CharGrid emojis;
+  final CharGrid emojis;
   final void Function(int x, int y) onEmojiTouch;
 
   const EmojiGrid({Key key, this.emojis, this.onEmojiTouch}) : super(key: key);
@@ -94,7 +96,7 @@ class EmojiGrid extends StatelessWidget {
 }
 
 class GridPainter extends CustomPainter {
-  final _CharGrid _emojis;
+  final CharGrid _emojis;
   final Map<String, TextEmoji> _textEmojis = {
     '❤': TextEmoji('❤'),
     '🦔': TextEmoji('🦔')
@@ -177,24 +179,4 @@ class TextEmoji {
 
     return textStyle.fontSize / textPainter.width;
   }
-}
-
-class _CharGrid {
-  final int _width, _height;
-  final List<String> _chars;
-
-  _CharGrid(this._width, this._height, {String background = ' '})
-      : _chars = List.filled(_width * _height, background);
-
-  int get width => _width;
-
-  int get height => _height;
-
-  double get aspectRatio => _width / _height;
-
-  String get(int x, int y) => _chars[getIndex(x, y)];
-
-  void set(int x, int y, String char) => _chars[getIndex(x, y)] = char;
-
-  int getIndex(int x, int y) => y * _width + x;
 }
