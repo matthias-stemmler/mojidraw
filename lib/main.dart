@@ -32,12 +32,12 @@ class MojiDrawPage extends StatefulWidget {
 }
 
 class _MojiDrawPageState extends State<MojiDrawPage> {
-  _Emojis _emojis;
+  _CharGrid _emojis;
 
   @override
   void initState() {
     super.initState();
-    _emojis = _Emojis(widget.width, widget.height, background: '❤');
+    _emojis = _CharGrid(widget.width, widget.height, background: '❤');
   }
 
   void _activateEmoji(int x, int y) {
@@ -65,7 +65,7 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
 }
 
 class EmojiGrid extends StatelessWidget {
-  final _Emojis emojis;
+  final _CharGrid emojis;
   final void Function(int x, int y) onEmojiTouch;
 
   const EmojiGrid({Key key, this.emojis, this.onEmojiTouch}) : super(key: key);
@@ -94,7 +94,7 @@ class EmojiGrid extends StatelessWidget {
 }
 
 class GridPainter extends CustomPainter {
-  final _Emojis _emojis;
+  final _CharGrid _emojis;
   final Map<String, TextEmoji> _textEmojis = {
     '❤': TextEmoji('❤'),
     '🦔': TextEmoji('🦔')
@@ -179,11 +179,11 @@ class TextEmoji {
   }
 }
 
-class _Emojis {
+class _CharGrid {
   final int _width, _height;
   final List<String> _chars;
 
-  _Emojis(this._width, this._height, {String background = ' '})
+  _CharGrid(this._width, this._height, {String background = ' '})
       : _chars = List.filled(_width * _height, background);
 
   int get width => _width;
