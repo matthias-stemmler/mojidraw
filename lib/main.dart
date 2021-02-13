@@ -15,7 +15,7 @@ class MojiDrawApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MojiDrawPage(title: 'Mojidraw', width: 15, height: 15),
+      home: MojiDrawPage(title: 'Mojidraw', width: 15, height: 20),
     );
   }
 }
@@ -54,7 +54,8 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
       ),
       body: Container(
           padding: EdgeInsets.all(20.0),
-          child: EmojiGrid(emojis: _emojis, onEmojiTouch: _activateEmoji)),
+          child: Center(
+              child: EmojiGrid(emojis: _emojis, onEmojiTouch: _activateEmoji))),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Increment',
         child: Icon(Icons.add),
@@ -86,7 +87,9 @@ class EmojiGrid extends StatelessWidget {
             : (details) {
                 _handlePanUpdate(details.localPosition, context.size);
               },
-        child: CustomPaint(painter: GridPainter(emojis), size: Size.infinite));
+        child: AspectRatio(
+            aspectRatio: emojis.aspectRatio,
+            child: CustomPaint(painter: GridPainter(emojis))));
   }
 }
 
@@ -117,24 +120,20 @@ class GridPainter extends CustomPainter {
 }
 
 class GridLayout {
-  Offset _offset;
   Size _cellSize;
   int _horizontalCells, _verticalCells;
 
   GridLayout(Size size, this._horizontalCells, this._verticalCells) {
-    // TODO support non-square grids
-    final length = size.shortestSide;
-    _offset = Offset((size.width - length) / 2, (size.height - length) / 2);
-    _cellSize = Size(length / _horizontalCells, length / _verticalCells);
+    _cellSize =
+        Size(size.width / _horizontalCells, size.height / _verticalCells);
   }
 
   Offset cellToOffset(GridCell cell) =>
-      _offset + Offset(cell.x * _cellSize.width, cell.y * _cellSize.height);
+      Offset(cell.x * _cellSize.width, cell.y * _cellSize.height);
 
   GridCell offsetToCell(Offset offset) {
-    final localOffset = offset - _offset;
-    int x = (localOffset.dx / _cellSize.width).floor();
-    int y = (localOffset.dy / _cellSize.height).floor();
+    int x = (offset.dx / _cellSize.width).floor();
+    int y = (offset.dy / _cellSize.height).floor();
 
     return x >= 0 && x < _horizontalCells && y >= 0 && y < _verticalCells
         ? GridCell(x, y)
@@ -189,6 +188,8 @@ class _Emojis {
   int get width => _width;
 
   int get height => _height;
+
+  double get aspectRatio => _width / _height;
 
   bool isActive(int x, int y) {
     return _states[getIndex(x, y)];
