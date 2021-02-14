@@ -31,6 +31,9 @@
 .pub/
 /build/
 
+# Third-party Flutter related
+**/failures/*.png
+
 # Web related
 lib/generated_plugin_registrant.dart
 
