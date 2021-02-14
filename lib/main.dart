@@ -92,27 +92,32 @@ class EmojiGrid extends StatelessWidget {
               },
         child: AspectRatio(
             aspectRatio: emojis.aspectRatio,
-            child: CustomPaint(painter: GridPainter(emojis))));
+            child: CustomPaint(
+                painter: GridPainter(
+                    emojis: emojis,
+                    textStyle: Theme.of(context).textTheme.bodyText2))));
   }
 }
 
 class GridPainter extends CustomPainter {
-  final CharGrid _emojis;
-  final Map<String, FittingTextRenderer> _textEmojis = {
-    '❤': FittingTextRenderer('❤'),
-    '🦔': FittingTextRenderer('🦔')
-  };
+  final CharGrid emojis;
+  Map<String, FittingTextRenderer> _renderers;
 
-  GridPainter(this._emojis);
+  GridPainter({this.emojis, textStyle}) {
+    _renderers = {
+      '❤': FittingTextRenderer(text: '❤', textStyle: textStyle),
+      '🦔': FittingTextRenderer(text: '🦔', textStyle: textStyle)
+    };
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
-    var layout = GridLayout(size, _emojis.width, _emojis.height);
+    var layout = GridLayout(size, emojis.width, emojis.height);
 
-    for (final y in Iterable<int>.generate(_emojis.height)) {
-      for (final x in Iterable<int>.generate(_emojis.width)) {
+    for (final y in Iterable<int>.generate(emojis.height)) {
+      for (final x in Iterable<int>.generate(emojis.width)) {
         TextPainter textPainter =
-            _textEmojis[this._emojis.get(x, y)].render(layout.cellSize);
+            _renderers[this.emojis.get(x, y)].render(layout.cellSize);
         textPainter.paint(canvas, layout.cellToOffset(GridCell(x, y)));
       }
     }
