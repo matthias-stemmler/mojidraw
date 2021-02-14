@@ -13,23 +13,20 @@ class FittingTextRenderer {
     _calculateSizeFactors();
   }
 
-  Paragraph render(Size size) {
-    final double fontSize =
-        min(size.width * _widthFactor, size.height * _heightFactor);
-    final style = ParagraphStyle(fontSize: fontSize);
-    final constraints = ParagraphConstraints(width: size.width);
-
-    return (ParagraphBuilder(style)..addText(_text)).build()
-      ..layout(constraints);
-  }
+  TextPainter render(Size size) => _makeTextPainter(
+      min(size.width * _widthFactor, size.height * _heightFactor));
 
   void _calculateSizeFactors() {
-    final style = TextStyle(fontSize: 14.0);
-    final span = TextSpan(text: _text, style: style);
-    final painter = TextPainter(textDirection: TextDirection.ltr, text: span)
-      ..layout();
+    double fontSize = 14.0;
+    TextPainter painter = _makeTextPainter(fontSize);
 
-    _widthFactor = style.fontSize / painter.width;
-    _heightFactor = style.fontSize / painter.height;
+    _widthFactor = fontSize / painter.width;
+    _heightFactor = fontSize / painter.height;
+  }
+
+  TextPainter _makeTextPainter(double fontSize) {
+    var style = TextStyle(fontSize: fontSize);
+    var span = TextSpan(text: _text, style: style);
+    return TextPainter(textDirection: TextDirection.ltr, text: span)..layout();
   }
 }

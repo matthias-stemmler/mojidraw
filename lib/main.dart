@@ -74,8 +74,8 @@ class EmojiGrid extends StatelessWidget {
   const EmojiGrid({Key key, this.emojis, this.onEmojiTouch}) : super(key: key);
 
   _handlePanUpdate(Offset position, Size size) {
-    final layout = GridLayout(size, emojis.width, emojis.height);
-    final cell = layout.offsetToCell(position);
+    var layout = GridLayout(size, emojis.width, emojis.height);
+    GridCell cell = layout.offsetToCell(position);
 
     if (cell != null) {
       onEmojiTouch(cell.x, cell.y);
@@ -107,13 +107,13 @@ class GridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final layout = GridLayout(size, _emojis.width, _emojis.height);
+    var layout = GridLayout(size, _emojis.width, _emojis.height);
 
     for (final y in Iterable<int>.generate(_emojis.height)) {
       for (final x in Iterable<int>.generate(_emojis.width)) {
-        canvas.drawParagraph(
-            _textEmojis[this._emojis.get(x, y)].render(layout.cellSize),
-            layout.cellToOffset(GridCell(x, y)));
+        TextPainter textPainter =
+            _textEmojis[this._emojis.get(x, y)].render(layout.cellSize);
+        textPainter.paint(canvas, layout.cellToOffset(GridCell(x, y)));
       }
     }
   }
