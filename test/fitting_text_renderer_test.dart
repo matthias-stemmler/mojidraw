@@ -12,7 +12,7 @@ void main() {
       'landscape': Size(150.0, 100.0)
     }.forEach((description, size) {
       testGoldens(description, (WidgetTester tester) async {
-        Widget widget = Builder(
+        final Widget widget = Builder(
             builder: (context) => CustomPaint(
                 painter: _TestPainter(Theme.of(context).textTheme.bodyText2)));
 
@@ -32,16 +32,16 @@ class _TestPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    TextPainter painter = _renderer.render(size);
+    final TextPainter painter = _renderer.render(size);
 
-    Rect rect = _center(size, painter.size);
+    final Rect rect = _center(size, painter.size);
 
     canvas.drawRect(rect, Paint()..color = Colors.black12);
     painter.paint(canvas, rect.topLeft);
   }
 
   Rect _center(Size outerSize, Size innerSize) {
-    Offset offset = ((outerSize - innerSize) as Offset) / 2.0;
+    final Offset offset = ((outerSize - innerSize) as Offset) / 2.0;
     return offset & innerSize;
   }
 

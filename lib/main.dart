@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'char_grid.dart';
 import 'fitting_text_renderer.dart';
+import 'grid_cell.dart';
+import 'grid_layout.dart';
 
 void main() {
   runApp(MojiDrawApp());
@@ -27,7 +29,7 @@ class MojiDrawPage extends StatefulWidget {
   final String title;
   final int width, height;
 
-  MojiDrawPage({Key key, this.title, this.width, this.height})
+  const MojiDrawPage({Key key, this.title, this.width, this.height})
       : super(key: key);
 
   @override
@@ -43,9 +45,9 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
     _emojis = CharGrid(widget.width, widget.height, background: '❤');
   }
 
-  void _activateEmoji(int x, int y) {
+  void _activateEmoji(GridCell cell) {
     setState(() {
-      _emojis.set(x, y, '🦔');
+      _emojis.set(cell, '🦔');
     });
   }
 
@@ -69,16 +71,16 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
 
 class EmojiGrid extends StatelessWidget {
   final CharGrid emojis;
-  final void Function(int x, int y) onEmojiTouch;
+  final void Function(GridCell cell) onEmojiTouch;
 
   const EmojiGrid({Key key, this.emojis, this.onEmojiTouch}) : super(key: key);
 
   _handlePanUpdate(Offset position, Size size) {
-    var layout = GridLayout(size, emojis.width, emojis.height);
-    GridCell cell = layout.offsetToCell(position);
+    final layout = GridLayout(size, emojis.width, emojis.height);
+    final GridCell cell = layout.offsetToCell(position);
 
     if (cell != null) {
-      onEmojiTouch(cell.x, cell.y);
+      onEmojiTouch(cell);
     }
   }
 
@@ -101,58 +103,25 @@ class EmojiGrid extends StatelessWidget {
 
 class GridPainter extends CustomPainter {
   final CharGrid emojis;
-  Map<String, FittingTextRenderer> _renderers;
+  final Map<String, FittingTextRenderer> _renderers;
 
-  GridPainter({this.emojis, textStyle}) {
-    _renderers = {
-      '❤': FittingTextRenderer(text: '❤', textStyle: textStyle),
-      '🦔': FittingTextRenderer(text: '🦔', textStyle: textStyle)
-    };
-  }
+  GridPainter({this.emojis, textStyle})
+      : _renderers = {
+          '❤': FittingTextRenderer(text: '❤', textStyle: textStyle),
+          '🦔': FittingTextRenderer(text: '🦔', textStyle: textStyle)
+        };
 
   @override
   void paint(Canvas canvas, Size size) {
-    var layout = GridLayout(size, emojis.width, emojis.height);
+    final layout = GridLayout(size, emojis.width, emojis.height);
 
-    for (final y in Iterable<int>.generate(emojis.height)) {
-      for (final x in Iterable<int>.generate(emojis.width)) {
-        TextPainter textPainter =
-            _renderers[this.emojis.get(x, y)].render(layout.cellSize);
-        textPainter.paint(canvas, layout.cellToOffset(GridCell(x, y)));
-      }
+    for (final cell in layout.cells) {
+      final TextPainter painter =
+          _renderers[this.emojis.get(cell)].render(layout.cellSize);
+      painter.paint(canvas, layout.cellToOffset(cell));
     }
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
-
-class GridLayout {
-  Size _cellSize;
-  int _horizontalCells, _verticalCells;
-
-  GridLayout(Size size, this._horizontalCells, this._verticalCells) {
-    _cellSize =
-        Size(size.width / _horizontalCells, size.height / _verticalCells);
-  }
-
-  Offset cellToOffset(GridCell cell) =>
-      Offset(cell.x * _cellSize.width, cell.y * _cellSize.height);
-
-  GridCell offsetToCell(Offset offset) {
-    int x = (offset.dx / _cellSize.width).floor();
-    int y = (offset.dy / _cellSize.height).floor();
-
-    return x >= 0 && x < _horizontalCells && y >= 0 && y < _verticalCells
-        ? GridCell(x, y)
-        : null;
-  }
-
-  Size get cellSize => _cellSize;
-}
-
-class GridCell {
-  final int x, y;
-
-  GridCell(this.x, this.y);
 }

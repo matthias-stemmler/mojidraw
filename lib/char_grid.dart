@@ -1,3 +1,5 @@
+import 'grid_cell.dart';
+
 class CharGrid {
   final int _width, _height;
   final List<String> _chars;
@@ -11,9 +13,9 @@ class CharGrid {
 
   double get aspectRatio => _width / _height;
 
-  String get(int x, int y) => _chars[_getIndex(x, y)];
+  String get(GridCell cell) => _chars[_getIndex(cell)];
 
-  void set(int x, int y, String char) => _chars[_getIndex(x, y)] = char;
+  void set(GridCell cell, String char) => _chars[_getIndex(cell)] = char;
 
-  int _getIndex(int x, int y) => y * _width + x;
+  int _getIndex(GridCell cell) => cell.y * _width + cell.x;
 }

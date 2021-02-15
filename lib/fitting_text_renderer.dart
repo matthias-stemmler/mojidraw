@@ -16,21 +16,21 @@ class FittingTextRenderer {
   }
 
   TextPainter render(Size size) {
-    double fontSize =
+    final double fontSize =
         min(size.width * _widthFactor, size.height * _heightFactor);
     return _makeTextPainter(
         textStyle.apply(fontSizeFactor: 0.0, fontSizeDelta: fontSize));
   }
 
   void _calculateSizeFactors() {
-    TextPainter painter = _makeTextPainter(textStyle);
+    final TextPainter painter = _makeTextPainter(textStyle);
 
     _widthFactor = textStyle.fontSize / painter.width;
     _heightFactor = textStyle.fontSize / painter.height;
   }
 
   TextPainter _makeTextPainter(TextStyle style) {
-    var span = TextSpan(text: text, style: style);
+    final span = TextSpan(text: text, style: style);
     return TextPainter(textDirection: TextDirection.ltr, text: span)..layout();
   }
 }
