@@ -8,8 +8,8 @@ import 'package:mojidraw/fitting_text_renderer.dart';
 void main() {
   group('renders text fitting in box', () {
     <String, Size>{
-      'portrait': Size(100.0, 250.0),
-      'landscape': Size(150.0, 100.0)
+      'portrait': const Size(100.0, 250.0),
+      'landscape': const Size(150.0, 100.0)
     }.forEach((description, size) {
       testGoldens(description, (WidgetTester tester) async {
         final Widget widget = Builder(
