@@ -12,9 +12,8 @@ void main() {
       'landscape': const Size(150.0, 100.0)
     }.forEach((description, size) {
       testGoldens(description, (WidgetTester tester) async {
-        final Widget widget = Builder(
-            builder: (context) => CustomPaint(
-                painter: _TestPainter(Theme.of(context).textTheme.bodyText2)));
+        final Widget widget =
+            Builder(builder: (context) => CustomPaint(painter: _TestPainter()));
 
         await tester.pumpWidgetBuilder(widget, surfaceSize: size);
 
@@ -27,8 +26,8 @@ void main() {
 class _TestPainter extends CustomPainter {
   final FittingTextRenderer _renderer;
 
-  _TestPainter(textStyle)
-      : _renderer = FittingTextRenderer(text: 'X', textStyle: textStyle);
+  _TestPainter()
+      : _renderer = FittingTextRenderer(text: 'X', fontFamily: 'Roboto');
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -36,7 +35,7 @@ class _TestPainter extends CustomPainter {
 
     final Rect rect = _center(size, painter.size);
 
-    canvas.drawRect(rect, Paint()..color = Colors.black12);
+    canvas.drawRect(rect, Paint()..color = Colors.grey);
     painter.paint(canvas, rect.topLeft);
   }
 

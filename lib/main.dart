@@ -41,12 +41,12 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
   @override
   void initState() {
     super.initState();
-    _emojis = CharGrid(widget.width, widget.height, background: '❤');
+    _emojis = CharGrid(widget.width, widget.height, background: '🍀');
   }
 
   void _activateEmoji(GridCell cell) {
     setState(() {
-      _emojis.set(cell, '🦔');
+      _emojis.set(cell, '🦦');
     });
   }
 
@@ -99,19 +99,17 @@ class EmojiGrid extends StatelessWidget {
       child: AspectRatio(
           aspectRatio: emojis.aspectRatio,
           child: CustomPaint(
-              painter: GridPainter(
-                  emojis: emojis,
-                  textStyle: Theme.of(context).textTheme.bodyText2))));
+              painter: GridPainter(emojis: emojis, fontFamily: 'JoyPixels'))));
 }
 
 class GridPainter extends CustomPainter {
   final CharGrid emojis;
   final Map<String, FittingTextRenderer> _renderers;
 
-  GridPainter({this.emojis, textStyle})
+  GridPainter({this.emojis, String fontFamily})
       : _renderers = {
-          '❤': FittingTextRenderer(text: '❤', textStyle: textStyle),
-          '🦔': FittingTextRenderer(text: '🦔', textStyle: textStyle)
+          '🍀': FittingTextRenderer(text: '🍀', fontFamily: fontFamily),
+          '🦦': FittingTextRenderer(text: '🦦', fontFamily: fontFamily)
         };
 
   @override

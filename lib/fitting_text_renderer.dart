@@ -7,30 +7,31 @@ import 'package:flutter/painting.dart';
 /// that makes it fit into a box of a given size
 class FittingTextRenderer {
   final String text;
-  final TextStyle textStyle;
+  final String fontFamily;
   double _widthFactor, _heightFactor;
 
-  FittingTextRenderer(
-      {this.text, this.textStyle = const TextStyle(fontSize: 14.0)}) {
+  FittingTextRenderer({this.text, this.fontFamily}) {
     _calculateSizeFactors();
   }
 
   TextPainter render(Size size) {
     final double fontSize =
         min(size.width * _widthFactor, size.height * _heightFactor);
-    return _makeTextPainter(
-        textStyle.apply(fontSizeFactor: 0.0, fontSizeDelta: fontSize));
+    return _makeTextPainter(fontSize);
   }
 
   void _calculateSizeFactors() {
-    final TextPainter painter = _makeTextPainter(textStyle);
+    const double fontSize = 14.0;
+    final TextPainter painter = _makeTextPainter(fontSize);
 
-    _widthFactor = textStyle.fontSize / painter.width;
-    _heightFactor = textStyle.fontSize / painter.height;
+    _widthFactor = fontSize / painter.width;
+    _heightFactor = fontSize / painter.height;
   }
 
-  TextPainter _makeTextPainter(TextStyle style) {
-    final span = TextSpan(text: text, style: style);
+  TextPainter _makeTextPainter(double fontSize) {
+    final span = TextSpan(
+        text: text,
+        style: TextStyle(fontFamily: fontFamily, fontSize: fontSize));
     return TextPainter(textDirection: TextDirection.ltr, text: span)..layout();
   }
 }
