@@ -13,8 +13,8 @@ class GridLayout {
   Size get cellSize => _cellSize;
 
   Iterable<GridCell> get cells sync* {
-    for (final y in Iterable<int>.generate(_verticalCells)) {
-      for (final x in Iterable<int>.generate(_horizontalCells)) {
+    for (final int y in Iterable.generate(_verticalCells)) {
+      for (final int x in Iterable.generate(_horizontalCells)) {
         yield GridCell(x, y);
       }
     }

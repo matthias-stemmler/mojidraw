@@ -17,5 +17,9 @@ class CharGrid {
 
   void set(GridCell cell, String char) => _chars[_getIndex(cell)] = char;
 
+  String get text => Iterable<int>.generate(_height)
+      .map((int y) => _chars.sublist(y * _width, (y + 1) * _width).join())
+      .join('\n');
+
   int _getIndex(GridCell cell) => cell.y * _width + cell.x;
 }

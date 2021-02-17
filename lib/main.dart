@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'char_grid.dart';
 import 'fitting_text_renderer.dart';
@@ -13,16 +14,14 @@ void main() {
 
 class MojiDrawApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Mojidraw',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MojiDrawPage(title: 'Mojidraw', width: 15, height: 20),
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'Mojidraw',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: MojiDrawPage(title: 'Mojidraw', width: 10, height: 10),
+      );
 }
 
 class MojiDrawPage extends StatefulWidget {
@@ -52,21 +51,27 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(
-          padding: EdgeInsets.all(20.0),
-          child: Center(
-              child: EmojiGrid(emojis: _emojis, onEmojiTouch: _activateEmoji))),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Container(
+            padding: EdgeInsets.all(20.0),
+            child: Center(
+                child:
+                    EmojiGrid(emojis: _emojis, onEmojiTouch: _activateEmoji))),
+        floatingActionButton: Builder(
+            builder: (context) => FloatingActionButton(
+                  tooltip: 'Copy to clipboard',
+                  child: Icon(Icons.copy),
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: _emojis.text));
+
+                    Scaffold.of(context)
+                        .showSnackBar(SnackBar(content: Text('Copied')));
+                  },
+                )),
+      );
 }
 
 class EmojiGrid extends StatelessWidget {
@@ -85,20 +90,18 @@ class EmojiGrid extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-        onPanUpdate: onEmojiTouch == null
-            ? null
-            : (details) {
-                _handlePanUpdate(details.localPosition, context.size);
-              },
-        child: AspectRatio(
-            aspectRatio: emojis.aspectRatio,
-            child: CustomPaint(
-                painter: GridPainter(
-                    emojis: emojis,
-                    textStyle: Theme.of(context).textTheme.bodyText2))));
-  }
+  Widget build(BuildContext context) => GestureDetector(
+      onPanUpdate: onEmojiTouch == null
+          ? null
+          : (details) {
+              _handlePanUpdate(details.localPosition, context.size);
+            },
+      child: AspectRatio(
+          aspectRatio: emojis.aspectRatio,
+          child: CustomPaint(
+              painter: GridPainter(
+                  emojis: emojis,
+                  textStyle: Theme.of(context).textTheme.bodyText2))));
 }
 
 class GridPainter extends CustomPainter {

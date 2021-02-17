@@ -50,10 +50,19 @@ void main() {
 
     test('get returns character specified using set', () {
       const cell = const GridCell(1, 3);
-      
+
       charGrid.set(cell, 'F');
 
       expect(charGrid.get(cell), 'F');
     });
+  });
+
+  test('text is rendered correctly', () {
+    final charGrid = CharGrid(3, 3, background: 'B');
+    final cell = GridCell(1, 1);
+
+    charGrid.set(cell, 'F');
+
+    expect(charGrid.text, 'BBB\nBFB\nBBB');
   });
 }
