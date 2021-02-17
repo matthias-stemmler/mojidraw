@@ -80,7 +80,7 @@ class EmojiGrid extends StatelessWidget {
 
   const EmojiGrid({Key key, this.emojis, this.onEmojiTouch}) : super(key: key);
 
-  _handlePanUpdate(Offset position, Size size) {
+  _handlePan(Offset position, Size size) {
     final layout = GridLayout(size, emojis.width, emojis.height);
     final GridCell cell = layout.offsetToCell(position);
 
@@ -90,16 +90,21 @@ class EmojiGrid extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-      onPanUpdate: onEmojiTouch == null
-          ? null
-          : (details) {
-              _handlePanUpdate(details.localPosition, context.size);
-            },
-      child: AspectRatio(
-          aspectRatio: emojis.aspectRatio,
-          child: CustomPaint(
-              painter: GridPainter(emojis: emojis, fontFamily: 'JoyPixels'))));
+  Widget build(BuildContext context) {
+    final onPan = onEmojiTouch == null
+        ? null
+        : (details) {
+            _handlePan(details.localPosition, context.size);
+          };
+    return GestureDetector(
+        onPanStart: onPan,
+        onPanUpdate: onPan,
+        child: AspectRatio(
+            aspectRatio: emojis.aspectRatio,
+            child: CustomPaint(
+                painter:
+                    GridPainter(emojis: emojis, fontFamily: 'JoyPixels'))));
+  }
 }
 
 class GridPainter extends CustomPainter {
