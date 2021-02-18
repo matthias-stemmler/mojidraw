@@ -17,9 +17,10 @@ class MojiDrawApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
         title: 'Mojidraw',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            snackBarTheme:
+                SnackBarThemeData(behavior: SnackBarBehavior.floating)),
         home: MojiDrawPage(title: 'Mojidraw', width: 10, height: 10),
       );
 }
@@ -67,8 +68,11 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: _emojis.text));
 
-                    Scaffold.of(context)
-                        .showSnackBar(SnackBar(content: Text('Copied')));
+                    final snackBar = SnackBar(
+                      content: Text('Copied to clipboard'),
+                      duration: Duration(milliseconds: 1500),
+                    );
+                    Scaffold.of(context).showSnackBar(snackBar);
                   },
                 )),
       );
