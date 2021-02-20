@@ -7,6 +7,7 @@ import 'char_grid.dart';
 import 'fitting_text_renderer.dart';
 import 'grid_cell.dart';
 import 'grid_layout.dart';
+import 'palette.dart';
 
 void main() {
   runApp(MojiDrawApp());
@@ -21,15 +22,18 @@ class MojiDrawApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
             snackBarTheme:
                 SnackBarThemeData(behavior: SnackBarBehavior.floating)),
-        home: MojiDrawPage(title: 'Mojidraw', width: 10, height: 10),
+        home: MojiDrawPage(
+            title: 'Mojidraw', width: 9, height: 9, fontFamily: 'JoyPixels'),
       );
 }
 
 class MojiDrawPage extends StatefulWidget {
   final String title;
   final int width, height;
+  final String fontFamily;
 
-  const MojiDrawPage({Key key, this.title, this.width, this.height})
+  const MojiDrawPage(
+      {Key key, this.title, this.width, this.height, this.fontFamily})
       : super(key: key);
 
   @override
@@ -38,16 +42,18 @@ class MojiDrawPage extends StatefulWidget {
 
 class _MojiDrawPageState extends State<MojiDrawPage> {
   CharGrid _emojis;
+  String _penEmoji;
 
   @override
   void initState() {
     super.initState();
     _emojis = CharGrid(widget.width, widget.height, background: '🍀');
+    _penEmoji = '❤';
   }
 
   void _activateEmoji(GridCell cell) {
     setState(() {
-      _emojis.set(cell, '🦦');
+      _emojis.set(cell, _penEmoji);
     });
   }
 
@@ -58,9 +64,23 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
         ),
         body: Container(
             padding: EdgeInsets.all(20.0),
-            child: Center(
-                child:
-                    EmojiGrid(emojis: _emojis, onEmojiTouch: _activateEmoji))),
+            child: Column(children: [
+              Container(
+                  padding: EdgeInsets.only(bottom: 30.0),
+                  child: Palette(
+                    chars: [' ', '🍀', '🦦', '❤', '🌊'],
+                    fontFamily: widget.fontFamily,
+                    selectedChar: _penEmoji,
+                    onCharSelected: (char) => setState(() {
+                      _penEmoji = char;
+                    }),
+                  )),
+              Flexible(
+                  child: EmojiGrid(
+                      emojis: _emojis,
+                      onEmojiTouch: _activateEmoji,
+                      fontFamily: widget.fontFamily))
+            ])),
         floatingActionButton: Builder(
             builder: (context) => FloatingActionButton(
                   tooltip: 'Copy to clipboard',
@@ -81,8 +101,10 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
 class EmojiGrid extends StatelessWidget {
   final CharGrid emojis;
   final void Function(GridCell cell) onEmojiTouch;
+  final String fontFamily;
 
-  const EmojiGrid({Key key, this.emojis, this.onEmojiTouch}) : super(key: key);
+  const EmojiGrid({Key key, this.emojis, this.onEmojiTouch, this.fontFamily})
+      : super(key: key);
 
   _handlePan(Offset position, Size size) {
     final layout = GridLayout(size, emojis.width, emojis.height);
@@ -106,8 +128,7 @@ class EmojiGrid extends StatelessWidget {
         child: AspectRatio(
             aspectRatio: emojis.aspectRatio,
             child: CustomPaint(
-                painter:
-                    GridPainter(emojis: emojis, fontFamily: 'JoyPixels'))));
+                painter: GridPainter(emojis: emojis, fontFamily: fontFamily))));
   }
 }
 
@@ -117,8 +138,11 @@ class GridPainter extends CustomPainter {
 
   GridPainter({this.emojis, String fontFamily})
       : _renderers = {
+          ' ': FittingTextRenderer(text: ' ', fontFamily: fontFamily),
           '🍀': FittingTextRenderer(text: '🍀', fontFamily: fontFamily),
-          '🦦': FittingTextRenderer(text: '🦦', fontFamily: fontFamily)
+          '🦦': FittingTextRenderer(text: '🦦', fontFamily: fontFamily),
+          '❤': FittingTextRenderer(text: '❤', fontFamily: fontFamily),
+          '🌊': FittingTextRenderer(text: '🌊', fontFamily: fontFamily),
         };
 
   @override
