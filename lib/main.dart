@@ -134,24 +134,18 @@ class EmojiGrid extends StatelessWidget {
 
 class GridPainter extends CustomPainter {
   final CharGrid emojis;
-  final Map<String, FittingTextRenderer> _renderers;
+  final String fontFamily;
 
-  GridPainter({this.emojis, String fontFamily})
-      : _renderers = {
-          ' ': FittingTextRenderer(text: ' ', fontFamily: fontFamily),
-          '🍀': FittingTextRenderer(text: '🍀', fontFamily: fontFamily),
-          '🦦': FittingTextRenderer(text: '🦦', fontFamily: fontFamily),
-          '❤': FittingTextRenderer(text: '❤', fontFamily: fontFamily),
-          '🌊': FittingTextRenderer(text: '🌊', fontFamily: fontFamily),
-        };
+  const GridPainter({this.emojis, this.fontFamily});
 
   @override
   void paint(Canvas canvas, Size size) {
     final layout = GridLayout(size, emojis.width, emojis.height);
 
     for (final cell in layout.cells) {
-      final TextPainter painter =
-          _renderers[this.emojis.get(cell)].render(layout.cellSize);
+      final renderer = FittingTextRenderer(
+          text: this.emojis.get(cell), fontFamily: fontFamily);
+      final TextPainter painter = renderer.render(layout.cellSize);
       painter.paint(canvas, layout.cellToOffset(cell));
     }
   }
