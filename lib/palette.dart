@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+const double _minButtonWidth = 48.0;
+const double _fontSize = 32.0;
+
 class Palette extends StatelessWidget {
   final String fontFamily;
   final List<String> chars;
@@ -19,23 +22,35 @@ class Palette extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
       alignment: Alignment.topLeft,
-      child: ToggleButtons(
-          renderBorder: false,
-          children: [
-            ...chars.map((char) => char == ' '
-                ? Icon(Icons.space_bar)
-                : Text(
-                    char,
-                    style: TextStyle(fontFamily: fontFamily, fontSize: 20.0),
+      child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        final int buttonCount =
+            (constraints.maxWidth / _minButtonWidth).floor();
+        final double buttonSize = constraints.maxWidth / buttonCount;
+        final Iterable<String> visibleChars = chars.take(buttonCount - 1);
+        final textStyle =
+            TextStyle(fontFamily: fontFamily, fontSize: _fontSize);
+
+        return ToggleButtons(
+            constraints: BoxConstraints.tight(Size.square(buttonSize)),
+            renderBorder: false,
+            children: [
+              ...visibleChars.map((char) => Text(
+                    char == ' ' ? '␣' : char,
+                    style: textStyle,
                   )),
-            Icon(Icons.add)
-          ],
-          isSelected: [...chars.map((char) => char == selectedChar), false],
-          onPressed: (int index) {
-            if (index < chars.length) {
-              onCharSelected?.call(chars[index]);
-            } else {
-              onAddPressed?.call();
-            }
-          }));
+              Text('+', style: textStyle)
+            ],
+            isSelected: [
+              ...visibleChars.map((char) => char == selectedChar),
+              false
+            ],
+            onPressed: (int index) {
+              if (index < visibleChars.length) {
+                onCharSelected?.call(chars[index]);
+              } else {
+                onAddPressed?.call();
+              }
+            });
+      }));
 }
