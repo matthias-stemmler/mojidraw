@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'char_grid.dart';
 import 'fitting_text_renderer.dart';
@@ -81,20 +82,17 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
                       onEmojiTouch: _activateEmoji,
                       fontFamily: widget.fontFamily))
             ])),
-        floatingActionButton: Builder(
-            builder: (context) => FloatingActionButton(
-                  tooltip: 'Copy to clipboard',
-                  child: Icon(Icons.copy),
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: _emojis.text));
+        floatingActionButton: FloatingActionButton(
+          tooltip: 'Copy to clipboard',
+          child: Icon(Icons.copy),
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: _emojis.text));
 
-                    final snackBar = SnackBar(
-                      content: Text('Copied to clipboard'),
-                      duration: Duration(milliseconds: 1500),
-                    );
-                    Scaffold.of(context).showSnackBar(snackBar);
-                  },
-                )),
+            Fluttertoast.showToast(
+              msg: 'Copied to clipboard',
+            );
+          },
+        ),
       );
 }
 
