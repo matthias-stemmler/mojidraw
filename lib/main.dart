@@ -8,32 +8,31 @@ import 'char_grid.dart';
 import 'fitting_text_renderer.dart';
 import 'grid_cell.dart';
 import 'grid_layout.dart';
+import 'grid_size.dart';
 import 'palette.dart';
 
 void main() {
-  runApp(MojiDrawApp());
+  runApp(_MojiDrawApp());
 }
 
-class MojiDrawApp extends StatelessWidget {
+class _MojiDrawApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
         title: 'Mojidraw',
         theme: ThemeData(
             primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            snackBarTheme:
-                SnackBarThemeData(behavior: SnackBarBehavior.floating)),
-        home: MojiDrawPage(
-            title: 'Mojidraw', width: 9, height: 9, fontFamily: 'JoyPixels'),
+            visualDensity: VisualDensity.adaptivePlatformDensity),
+        home: _MojiDrawPage(
+            title: 'Mojidraw', width: 21, height: 21, fontFamily: 'JoyPixels'),
       );
 }
 
-class MojiDrawPage extends StatefulWidget {
+class _MojiDrawPage extends StatefulWidget {
   final String title;
   final int width, height;
   final String fontFamily;
 
-  const MojiDrawPage(
+  const _MojiDrawPage(
       {Key key, this.title, this.width, this.height, this.fontFamily})
       : super(key: key);
 
@@ -41,20 +40,26 @@ class MojiDrawPage extends StatefulWidget {
   _MojiDrawPageState createState() => _MojiDrawPageState();
 }
 
-class _MojiDrawPageState extends State<MojiDrawPage> {
+class _MojiDrawPageState extends State<_MojiDrawPage> {
   CharGrid _emojis;
   String _penEmoji;
 
   @override
   void initState() {
     super.initState();
-    _emojis = CharGrid(widget.width, widget.height, background: '🍀');
+    _emojis = CharGrid(GridSize(widget.width, widget.height), background: '🍀');
     _penEmoji = '❤';
   }
 
-  void _activateEmoji(GridCell cell) {
+  void _drawEmoji(GridCell cell) {
     setState(() {
       _emojis.set(cell, _penEmoji);
+    });
+  }
+
+  void _switchPen(String penEmoji) {
+    setState(() {
+      _penEmoji = penEmoji;
     });
   }
 
@@ -72,14 +77,12 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
                     chars: [' ', '🍀', '🦦', '❤', '🌊'],
                     fontFamily: widget.fontFamily,
                     selectedChar: _penEmoji,
-                    onCharSelected: (char) => setState(() {
-                      _penEmoji = char;
-                    }),
+                    onCharSelected: _switchPen,
                   )),
               Flexible(
-                  child: EmojiGrid(
+                  child: _EmojiGrid(
                       emojis: _emojis,
-                      onEmojiTouch: _activateEmoji,
+                      onEmojiTouch: _drawEmoji,
                       fontFamily: widget.fontFamily))
             ])),
         floatingActionButton: FloatingActionButton(
@@ -96,16 +99,16 @@ class _MojiDrawPageState extends State<MojiDrawPage> {
       );
 }
 
-class EmojiGrid extends StatelessWidget {
+class _EmojiGrid extends StatelessWidget {
   final CharGrid emojis;
   final void Function(GridCell cell) onEmojiTouch;
   final String fontFamily;
 
-  const EmojiGrid({Key key, this.emojis, this.onEmojiTouch, this.fontFamily})
+  const _EmojiGrid({Key key, this.emojis, this.onEmojiTouch, this.fontFamily})
       : super(key: key);
 
   _handlePan(Offset position, Size size) {
-    final layout = GridLayout(size, emojis.width, emojis.height);
+    final layout = GridLayout(size, emojis.size);
     final GridCell cell = layout.offsetToCell(position);
 
     if (cell != null) {
@@ -120,34 +123,64 @@ class EmojiGrid extends StatelessWidget {
         : (details) {
             _handlePan(details.localPosition, context.size);
           };
+
     return GestureDetector(
         onPanStart: onPan,
         onPanUpdate: onPan,
         child: AspectRatio(
             aspectRatio: emojis.aspectRatio,
-            child: CustomPaint(
-                painter: GridPainter(emojis: emojis, fontFamily: fontFamily))));
+            child: CustomMultiChildLayout(
+                delegate: _GridLayoutDelegate(emojis.size),
+                children: emojis.cells
+                    .map((cell) => LayoutId(
+                        id: cell,
+                        child: RepaintBoundary(
+                            child: CustomPaint(
+                                painter: _GridCellPainter(
+                                    text: emojis.get(cell),
+                                    fontFamily: fontFamily)))))
+                    .toList())));
   }
 }
 
-class GridPainter extends CustomPainter {
-  final CharGrid emojis;
-  final String fontFamily;
+class _GridLayoutDelegate extends MultiChildLayoutDelegate {
+  final GridSize _gridSize;
 
-  const GridPainter({this.emojis, this.fontFamily});
+  _GridLayoutDelegate(this._gridSize);
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final layout = GridLayout(size, emojis.width, emojis.height);
+  void performLayout(Size size) {
+    final layout = GridLayout(size, _gridSize);
 
     for (final cell in layout.cells) {
-      final renderer = FittingTextRenderer(
-          text: this.emojis.get(cell), fontFamily: fontFamily);
-      final TextPainter painter = renderer.render(layout.cellSize);
-      painter.paint(canvas, layout.cellToOffset(cell));
+      layoutChild(cell, BoxConstraints.tight(layout.cellSize));
+      positionChild(cell, layout.cellToOffset(cell));
     }
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRelayout(MultiChildLayoutDelegate oldDelegate) =>
+      oldDelegate is _GridLayoutDelegate
+          ? oldDelegate._gridSize != _gridSize
+          : true;
+}
+
+class _GridCellPainter extends CustomPainter {
+  final String text;
+  final String fontFamily;
+
+  const _GridCellPainter({@required this.text, this.fontFamily});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final renderer = FittingTextRenderer(text: text, fontFamily: fontFamily);
+    final TextPainter painter = renderer.render(size);
+    painter.paint(canvas, Offset.zero);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) =>
+      oldDelegate is _GridCellPainter
+          ? oldDelegate.text != text || oldDelegate.fontFamily != fontFamily
+          : true;
 }

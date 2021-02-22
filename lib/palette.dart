@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const double _minButtonWidth = 48.0;
 const double _fontSize = 32.0;
 
+@immutable
 class Palette extends StatelessWidget {
   final String fontFamily;
   final List<String> chars;

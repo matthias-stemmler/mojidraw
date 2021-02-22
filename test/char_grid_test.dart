@@ -1,38 +1,20 @@
 import 'package:mojidraw/char_grid.dart';
 import 'package:mojidraw/grid_cell.dart';
+import 'package:mojidraw/grid_size.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('width is returned correctly', () {
-    final charGrid = CharGrid(2, 8);
-
-    expect(charGrid.width, 2);
-  });
-
-  test('height is returned correctly', () {
-    final charGrid = CharGrid(2, 8);
-
-    expect(charGrid.height, 8);
-  });
-
-  test('aspect ratio is calculated correctly', () {
-    final charGrid = CharGrid(2, 8);
-
-    expect(charGrid.aspectRatio, 0.25);
-  });
+  const size = GridSize(2, 8);
+  const cell = GridCell(1, 3);
 
   group('given no background character', () {
-    final charGrid = CharGrid(2, 8);
+    final charGrid = CharGrid(size);
 
     test('get returns space when not specified using set', () {
-      const cell = GridCell(1, 3);
-
       expect(charGrid.get(cell), ' ');
     });
 
     test('get returns character specified using set', () {
-      const cell = GridCell(1, 3);
-
       charGrid.set(cell, 'F');
 
       expect(charGrid.get(cell), 'F');
@@ -40,29 +22,23 @@ void main() {
   });
 
   group('given a background character', () {
-    final charGrid = CharGrid(2, 8, background: 'B');
+    final charGrid = CharGrid(size, background: 'B');
 
     test('get returns background character when not specified using set', () {
-      const cell = const GridCell(1, 3);
-
       expect(charGrid.get(cell), 'B');
     });
 
     test('get returns character specified using set', () {
-      const cell = const GridCell(1, 3);
-
       charGrid.set(cell, 'F');
 
       expect(charGrid.get(cell), 'F');
     });
   });
 
-  test('text is rendered correctly', () {
-    final charGrid = CharGrid(3, 3, background: 'B');
-    final cell = GridCell(1, 1);
-
+  test('text returns grid rendered as text', () {
+    final charGrid = CharGrid(size, background: 'B');
     charGrid.set(cell, 'F');
 
-    expect(charGrid.text, 'BBB\nBFB\nBBB');
+    expect(charGrid.text, 'BB\nBB\nBB\nBF\nBB\nBB\nBB\nBB');
   });
 }

@@ -13,7 +13,7 @@ void main() {
     }.forEach((description, size) {
       testGoldens(description, (WidgetTester tester) async {
         final Widget widget =
-            Builder(builder: (context) => CustomPaint(painter: _TestPainter()));
+            Builder(builder: (_) => CustomPaint(painter: _TestPainter()));
 
         await tester.pumpWidgetBuilder(widget, surfaceSize: size);
 

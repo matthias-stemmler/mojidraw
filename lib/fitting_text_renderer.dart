@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
 /// Renders a text in the maximal font size
@@ -10,7 +11,7 @@ class FittingTextRenderer {
   final String fontFamily;
   double _widthFactor, _heightFactor;
 
-  FittingTextRenderer({this.text, this.fontFamily}) {
+  FittingTextRenderer({@required this.text, this.fontFamily}) {
     _calculateSizeFactors();
   }
 
