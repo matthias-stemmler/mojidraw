@@ -74,7 +74,8 @@ class _MojiDrawPageState extends State<_MojiDrawPage> {
               Container(
                   padding: EdgeInsets.only(bottom: 30.0),
                   child: Palette(
-                    chars: [' ', '🍀', '🦦', '❤', '🌊'],
+                    getChars: (count) =>
+                        [' ', '🍀', '🦦', '❤', '🌊'].take(count),
                     fontFamily: widget.fontFamily,
                     selectedChar: _penEmoji,
                     onCharSelected: _switchPen,
@@ -165,6 +166,7 @@ class _GridLayoutDelegate extends MultiChildLayoutDelegate {
           : true;
 }
 
+@immutable
 class _GridCellPainter extends CustomPainter {
   final String text;
   final String fontFamily;

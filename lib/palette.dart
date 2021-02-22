@@ -6,15 +6,16 @@ const double _fontSize = 32.0;
 @immutable
 class Palette extends StatelessWidget {
   final String fontFamily;
-  final List<String> chars;
   final String selectedChar;
+
+  final Iterable<String> Function(int count) getChars;
   final void Function(String char) onCharSelected;
   final void Function() onAddPressed;
 
   const Palette(
       {Key key,
+      @required this.getChars,
       this.fontFamily,
-      this.chars = const [],
       this.selectedChar,
       this.onCharSelected,
       this.onAddPressed})
@@ -25,29 +26,23 @@ class Palette extends StatelessWidget {
       alignment: Alignment.topLeft,
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-        final int buttonCount =
-            (constraints.maxWidth / _minButtonWidth).floor();
-        final double buttonSize = constraints.maxWidth / buttonCount;
-        final Iterable<String> visibleChars = chars.take(buttonCount - 1);
-        final textStyle =
-            TextStyle(fontFamily: fontFamily, fontSize: _fontSize);
+        final double width = constraints.maxWidth;
+        final int buttonCount = (width / _minButtonWidth).floor();
+        final double buttonSize = width / buttonCount;
+        final List<String> chars = getChars(buttonCount - 1).toList();
 
         return ToggleButtons(
             constraints: BoxConstraints.tight(Size.square(buttonSize)),
             renderBorder: false,
             children: [
-              ...visibleChars.map((char) => Text(
-                    char == ' ' ? '␣' : char,
-                    style: textStyle,
-                  )),
-              Text('+', style: textStyle)
+              ...chars.map((char) => char == ' '
+                  ? _text('␣')
+                  : _text(char, fontFamily: fontFamily)),
+              _text('+')
             ],
-            isSelected: [
-              ...visibleChars.map((char) => char == selectedChar),
-              false
-            ],
+            isSelected: [...chars.map((char) => char == selectedChar), false],
             onPressed: (int index) {
-              if (index < visibleChars.length) {
+              if (index < chars.length) {
                 onCharSelected?.call(chars[index]);
               } else {
                 onAddPressed?.call();
@@ -55,3 +50,6 @@ class Palette extends StatelessWidget {
             });
       }));
 }
+
+Widget _text(String text, {String fontFamily}) =>
+    Text(text, style: TextStyle(fontFamily: fontFamily, fontSize: _fontSize));
