@@ -12,8 +12,7 @@ void main() {
       'landscape': const Size(150.0, 100.0)
     }.forEach((description, size) {
       testGoldens(description, (WidgetTester tester) async {
-        final Widget widget =
-            Builder(builder: (_) => CustomPaint(painter: _TestPainter()));
+        final Widget widget = CustomPaint(painter: _TestPainter());
 
         await tester.pumpWidgetBuilder(widget, surfaceSize: size);
 
