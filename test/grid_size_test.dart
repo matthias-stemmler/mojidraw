@@ -15,7 +15,7 @@ void main() {
 
   group('contains returns whether grid contains cell', () {
     test('within grid', () {
-      expect(size.contains(GridCell(1, 3)), true);
+      expect(size.contains(const GridCell(1, 3)), true);
     });
 
     <String, GridCell>{

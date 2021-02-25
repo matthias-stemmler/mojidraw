@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'bottom_sheet.dart';
 import 'char_grid.dart';
 import 'fitting_text_renderer.dart';
 import 'grid_cell.dart';
@@ -17,12 +18,12 @@ void main() {
 
 class _MojiDrawApp extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => MaterialApp(
+  Widget build(_) => MaterialApp(
         title: 'Mojidraw',
         theme: ThemeData(
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity),
-        home: _MojiDrawPage(
+        home: const _MojiDrawPage(
             title: 'Mojidraw', width: 21, height: 21, fontFamily: 'JoyPixels'),
       );
 }
@@ -37,7 +38,7 @@ class _MojiDrawPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _MojiDrawPageState createState() => _MojiDrawPageState();
+  State createState() => _MojiDrawPageState();
 }
 
 class _MojiDrawPageState extends State<_MojiDrawPage> {
@@ -64,31 +65,39 @@ class _MojiDrawPageState extends State<_MojiDrawPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(_) => Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
         ),
         body: Container(
-            padding: EdgeInsets.all(20.0),
-            child: Column(children: [
-              Container(
-                  padding: EdgeInsets.only(bottom: 30.0),
-                  child: Palette(
-                    getChars: (count) =>
-                        [' ', '🍀', '🦦', '❤', '🌊'].take(count),
-                    fontFamily: widget.fontFamily,
-                    selectedChar: _penEmoji,
-                    onCharSelected: _switchPen,
-                  )),
-              Flexible(
-                  child: _EmojiGrid(
-                      emojis: _emojis,
-                      onEmojiTouch: _drawEmoji,
-                      fontFamily: widget.fontFamily))
-            ])),
+            padding: const EdgeInsets.all(20.0),
+            child: BottomSheetProvider(
+                bottomSheetBuilder: (_) => Container(
+                    decoration: const BoxDecoration(color: Colors.yellow),
+                    child: const Text('Emoji Picker')),
+                builder: (BuildContext context) => Column(children: [
+                      Container(
+                          padding: const EdgeInsets.only(bottom: 15.0),
+                          child: Palette(
+                            getChars: [' ', '🍀', '🦦', '❤', '🌊'].take,
+                            fontFamily: widget.fontFamily,
+                            selectedChar: _penEmoji,
+                            onCharSelected: _switchPen,
+                            onAddPressed:
+                                BottomSheetProvider.of(context).toggle,
+                          )),
+                      Flexible(
+                          child: BottomSheetArea(
+                              child: Container(
+                        padding: const EdgeInsets.only(top: 15.0),
+                        child: _EmojiGrid(
+                            emojis: _emojis,
+                            onEmojiTouch: _drawEmoji,
+                            fontFamily: widget.fontFamily),
+                      )))
+                    ]))),
         floatingActionButton: FloatingActionButton(
           tooltip: 'Copy to clipboard',
-          child: Icon(Icons.copy),
           onPressed: () {
             Clipboard.setData(ClipboardData(text: _emojis.text));
 
@@ -96,6 +105,7 @@ class _MojiDrawPageState extends State<_MojiDrawPage> {
               msg: 'Copied to clipboard',
             );
           },
+          child: const Icon(Icons.copy),
         ),
       );
 }
@@ -108,40 +118,32 @@ class _EmojiGrid extends StatelessWidget {
   const _EmojiGrid({Key key, this.emojis, this.onEmojiTouch, this.fontFamily})
       : super(key: key);
 
-  _handlePan(Offset position, Size size) {
+  void _handlePan(Offset position, Size size) {
     final layout = GridLayout(size, emojis.size);
     final GridCell cell = layout.offsetToCell(position);
 
     if (cell != null) {
-      onEmojiTouch(cell);
+      onEmojiTouch?.call(cell);
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final onPan = onEmojiTouch == null
-        ? null
-        : (details) {
-            _handlePan(details.localPosition, context.size);
-          };
-
-    return GestureDetector(
-        onPanStart: onPan,
-        onPanUpdate: onPan,
-        child: AspectRatio(
-            aspectRatio: emojis.aspectRatio,
-            child: CustomMultiChildLayout(
-                delegate: _GridLayoutDelegate(emojis.size),
-                children: emojis.cells
-                    .map((cell) => LayoutId(
-                        id: cell,
-                        child: RepaintBoundary(
-                            child: CustomPaint(
-                                painter: _GridCellPainter(
-                                    text: emojis.get(cell),
-                                    fontFamily: fontFamily)))))
-                    .toList())));
-  }
+  Widget build(BuildContext context) => GestureDetector(
+      onPanStart: (details) => _handlePan(details.localPosition, context.size),
+      onPanUpdate: (details) => _handlePan(details.localPosition, context.size),
+      child: AspectRatio(
+          aspectRatio: emojis.aspectRatio,
+          child: CustomMultiChildLayout(
+              delegate: _GridLayoutDelegate(emojis.size),
+              children: emojis.cells
+                  .map((cell) => LayoutId(
+                      id: cell,
+                      child: RepaintBoundary(
+                          child: CustomPaint(
+                              painter: _GridCellPainter(
+                                  text: emojis.get(cell),
+                                  fontFamily: fontFamily)))))
+                  .toList())));
 }
 
 class _GridLayoutDelegate extends MultiChildLayoutDelegate {
@@ -161,9 +163,8 @@ class _GridLayoutDelegate extends MultiChildLayoutDelegate {
 
   @override
   bool shouldRelayout(MultiChildLayoutDelegate oldDelegate) =>
-      oldDelegate is _GridLayoutDelegate
-          ? oldDelegate._gridSize != _gridSize
-          : true;
+      oldDelegate is! _GridLayoutDelegate ||
+      oldDelegate is _GridLayoutDelegate && oldDelegate._gridSize != _gridSize;
 }
 
 @immutable
@@ -182,7 +183,7 @@ class _GridCellPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) =>
-      oldDelegate is _GridCellPainter
-          ? oldDelegate.text != text || oldDelegate.fontFamily != fontFamily
-          : true;
+      oldDelegate is! _GridCellPainter ||
+      oldDelegate is _GridCellPainter &&
+          (oldDelegate.text != text || oldDelegate.fontFamily != fontFamily);
 }

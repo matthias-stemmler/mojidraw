@@ -39,7 +39,7 @@ class _TestPainter extends CustomPainter {
   }
 
   Rect _center(Size outerSize, Size innerSize) {
-    final Offset offset = ((outerSize - innerSize) as Offset) / 2.0;
+    final Offset offset = (outerSize - innerSize as Offset) / 2.0;
     return offset & innerSize;
   }
 

@@ -4,13 +4,19 @@ import 'package:mojidraw/palette.dart';
 
 void main() {
   group('Palette', () {
-    _setUp(WidgetTester tester) async {
+    String selectedChar;
+    bool addPressed;
+
+    Future<void> _setUp(WidgetTester tester) async {
+      selectedChar = null;
+      addPressed = false;
+
       final Widget palette = MaterialApp(
           home: Scaffold(
               body: Palette(
         getChars: _chars().take,
-        onCharSelected: (char) => print('charSelected: "$char"'),
-        onAddPressed: () => print('addPressed'),
+        onCharSelected: (char) => selectedChar = char,
+        onAddPressed: () => addPressed = true,
       )));
 
       await tester.pumpWidget(palette);
@@ -27,9 +33,9 @@ void main() {
           (WidgetTester tester) async {
         await _setUp(tester);
 
-        final tap = () => tester.tap(find.text('␣'));
+        await tester.tap(find.text('␣'));
 
-        await expectLater(tap, prints('charSelected: " "\n'));
+        expect(selectedChar, ' ');
       });
     });
 
@@ -44,9 +50,9 @@ void main() {
           (WidgetTester tester) async {
         await _setUp(tester);
 
-        final tap = () => tester.tap(find.text('1'));
+        await tester.tap(find.text('1'));
 
-        await expectLater(tap, prints('charSelected: "1"\n'));
+        expect(selectedChar, '1');
       });
     });
 
@@ -60,9 +66,9 @@ void main() {
       testWidgets('tapping invokes onAddPressed', (WidgetTester tester) async {
         await _setUp(tester);
 
-        final tap = () => tester.tap(find.text('+'));
+        await tester.tap(find.text('+'));
 
-        await expectLater(tap, prints('addPressed\n'));
+        expect(addPressed, isTrue);
       });
     });
   });

@@ -22,7 +22,7 @@ class Palette extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(_) => Container(
       alignment: Alignment.topLeft,
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -32,22 +32,22 @@ class Palette extends StatelessWidget {
         final List<String> chars = getChars(buttonCount - 1).toList();
 
         return ToggleButtons(
-            constraints: BoxConstraints.tight(Size.square(buttonSize)),
-            renderBorder: false,
-            children: [
-              ...chars.map((char) => char == ' '
-                  ? _text('␣')
-                  : _text(char, fontFamily: fontFamily)),
-              _text('+')
-            ],
-            isSelected: [...chars.map((char) => char == selectedChar), false],
-            onPressed: (int index) {
-              if (index < chars.length) {
-                onCharSelected?.call(chars[index]);
-              } else {
-                onAddPressed?.call();
-              }
-            });
+          constraints: BoxConstraints.tight(Size.square(buttonSize)),
+          renderBorder: false,
+          isSelected: [...chars.map((char) => char == selectedChar), false],
+          onPressed: (int index) {
+            if (index < chars.length) {
+              onCharSelected?.call(chars[index]);
+            } else {
+              onAddPressed?.call();
+            }
+          },
+          children: [
+            ...chars.map((char) =>
+                char == ' ' ? _text('␣') : _text(char, fontFamily: fontFamily)),
+            _text('+')
+          ],
+        );
       }));
 }
 
