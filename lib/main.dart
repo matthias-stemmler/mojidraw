@@ -70,7 +70,7 @@ class _MojiDrawPageState extends State<_MojiDrawPage> {
           title: Text(widget.title),
         ),
         body: Container(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
             child: Column(children: [
               Container(
                   padding: const EdgeInsets.only(bottom: 15.0),
@@ -98,16 +98,21 @@ class _MojiDrawPageState extends State<_MojiDrawPage> {
                 ),
               )
             ])),
-        floatingActionButton: FloatingActionButton(
-          tooltip: 'Copy to clipboard',
-          onPressed: () {
-            Clipboard.setData(ClipboardData(text: _emojis.text));
+        bottomNavigationBar: BottomAppBar(
+            child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+          child: Row(children: [
+            IconButton(
+                icon: const Icon(Icons.copy),
+                tooltip: 'Copy to clipboard',
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: _emojis.text));
 
-            Fluttertoast.showToast(
-              msg: 'Copied to clipboard',
-            );
-          },
-          child: const Icon(Icons.copy),
-        ),
+                  Fluttertoast.showToast(
+                    msg: 'Copied to clipboard',
+                  );
+                })
+          ]),
+        )),
       );
 }
