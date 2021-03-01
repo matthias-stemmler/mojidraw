@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mojidraw/covering_sheet.dart';
 
-import 'bottom_sheet.dart';
 import 'char_grid.dart';
 import 'emoji_grid.dart';
+import 'emoji_picker.dart';
 import 'grid_cell.dart';
 import 'grid_size.dart';
 import 'palette.dart';
@@ -39,6 +40,8 @@ class _MojiDrawPage extends StatefulWidget {
 }
 
 class _MojiDrawPageState extends State<_MojiDrawPage> {
+  final _coveringSheetController = CoveringSheetController();
+
   CharGrid _emojis;
   String _penEmoji;
 
@@ -68,31 +71,33 @@ class _MojiDrawPageState extends State<_MojiDrawPage> {
         ),
         body: Container(
             padding: const EdgeInsets.all(20.0),
-            child: BottomSheetProvider(
-                bottomSheetBuilder: (_) => Container(
-                    decoration: const BoxDecoration(color: Colors.yellow),
-                    child: const Text('Emoji Picker')),
-                builder: (BuildContext context) => Column(children: [
+            child: Column(children: [
+              Container(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: Palette(
+                      getChars: [' ', '🍀', '🦦', '❤', '🌊'].take,
+                      fontFamily: widget.fontFamily,
+                      selectedChar: _penEmoji,
+                      onCharSelected: _switchPen,
+                      onAddPressed: _coveringSheetController.toggle)),
+              Flexible(
+                child: CoveringSheet(
+                  controller: _coveringSheetController,
+                  sheet: EmojiPicker(fontFamily: widget.fontFamily),
+                  child: Column(
+                    children: [
                       Container(
-                          padding: const EdgeInsets.only(bottom: 15.0),
-                          child: Palette(
-                            getChars: [' ', '🍀', '🦦', '❤', '🌊'].take,
-                            fontFamily: widget.fontFamily,
-                            selectedChar: _penEmoji,
-                            onCharSelected: _switchPen,
-                            onAddPressed:
-                                BottomSheetProvider.of(context).toggle,
-                          )),
-                      Flexible(
-                          child: BottomSheetArea(
-                              child: Container(
                         padding: const EdgeInsets.only(top: 15.0),
                         child: EmojiGrid(
                             emojis: _emojis,
                             onEmojiTouch: _drawEmoji,
                             fontFamily: widget.fontFamily),
-                      )))
-                    ]))),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ])),
         floatingActionButton: FloatingActionButton(
           tooltip: 'Copy to clipboard',
           onPressed: () {
