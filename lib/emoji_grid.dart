@@ -74,7 +74,7 @@ class _GridCellPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final renderer = FittingTextRenderer(text: text, fontFamily: fontFamily);
-    final TextPainter painter = renderer.render(size);
+    final TextPainter painter = renderer.getTextPainter(size);
     painter.paint(canvas, Offset.zero);
   }
 

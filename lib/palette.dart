@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'fitting_text_renderer.dart';
+
 const double _minButtonWidth = 48.0;
-const double _fontSize = 32.0;
+const EdgeInsets _padding = EdgeInsets.all(5.0);
 
 @immutable
 class Palette extends StatelessWidget {
@@ -28,11 +30,12 @@ class Palette extends StatelessWidget {
           builder: (BuildContext context, BoxConstraints constraints) {
         final double width = constraints.maxWidth;
         final int buttonCount = (width / _minButtonWidth).floor();
-        final double buttonSize = width / buttonCount;
+        final buttonSize = Size.square(width / buttonCount);
+        final Size textSize = _padding.deflateSize(buttonSize);
         final List<String> chars = getChars(buttonCount - 1).toList();
 
         return ToggleButtons(
-          constraints: BoxConstraints.tight(Size.square(buttonSize)),
+          constraints: BoxConstraints.tight(buttonSize),
           renderBorder: false,
           isSelected: [...chars.map((char) => char == selectedChar), false],
           onPressed: (int index) {
@@ -43,13 +46,15 @@ class Palette extends StatelessWidget {
             }
           },
           children: [
-            ...chars.map((char) =>
-                char == ' ' ? _text('␣') : _text(char, fontFamily: fontFamily)),
-            _text('+')
+            ...chars.map((char) => char == ' '
+                ? _text('␣', textSize)
+                : _text(char, textSize, fontFamily: fontFamily)),
+            _text('+', textSize)
           ],
         );
       }));
 }
 
-Widget _text(String text, {String fontFamily}) =>
-    Text(text, style: TextStyle(fontFamily: fontFamily, fontSize: _fontSize));
+Widget _text(String text, Size size, {String fontFamily}) => Text(text,
+    style: FittingTextRenderer(text: text, fontFamily: fontFamily)
+        .getTextStyle(size));

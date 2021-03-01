@@ -30,7 +30,7 @@ class _TestPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final TextPainter painter = _renderer.render(size);
+    final TextPainter painter = _renderer.getTextPainter(size);
 
     final Rect rect = _center(size, painter.size);
 
