@@ -26,8 +26,7 @@ class Palette extends StatelessWidget {
   @override
   Widget build(_) => Container(
       alignment: Alignment.topLeft,
-      child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
+      child: LayoutBuilder(builder: (_, BoxConstraints constraints) {
         final double width = constraints.maxWidth;
         final int buttonCount = (width / _minButtonWidth).floor();
         final buttonSize = Size.square(width / buttonCount);

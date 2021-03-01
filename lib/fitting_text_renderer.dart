@@ -15,13 +15,13 @@ class FittingTextRenderer {
     _calculateSizeFactors();
   }
 
-  double getFontSize(Size size) =>
-      min(size.width * _widthFactor, size.height * _heightFactor);
-
-  TextPainter getTextPainter(Size size) => _buildPainter(getFontSize(size));
+  TextPainter getTextPainter(Size size) => _buildPainter(_getFontSize(size));
 
   TextStyle getTextStyle(Size size) =>
-      TextStyle(fontFamily: fontFamily, fontSize: getFontSize(size));
+      TextStyle(fontFamily: fontFamily, fontSize: _getFontSize(size));
+
+  double _getFontSize(Size size) =>
+      min(size.width * _widthFactor, size.height * _heightFactor);
 
   void _calculateSizeFactors() {
     const double fontSize = 14.0;
