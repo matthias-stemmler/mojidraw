@@ -37,9 +37,8 @@ class _DrawingPageState extends State<DrawingPage> {
                 Container(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: Palette(
-                        getChars: [' ', '🍀', '🦦', '❤', '🌊'].take,
                         fontFamily: widget.fontFamily,
-                        onAddPressed: _coveringSheetController.toggle)),
+                        onExpandToggled: _coveringSheetController.toggle)),
                 Flexible(
                   child: CoveringSheet(
                     controller: _coveringSheetController,

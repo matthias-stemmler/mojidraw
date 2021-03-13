@@ -6,25 +6,29 @@ import '../util/grid_size.dart';
 
 class DrawingState extends ChangeNotifier {
   final CharGrid _grid;
-  String _pen;
+  final List<String> _palette;
+  int _penIndex;
 
   DrawingState({@required GridSize size})
       : _grid = CharGrid(size: size, background: '🍀'),
-        _pen = '❤';
+        _palette = [' ', '🍀', '🦦', '❤', '🌊', '😊'],
+        _penIndex = 3;
 
-  String get pen => _pen;
+  List<String> get palette => _palette;
+
+  int get penIndex => _penIndex;
 
   String get gridAsText => _grid.text;
 
   String getCellChar(GridCell cell) => _grid.get(cell);
 
-  void switchPen(String pen) {
-    _pen = pen;
+  void switchPen(int penIndex) {
+    _penIndex = penIndex;
     notifyListeners();
   }
 
   void draw(GridCell cell) {
-    _grid.set(cell, _pen);
+    _grid.set(cell, _palette[_penIndex]);
     notifyListeners();
   }
 }

@@ -9,72 +9,102 @@ const EdgeInsets _padding = EdgeInsets.all(5.0);
 
 @immutable
 class Palette extends StatelessWidget {
-  final Iterable<String> Function(int count) getChars;
+  final void Function() onExpandToggled;
   final String fontFamily;
-  final void Function() onAddPressed;
 
-  const Palette(
-      {Key key, @required this.getChars, this.fontFamily, this.onAddPressed})
+  const Palette({Key key, @required this.onExpandToggled, this.fontFamily})
       : super(key: key);
 
   @override
   Widget build(_) => Container(
       alignment: Alignment.topLeft,
-      child: LayoutBuilder(builder: (_, BoxConstraints constraints) {
+      child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        final List<String> chars =
+            context.select((DrawingState state) => state.palette);
+
         final double width = constraints.maxWidth;
         final int buttonCount = (width / _minButtonWidth).floor();
         final buttonSize = Size.square(width / buttonCount);
+        final buttonConstraints = BoxConstraints.tight(buttonSize);
         final Size textSize = _padding.deflateSize(buttonSize);
-        final List<String> chars = getChars(buttonCount - 1).toList();
 
-        return _Buttons(
-            chars: chars,
-            constraints: BoxConstraints.tight(buttonSize),
-            textSize: textSize,
-            fontFamily: fontFamily,
-            onAddPressed: onAddPressed);
+        return Row(
+          children: [
+            Flexible(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: _PenButtons(
+                    chars: chars,
+                    constraints: buttonConstraints,
+                    textSize: textSize,
+                    fontFamily: fontFamily),
+              ),
+            ),
+            _ExpandButton(
+                constraints: buttonConstraints,
+                textSize: textSize,
+                onPressed: onExpandToggled)
+          ],
+        );
       }));
 }
 
-class _Buttons extends StatelessWidget {
+class _PenButtons extends StatelessWidget {
   final List<String> chars;
   final BoxConstraints constraints;
   final Size textSize;
   final String fontFamily;
-  final void Function() onAddPressed;
 
-  const _Buttons(
+  const _PenButtons(
       {Key key,
       @required this.chars,
       @required this.constraints,
       @required this.textSize,
-      this.fontFamily,
-      this.onAddPressed})
+      this.fontFamily})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final String pen = context.select((DrawingState state) => state.pen);
+    final int penIndex = context.select((DrawingState state) => state.penIndex);
+    final isSelected =
+        Iterable.generate(chars.length).map((index) => index == penIndex);
 
     return ToggleButtons(
       constraints: constraints,
       renderBorder: false,
-      isSelected: [...chars.map((char) => char == pen), false],
+      isSelected: isSelected.toList(),
       onPressed: (int index) {
-        if (index < chars.length) {
-          context.read<DrawingState>().switchPen(chars[index]);
-        } else {
-          onAddPressed?.call();
-        }
+        context.read<DrawingState>().switchPen(index);
       },
-      children: [
-        ...chars.map((char) => char == ' '
-            ? _Text('␣', size: textSize)
-            : _Text(char, size: textSize, fontFamily: fontFamily)),
-        _Text('+', size: textSize)
-      ],
+      children: chars
+          .map((char) => char == ' '
+              ? _Text('␣', size: textSize)
+              : _Text(char, size: textSize, fontFamily: fontFamily))
+          .toList(),
     );
   }
+}
+
+class _ExpandButton extends StatelessWidget {
+  final BoxConstraints constraints;
+  final Size textSize;
+  final void Function() onPressed;
+
+  const _ExpandButton(
+      {Key key,
+      @required this.constraints,
+      @required this.textSize,
+      @required this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => ToggleButtons(
+      constraints: constraints,
+      renderBorder: false,
+      isSelected: const [false],
+      onPressed: (_) => onPressed(),
+      children: [_Text('+', size: textSize)]);
 }
 
 @immutable
@@ -83,7 +113,7 @@ class _Text extends StatelessWidget {
   final Size size;
   final String fontFamily;
 
-  const _Text(this.text, {Key key, this.size, this.fontFamily})
+  const _Text(this.text, {Key key, @required this.size, this.fontFamily})
       : super(key: key);
 
   @override
