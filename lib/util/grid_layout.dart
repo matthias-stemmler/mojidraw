@@ -7,16 +7,16 @@ import 'grid_size.dart';
 
 @immutable
 class GridLayout {
-  final GridSize _gridSize;
+  final GridSize gridSize;
   final Size _cellSize;
 
-  GridLayout(Size size, this._gridSize)
+  GridLayout({@required Size size, @required this.gridSize})
       : _cellSize =
-            Size(size.width / _gridSize.width, size.height / _gridSize.height);
+            Size(size.width / gridSize.width, size.height / gridSize.height);
 
   Size get cellSize => _cellSize;
 
-  Iterable<GridCell> get cells => _gridSize.cells;
+  Iterable<GridCell> get cells => gridSize.cells;
 
   Offset cellToOffset(GridCell cell) =>
       Offset(cell.x * _cellSize.width, cell.y * _cellSize.height);
@@ -26,6 +26,6 @@ class GridLayout {
     final int y = (offset.dy / _cellSize.height).floor();
     final cell = GridCell(x, y);
 
-    return _gridSize.contains(cell) ? cell : null;
+    return gridSize.contains(cell) ? cell : null;
   }
 }

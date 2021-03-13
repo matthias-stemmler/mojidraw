@@ -8,7 +8,7 @@ void main() {
   const cell = GridCell(1, 3);
 
   group('given no background character', () {
-    final charGrid = CharGrid(size);
+    final charGrid = CharGrid(size: size);
 
     test('get returns space when not specified using set', () {
       expect(charGrid.get(cell), ' ');
@@ -22,7 +22,7 @@ void main() {
   });
 
   group('given a background character', () {
-    final charGrid = CharGrid(size, background: 'B');
+    final charGrid = CharGrid(size: size, background: 'B');
 
     test('get returns background character when not specified using set', () {
       expect(charGrid.get(cell), 'B');
@@ -36,7 +36,7 @@ void main() {
   });
 
   test('text returns grid rendered as text', () {
-    final charGrid = CharGrid(size, background: 'B');
+    final charGrid = CharGrid(size: size, background: 'B');
     charGrid.set(cell, 'F');
 
     expect(charGrid.text, 'BB\nBB\nBB\nBF\nBB\nBB\nBB\nBB');

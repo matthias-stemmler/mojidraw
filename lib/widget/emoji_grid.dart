@@ -12,10 +12,11 @@ class EmojiGrid extends StatelessWidget {
   final GridSize size;
   final String fontFamily;
 
-  const EmojiGrid({Key key, this.size, this.fontFamily}) : super(key: key);
+  const EmojiGrid({Key key, @required this.size, this.fontFamily})
+      : super(key: key);
 
   void _handlePan(Offset position, BuildContext context) {
-    final layout = GridLayout(context.size, size);
+    final layout = GridLayout(size: context.size, gridSize: size);
     final GridCell cell = layout.offsetToCell(position);
 
     if (cell != null) {
@@ -49,7 +50,7 @@ class _GridLayoutDelegate extends MultiChildLayoutDelegate {
 
   @override
   void performLayout(Size size) {
-    final layout = GridLayout(size, _gridSize);
+    final layout = GridLayout(size: size, gridSize: _gridSize);
 
     for (final cell in layout.cells) {
       layoutChild(cell, BoxConstraints.tight(layout.cellSize));
@@ -63,16 +64,18 @@ class _GridLayoutDelegate extends MultiChildLayoutDelegate {
       oldDelegate is _GridLayoutDelegate && oldDelegate._gridSize != _gridSize;
 }
 
+@immutable
 class _EmojiGridCell extends StatelessWidget {
   final GridCell cell;
   final String fontFamily;
 
-  const _EmojiGridCell({Key key, this.cell, this.fontFamily}) : super(key: key);
+  const _EmojiGridCell({Key key, @required this.cell, this.fontFamily})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) => CustomPaint(
       painter: _GridCellPainter(
-          text: context.select((DrawingState state) => state.getCell(cell)),
+          text: context.select((DrawingState state) => state.getCellChar(cell)),
           fontFamily: fontFamily));
 }
 

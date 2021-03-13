@@ -5,11 +5,16 @@ const double _grabbingHeight = 25.0;
 const _snapPositionOpen = SnapPosition(positionFactor: 1.0);
 const _snapPositionClosed = SnapPosition(positionPixel: -_grabbingHeight);
 
+@immutable
 class CoveringSheet extends StatelessWidget {
   final CoveringSheetController controller;
   final Widget child, sheet;
 
-  const CoveringSheet({Key key, this.controller, this.sheet, this.child})
+  const CoveringSheet(
+      {Key key,
+      @required this.controller,
+      @required this.sheet,
+      @required this.child})
       : super(key: key);
 
   @override

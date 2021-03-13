@@ -8,15 +8,15 @@ class DrawingState extends ChangeNotifier {
   final CharGrid _grid;
   String _pen;
 
-  DrawingState({int width, int height})
-      : _grid = CharGrid(GridSize(width, height), background: '🍀'),
+  DrawingState({@required GridSize size})
+      : _grid = CharGrid(size: size, background: '🍀'),
         _pen = '❤';
 
   String get pen => _pen;
 
-  String get text => _grid.text;
+  String get gridAsText => _grid.text;
 
-  String getCell(GridCell cell) => _grid.get(cell);
+  String getCellChar(GridCell cell) => _grid.get(cell);
 
   void switchPen(String pen) {
     _pen = pen;

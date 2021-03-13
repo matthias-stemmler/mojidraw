@@ -4,8 +4,6 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
-/// Renders a text in the maximal font size
-/// that makes it fit into a box of a given size
 class FittingTextRenderer {
   final String text;
   final String fontFamily;

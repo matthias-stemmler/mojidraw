@@ -6,7 +6,8 @@ import 'package:mojidraw/util/grid_size.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final layout = GridLayout(const Size(10.0, 20.0), const GridSize(4, 5));
+  final layout =
+      GridLayout(size: const Size(10.0, 20.0), gridSize: const GridSize(4, 5));
 
   test('cellsize returns size of a single cell', () {
     expect(layout.cellSize, const Size(2.5, 4.0));

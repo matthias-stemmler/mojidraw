@@ -9,16 +9,16 @@ import 'emoji_grid.dart';
 import 'emoji_picker.dart';
 import 'palette.dart';
 
+@immutable
 class DrawingPage extends StatefulWidget {
-  final String title;
-  final int width, height;
+  final GridSize size;
   final String fontFamily;
 
-  DrawingPage({Key key, this.title, this.width, this.height, this.fontFamily})
+  const DrawingPage({Key key, @required this.size, this.fontFamily})
       : super(key: key);
 
   @override
-  _DrawingPageState createState() => _DrawingPageState();
+  State createState() => _DrawingPageState();
 }
 
 class _DrawingPageState extends State<DrawingPage> {
@@ -26,10 +26,10 @@ class _DrawingPageState extends State<DrawingPage> {
 
   @override
   Widget build(_) => ChangeNotifierProvider(
-        create: (_) => DrawingState(width: widget.width, height: widget.height),
+        create: (_) => DrawingState(size: widget.size),
         child: Scaffold(
           appBar: AppBar(
-            title: Text(widget.title),
+            title: const Text('Mojidraw'),
           ),
           body: Container(
               padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
@@ -49,8 +49,7 @@ class _DrawingPageState extends State<DrawingPage> {
                         Container(
                           padding: const EdgeInsets.only(top: 15.0),
                           child: EmojiGrid(
-                              size: GridSize(widget.width, widget.height),
-                              fontFamily: widget.fontFamily),
+                              size: widget.size, fontFamily: widget.fontFamily),
                         ),
                       ],
                     ),
