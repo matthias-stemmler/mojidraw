@@ -36,10 +36,10 @@ class _DrawingPageState extends State<DrawingPage> {
               child: Column(children: [
                 Container(
                     padding: const EdgeInsets.only(bottom: 15.0),
-                    child: _Palette(
-                      fontFamily: widget.fontFamily,
-                      onToggle: _coveringSheetController.toggle,
-                    )),
+                    child: Palette(
+                        getChars: [' ', '🍀', '🦦', '❤', '🌊'].take,
+                        fontFamily: widget.fontFamily,
+                        onAddPressed: _coveringSheetController.toggle)),
                 Flexible(
                   child: CoveringSheet(
                     controller: _coveringSheetController,
@@ -64,19 +64,4 @@ class _DrawingPageState extends State<DrawingPage> {
           )),
         ),
       );
-}
-
-class _Palette extends StatelessWidget {
-  final String fontFamily;
-  final void Function() onToggle;
-
-  const _Palette({Key key, this.fontFamily, this.onToggle}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Palette(
-      getChars: [' ', '🍀', '🦦', '❤', '🌊'].take,
-      fontFamily: fontFamily,
-      selectedChar: context.select((DrawingState state) => state.pen),
-      onCharSelected: (char) => context.read<DrawingState>().switchPen(char),
-      onAddPressed: onToggle);
 }
