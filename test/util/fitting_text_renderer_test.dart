@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:mojidraw/fitting_text_renderer.dart';
+import 'package:mojidraw/util/fitting_text_renderer.dart';
 
 void main() {
   group('renders text fitting in box', () {

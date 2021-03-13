@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import 'grid_cell.dart';
-import 'grid_size.dart';
+import '../util/grid_cell.dart';
+import '../util/grid_size.dart';
 
 @immutable
 class CharGrid {

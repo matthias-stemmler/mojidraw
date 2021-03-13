@@ -1,7 +1,8 @@
 import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mojidraw/fitting_text_renderer.dart';
+
+import '../util/fitting_text_renderer.dart';
 
 const EdgeInsets _padding = EdgeInsets.all(5.0);
 

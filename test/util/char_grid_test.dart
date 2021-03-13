@@ -1,6 +1,6 @@
-import 'package:mojidraw/char_grid.dart';
-import 'package:mojidraw/grid_cell.dart';
-import 'package:mojidraw/grid_size.dart';
+import 'package:mojidraw/util/char_grid.dart';
+import 'package:mojidraw/util/grid_cell.dart';
+import 'package:mojidraw/util/grid_size.dart';
 import 'package:test/test.dart';
 
 void main() {

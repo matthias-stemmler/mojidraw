@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mojidraw/palette.dart';
+
+import 'file:///C:/home/projects/flutter/mojidraw/lib/widget/palette.dart';
 
 void main() {
   group('Palette', () {

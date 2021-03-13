@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'fitting_text_renderer.dart';
+import '../util/fitting_text_renderer.dart';
 
 const double _minButtonWidth = 48.0;
 const EdgeInsets _padding = EdgeInsets.all(5.0);

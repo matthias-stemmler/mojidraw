@@ -5,7 +5,7 @@ const double _grabbingHeight = 25.0;
 const _snapPositionOpen = SnapPosition(positionFactor: 1.0);
 const _snapPositionClosed = SnapPosition(positionPixel: -_grabbingHeight);
 
-class CoveringSheet extends StatefulWidget {
+class CoveringSheet extends StatelessWidget {
   final CoveringSheetController controller;
   final Widget child, sheet;
 
@@ -13,25 +13,20 @@ class CoveringSheet extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CoveringSheetState createState() => _CoveringSheetState();
-}
-
-class _CoveringSheetState extends State<CoveringSheet> {
-  @override
   Widget build(BuildContext context) => Scaffold(
           body: SnappingSheet(
         lockOverflowDrag: true,
         snapPositions: const [_snapPositionClosed, _snapPositionOpen],
-        snappingSheetController: widget.controller._snappingSheetController,
+        snappingSheetController: controller._snappingSheetController,
         grabbingHeight: _grabbingHeight,
         grabbing: _Grabbing(),
         sheetBelow: SnappingSheetContent(
             child: Container(
           decoration:
               BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-          child: widget.sheet,
+          child: sheet,
         )),
-        child: widget.child,
+        child: child,
       ));
 }
 

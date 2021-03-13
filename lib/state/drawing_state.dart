@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
 
-import 'char_grid.dart';
-import 'grid_cell.dart';
-import 'grid_size.dart';
+import '../util/char_grid.dart';
+import '../util/grid_cell.dart';
+import '../util/grid_size.dart';
 
-class GridDrawingState extends ChangeNotifier {
+class DrawingState extends ChangeNotifier {
   final CharGrid _grid;
   String _pen;
 
-  GridDrawingState({int width, int height})
+  DrawingState({int width, int height})
       : _grid = CharGrid(GridSize(width, height), background: '🍀'),
         _pen = '❤';
 

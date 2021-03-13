@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-import 'fitting_text_renderer.dart';
-import 'grid_cell.dart';
-import 'grid_drawing_state.dart';
-import 'grid_layout.dart';
-import 'grid_size.dart';
+import '../state/drawing_state.dart';
+import '../util/fitting_text_renderer.dart';
+import '../util/grid_cell.dart';
+import '../util/grid_layout.dart';
+import '../util/grid_size.dart';
 
 @immutable
 class EmojiGrid extends StatelessWidget {
@@ -19,7 +19,7 @@ class EmojiGrid extends StatelessWidget {
     final GridCell cell = layout.offsetToCell(position);
 
     if (cell != null) {
-      context.read<GridDrawingState>().draw(cell);
+      context.read<DrawingState>().draw(cell);
     }
   }
 
@@ -72,7 +72,7 @@ class _EmojiGridCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) => CustomPaint(
       painter: _GridCellPainter(
-          text: context.select((GridDrawingState state) => state.getCell(cell)),
+          text: context.select((DrawingState state) => state.getCell(cell)),
           fontFamily: fontFamily));
 }
 
