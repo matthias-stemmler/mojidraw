@@ -9,10 +9,12 @@ const EdgeInsets _padding = EdgeInsets.all(5.0);
 
 @immutable
 class Palette extends StatelessWidget {
+  final void Function() onPenSwitched;
   final void Function() onExpandToggled;
   final String fontFamily;
 
-  const Palette({Key key, @required this.onExpandToggled, this.fontFamily})
+  const Palette(
+      {Key key, this.onPenSwitched, this.onExpandToggled, this.fontFamily})
       : super(key: key);
 
   @override
@@ -20,8 +22,8 @@ class Palette extends StatelessWidget {
       alignment: Alignment.topLeft,
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-        final List<String> chars =
-            context.select((DrawingState state) => state.palette);
+        final Iterable<String> chars =
+            context.select((DrawingState state) => state.paletteChars);
 
         final double width = constraints.maxWidth;
         final int buttonCount = (width / _minButtonWidth).floor();
@@ -51,17 +53,19 @@ class Palette extends StatelessWidget {
 }
 
 class _PenButtons extends StatelessWidget {
-  final List<String> chars;
+  final Iterable<String> chars;
   final BoxConstraints constraints;
   final Size textSize;
   final String fontFamily;
+  final void Function() onPenSwitched;
 
   const _PenButtons(
       {Key key,
       @required this.chars,
       @required this.constraints,
       @required this.textSize,
-      this.fontFamily})
+      this.fontFamily,
+      this.onPenSwitched})
       : super(key: key);
 
   @override
@@ -76,6 +80,7 @@ class _PenButtons extends StatelessWidget {
       isSelected: isSelected.toList(),
       onPressed: (int index) {
         context.read<DrawingState>().switchPen(index);
+        onPenSwitched?.call();
       },
       children: chars
           .map((char) => char == ' '

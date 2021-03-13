@@ -42,6 +42,8 @@ class CoveringSheetController {
       _snappingSheetController.currentSnapPosition == _snapPositionOpen
           ? _snapPositionClosed
           : _snapPositionOpen);
+
+  void close() => _snappingSheetController.snapToPosition(_snapPositionClosed);
 }
 
 class _Grabbing extends StatelessWidget {

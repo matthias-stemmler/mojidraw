@@ -38,11 +38,14 @@ class _DrawingPageState extends State<DrawingPage> {
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: Palette(
                         fontFamily: widget.fontFamily,
+                        onPenSwitched: _coveringSheetController.close,
                         onExpandToggled: _coveringSheetController.toggle)),
                 Flexible(
                   child: CoveringSheet(
                     controller: _coveringSheetController,
-                    sheet: EmojiPicker(fontFamily: widget.fontFamily),
+                    sheet: EmojiPicker(
+                        fontFamily: widget.fontFamily,
+                        onEmojiPicked: _coveringSheetController.close),
                     child: Column(
                       children: [
                         Container(
