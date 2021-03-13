@@ -11,12 +11,6 @@ class CharGrid {
   CharGrid(this._size, {String background = ' '})
       : _chars = List.filled(_size.cellCount, background);
 
-  GridSize get size => _size;
-
-  double get aspectRatio => _size.aspectRatio;
-
-  Iterable<GridCell> get cells => _size.cells;
-
   String get(GridCell cell) => _chars[_getIndex(cell)];
 
   void set(GridCell cell, String char) => _chars[_getIndex(cell)] = char;

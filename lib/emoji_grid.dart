@@ -1,45 +1,44 @@
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
-import 'char_grid.dart';
 import 'fitting_text_renderer.dart';
 import 'grid_cell.dart';
+import 'grid_drawing_state.dart';
 import 'grid_layout.dart';
 import 'grid_size.dart';
 
 @immutable
 class EmojiGrid extends StatelessWidget {
-  final CharGrid emojis;
-  final void Function(GridCell cell) onEmojiTouch;
+  final GridSize size;
   final String fontFamily;
 
-  const EmojiGrid({Key key, this.emojis, this.onEmojiTouch, this.fontFamily})
-      : super(key: key);
+  const EmojiGrid({Key key, this.size, this.fontFamily}) : super(key: key);
 
-  void _handlePan(Offset position, Size size) {
-    final layout = GridLayout(size, emojis.size);
+  void _handlePan(Offset position, BuildContext context) {
+    final layout = GridLayout(context.size, size);
     final GridCell cell = layout.offsetToCell(position);
 
     if (cell != null) {
-      onEmojiTouch?.call(cell);
+      context.read<GridDrawingState>().draw(cell);
     }
   }
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onPanStart: (details) => _handlePan(details.localPosition, context.size),
-      onPanUpdate: (details) => _handlePan(details.localPosition, context.size),
+      onPanStart: (details) => _handlePan(details.localPosition, context),
+      onPanUpdate: (details) => _handlePan(details.localPosition, context),
       child: AspectRatio(
-          aspectRatio: emojis.aspectRatio,
+          aspectRatio: size.aspectRatio,
           child: CustomMultiChildLayout(
-              delegate: _GridLayoutDelegate(emojis.size),
-              children: emojis.cells
+              delegate: _GridLayoutDelegate(size),
+              children: size.cells
                   .map((cell) => LayoutId(
                       id: cell,
                       child: RepaintBoundary(
-                          child: CustomPaint(
-                              painter: _GridCellPainter(
-                                  text: emojis.get(cell),
-                                  fontFamily: fontFamily)))))
+                          child: _EmojiGridCell(
+                        cell: cell,
+                        fontFamily: fontFamily,
+                      ))))
                   .toList())));
 }
 
@@ -62,6 +61,19 @@ class _GridLayoutDelegate extends MultiChildLayoutDelegate {
   bool shouldRelayout(MultiChildLayoutDelegate oldDelegate) =>
       oldDelegate is! _GridLayoutDelegate ||
       oldDelegate is _GridLayoutDelegate && oldDelegate._gridSize != _gridSize;
+}
+
+class _EmojiGridCell extends StatelessWidget {
+  final GridCell cell;
+  final String fontFamily;
+
+  const _EmojiGridCell({Key key, this.cell, this.fontFamily}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => CustomPaint(
+      painter: _GridCellPainter(
+          text: context.select((GridDrawingState state) => state.getCell(cell)),
+          fontFamily: fontFamily));
 }
 
 @immutable

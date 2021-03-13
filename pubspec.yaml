@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   fluttertoast: ^7.1.8
+  provider: ^4.3.3
   snapping_sheet: ^2.0.2
 
 dev_dependencies:
