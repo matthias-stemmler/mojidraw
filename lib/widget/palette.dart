@@ -5,7 +5,10 @@ import '../state/drawing_state.dart';
 import '../util/fitting_text_renderer.dart';
 
 const double _minButtonWidth = 48.0;
-const EdgeInsets _padding = EdgeInsets.all(5.0);
+const EdgeInsets _buttonPadding = EdgeInsets.all(5.0);
+const double _buttonCutoffRatio = 0.5;
+const Duration _scrollDuration = Duration(milliseconds: 300);
+const Curve _scrollCurve = Curves.easeInOut;
 
 @immutable
 class Palette extends StatelessWidget {
@@ -13,9 +16,33 @@ class Palette extends StatelessWidget {
   final void Function() onExpandToggled;
   final String fontFamily;
 
-  const Palette(
-      {Key key, this.onPenSwitched, this.onExpandToggled, this.fontFamily})
+  final ScrollController _scrollController = ScrollController();
+
+  Palette({Key key, this.onPenSwitched, this.onExpandToggled, this.fontFamily})
       : super(key: key);
+
+  void _handlePenSelected(
+      int penIndex, double scrollWidth, double buttonWidth) {
+    final double focusLeft = penIndex * buttonWidth;
+    final double viewportLeft = _scrollController.offset;
+
+    if (focusLeft < viewportLeft) {
+      _scrollTo(focusLeft);
+      return;
+    }
+
+    final double focusRight = focusLeft + buttonWidth;
+    final double viewportRight = viewportLeft + scrollWidth;
+
+    if (focusRight > viewportRight) {
+      _scrollTo(focusRight - scrollWidth);
+    }
+  }
+
+  void _scrollTo(double offset) {
+    _scrollController.animateTo(offset,
+        duration: _scrollDuration, curve: _scrollCurve);
+  }
 
   @override
   Widget build(_) => Container(
@@ -26,21 +53,29 @@ class Palette extends StatelessWidget {
             context.select((DrawingState state) => state.paletteChars);
 
         final double width = constraints.maxWidth;
-        final int buttonCount = (width / _minButtonWidth).floor();
-        final buttonSize = Size.square(width / buttonCount);
+        final double buttonCount =
+            (width / _minButtonWidth - _buttonCutoffRatio).floor() +
+                _buttonCutoffRatio;
+        final double buttonWidth = width / buttonCount;
+        final double scrollWidth = width - buttonWidth;
+        final buttonSize = Size.square(buttonWidth);
         final buttonConstraints = BoxConstraints.tight(buttonSize);
-        final Size textSize = _padding.deflateSize(buttonSize);
+        final Size textSize = _buttonPadding.deflateSize(buttonSize);
 
         return Row(
           children: [
             Expanded(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 scrollDirection: Axis.horizontal,
                 child: _PenButtons(
-                    chars: chars,
-                    constraints: buttonConstraints,
-                    textSize: textSize,
-                    fontFamily: fontFamily),
+                  chars: chars,
+                  constraints: buttonConstraints,
+                  textSize: textSize,
+                  fontFamily: fontFamily,
+                  onPenSelected: (penIndex) =>
+                      _handlePenSelected(penIndex, scrollWidth, buttonWidth),
+                ),
               ),
             ),
             _ExpandButton(
@@ -58,36 +93,86 @@ class _PenButtons extends StatelessWidget {
   final Size textSize;
   final String fontFamily;
   final void Function() onPenSwitched;
+  final void Function(int penIndex) onPenSelected;
 
-  const _PenButtons(
-      {Key key,
-      @required this.chars,
-      @required this.constraints,
-      @required this.textSize,
-      this.fontFamily,
-      this.onPenSwitched})
-      : super(key: key);
+  const _PenButtons({
+    Key key,
+    @required this.chars,
+    @required this.constraints,
+    @required this.textSize,
+    this.fontFamily,
+    this.onPenSwitched,
+    this.onPenSelected,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final int penIndex = context.select((DrawingState state) => state.penIndex);
-    final isSelected =
-        Iterable.generate(chars.length).map((index) => index == penIndex);
+
+    return _ToggleButtons(
+      chars: chars,
+      penIndex: penIndex,
+      constraints: constraints,
+      textSize: textSize,
+      fontFamily: fontFamily,
+      onPenSwitched: onPenSwitched,
+      onPenSelected: onPenSelected,
+    );
+  }
+}
+
+class _ToggleButtons extends StatefulWidget {
+  final Iterable<String> chars;
+  final int penIndex;
+  final BoxConstraints constraints;
+  final Size textSize;
+  final String fontFamily;
+  final void Function() onPenSwitched;
+  final void Function(int penIndex) onPenSelected;
+
+  const _ToggleButtons(
+      {Key key,
+      @required this.chars,
+      @required this.penIndex,
+      @required this.constraints,
+      @required this.textSize,
+      this.fontFamily,
+      this.onPenSwitched,
+      this.onPenSelected})
+      : super(key: key);
+
+  @override
+  State createState() => _ToggleButtonsState();
+}
+
+class _ToggleButtonsState extends State<_ToggleButtons> {
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = Iterable.generate(widget.chars.length)
+        .map((index) => index == widget.penIndex);
 
     return ToggleButtons(
-      constraints: constraints,
+      constraints: widget.constraints,
       renderBorder: false,
       isSelected: isSelected.toList(),
       onPressed: (int index) {
         context.read<DrawingState>().switchPen(index);
-        onPenSwitched?.call();
+        widget.onPenSwitched?.call();
+        widget.onPenSelected?.call(index);
       },
-      children: chars
+      children: widget.chars
           .map((char) => char == ' '
-              ? _Text('␣', size: textSize)
-              : _Text(char, size: textSize, fontFamily: fontFamily))
+              ? _Text('␣', size: widget.textSize)
+              : _Text(char,
+                  size: widget.textSize, fontFamily: widget.fontFamily))
           .toList(),
     );
+  }
+
+  @override
+  void didUpdateWidget(_ToggleButtons oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    widget.onPenSelected?.call(widget.penIndex);
   }
 }
 
@@ -104,7 +189,7 @@ class _ExpandButton extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ToggleButtons(
+  Widget build(_) => ToggleButtons(
       constraints: constraints,
       renderBorder: false,
       isSelected: const [false],
@@ -122,7 +207,7 @@ class _Text extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Text(text,
+  Widget build(_) => Text(text,
       style: FittingTextRenderer(text: text, fontFamily: fontFamily)
           .getTextStyle(size));
 }
