@@ -33,7 +33,7 @@ class Palette extends StatelessWidget {
 
         return Row(
           children: [
-            Flexible(
+            Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: _PenButtons(

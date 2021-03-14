@@ -5,7 +5,7 @@ import '../util/char_grid.dart';
 import '../util/grid_cell.dart';
 import '../util/grid_size.dart';
 
-const int _maxPaletteLength = 5;
+const int _maxPaletteLength = 10;
 
 class DrawingState extends ChangeNotifier {
   final CharGrid _grid;
@@ -20,17 +20,14 @@ class DrawingState extends ChangeNotifier {
     _palette.add(_PaletteEntry()..char = ' ');
     _palette.add(_PaletteEntry()
       ..char = '🍀'
-      ..score = 3);
-    _palette.add(_PaletteEntry()
-      ..char = '🦦'
       ..score = 2);
     _palette.add(_PaletteEntry()
-      ..char = '❤'
+      ..char = '🦦'
       ..score = 1);
     _palette.add(_PaletteEntry()
-      ..char = '🌊'
+      ..char = '❤'
       ..score = 0);
-    _nextScore = 4;
+    _nextScore = 3;
   }
 
   Iterable<String> get paletteChars => _palette.map((entry) => entry.char);
