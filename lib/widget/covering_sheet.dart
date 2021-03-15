@@ -48,16 +48,19 @@ class CoveringSheetController {
 
 class _Grabbing extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Container(
-        alignment: Alignment.center,
-        decoration:
-            BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-        child: Container(
-          width: 100.0,
-          height: 5.0,
-          decoration: BoxDecoration(
-              color: Theme.of(context).buttonColor,
-              borderRadius: const BorderRadius.all(Radius.circular(5.0))),
+  Widget build(BuildContext context) => OverflowBox(
+    maxHeight: _grabbingHeight + 1.0,
+    child: Container(
+          alignment: Alignment.center,
+          decoration:
+              BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
+          child: Container(
+            width: 100.0,
+            height: 5.0,
+            decoration: BoxDecoration(
+                color: Theme.of(context).buttonColor,
+                borderRadius: const BorderRadius.all(Radius.circular(5.0))),
+          ),
         ),
-      );
+  );
 }
