@@ -12,6 +12,6 @@ class MojiDrawApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity),
         home:
-            const DrawingPage(size: GridSize(11, 11), fontFamily: 'JoyPixels'),
+            const DrawingPage(size: GridSize(12, 13), fontFamily: 'JoyPixels'),
       );
 }
