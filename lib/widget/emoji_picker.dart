@@ -1,4 +1,5 @@
 import 'package:emojis/emoji.dart';
+import 'package:extended_tabs/extended_tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:mojidraw/state/drawing_state.dart';
 import 'package:mojidraw/util/emoji.dart';
@@ -31,7 +32,7 @@ class EmojiPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
-      length: 8,
+      length: _emojiTabs.length,
       child: Scaffold(
         bottomNavigationBar: TabBar(
             indicator: BoxDecoration(
@@ -42,7 +43,8 @@ class EmojiPicker extends StatelessWidget {
             tabs: _emojiTabs.keys
                 .map((icon) => _CategoryTabButton(icon: icon))
                 .toList()),
-        body: TabBarView(
+        body: ExtendedTabBarView(
+            cacheExtent: _emojiTabs.length,
             children: _emojiTabs.values
                 .map((emojiChars) => _CategoryTab(
                       emojiChars: emojiChars,
@@ -68,7 +70,7 @@ class _CategoryTabButton extends StatelessWidget {
 }
 
 @immutable
-class _CategoryTab extends StatefulWidget {
+class _CategoryTab extends StatelessWidget {
   final Iterable<String> emojiChars;
   final String fontFamily;
   final void Function() onEmojiPicked;
@@ -78,22 +80,14 @@ class _CategoryTab extends StatefulWidget {
       : super(key: key);
 
   @override
-  State createState() => _CategoryTabState();
-}
-
-class _CategoryTabState extends State<_CategoryTab>
-    with AutomaticKeepAliveClientMixin {
-  @override
   Widget build(BuildContext context) => GridView.builder(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 48.0),
-      itemCount: widget.emojiChars.length,
+      itemCount: emojiChars.length,
       itemBuilder: (_, int index) {
-        super.build(context);
-
-        final String char = widget.emojiChars.elementAt(index);
+        final String char = emojiChars.elementAt(index);
         final renderer =
-            FittingTextRenderer(text: char, fontFamily: widget.fontFamily);
+            FittingTextRenderer(text: char, fontFamily: fontFamily);
 
         return LayoutBuilder(builder: (_, BoxConstraints constraints) {
           final Size size = _padding.deflateSize(constraints.biggest);
@@ -103,12 +97,9 @@ class _CategoryTabState extends State<_CategoryTab>
               style: TextButton.styleFrom(padding: _padding),
               onPressed: () {
                 context.read<DrawingState>().addPen(char);
-                widget.onEmojiPicked?.call();
+                onEmojiPicked?.call();
               },
               child: Text(char, style: textStyle));
         });
       });
-
-  @override
-  bool get wantKeepAlive => true;
 }
