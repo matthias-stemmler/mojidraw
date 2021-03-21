@@ -68,7 +68,7 @@ class _CategoryTabButton extends StatelessWidget {
 }
 
 @immutable
-class _CategoryTab extends StatelessWidget {
+class _CategoryTab extends StatefulWidget {
   final Iterable<String> emojiChars;
   final String fontFamily;
   final void Function() onEmojiPicked;
@@ -78,14 +78,22 @@ class _CategoryTab extends StatelessWidget {
       : super(key: key);
 
   @override
+  State createState() => _CategoryTabState();
+}
+
+class _CategoryTabState extends State<_CategoryTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) => GridView.builder(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 48.0),
-      itemCount: emojiChars.length,
+      itemCount: widget.emojiChars.length,
       itemBuilder: (_, int index) {
-        final String char = emojiChars.elementAt(index);
+        super.build(context);
+
+        final String char = widget.emojiChars.elementAt(index);
         final renderer =
-            FittingTextRenderer(text: char, fontFamily: fontFamily);
+            FittingTextRenderer(text: char, fontFamily: widget.fontFamily);
 
         return LayoutBuilder(builder: (_, BoxConstraints constraints) {
           final Size size = _padding.deflateSize(constraints.biggest);
@@ -95,9 +103,12 @@ class _CategoryTab extends StatelessWidget {
               style: TextButton.styleFrom(padding: _padding),
               onPressed: () {
                 context.read<DrawingState>().addPen(char);
-                onEmojiPicked?.call();
+                widget.onEmojiPicked?.call();
               },
               child: Text(char, style: textStyle));
         });
       });
+
+  @override
+  bool get wantKeepAlive => true;
 }
