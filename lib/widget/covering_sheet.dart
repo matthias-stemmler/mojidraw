@@ -26,11 +26,12 @@ class CoveringSheet extends StatelessWidget {
         grabbingHeight: _grabbingHeight,
         grabbing: _Grabbing(),
         sheetBelow: SnappingSheetContent(
+            heightBehavior: const SnappingSheetHeight.fixed(),
             child: Container(
-          decoration:
-              BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
-          child: sheet,
-        )),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor),
+              child: sheet,
+            )),
         child: child,
       ));
 }
@@ -49,8 +50,8 @@ class CoveringSheetController {
 class _Grabbing extends StatelessWidget {
   @override
   Widget build(BuildContext context) => OverflowBox(
-    maxHeight: _grabbingHeight + 1.0,
-    child: Container(
+        maxHeight: _grabbingHeight + 1.0,
+        child: Container(
           alignment: Alignment.center,
           decoration:
               BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
@@ -62,5 +63,5 @@ class _Grabbing extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(5.0))),
           ),
         ),
-  );
+      );
 }
