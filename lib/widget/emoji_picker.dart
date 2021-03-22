@@ -81,6 +81,7 @@ class _CategoryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GridView.builder(
+      cacheExtent: double.infinity,
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 48.0),
       itemCount: emojiChars.length,
