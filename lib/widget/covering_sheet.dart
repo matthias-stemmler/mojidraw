@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 
 const double _grabbingHeight = 25.0;
-const _snapPositionOpen = SnapPosition(positionFactor: 1.0);
-const _snapPositionClosed = SnapPosition(positionPixel: -_grabbingHeight);
+const _snappingPositionOpen = SnappingPosition.factor(
+    positionFactor: 1.0, grabbingContentOffset: GrabbingContentOffset.bottom);
+const _snappingPositionClosed = SnappingPosition.pixels(
+    positionPixels: 0.0, grabbingContentOffset: GrabbingContentOffset.bottom);
 
 @immutable
 class CoveringSheet extends StatelessWidget {
@@ -18,37 +20,56 @@ class CoveringSheet extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-          body: SnappingSheet(
-        lockOverflowDrag: true,
-        snapPositions: const [_snapPositionClosed, _snapPositionOpen],
-        snappingSheetController: controller._snappingSheetController,
-        grabbingHeight: _grabbingHeight,
-        grabbing: _Grabbing(),
-        sheetBelow: SnappingSheetContent(
-            heightBehavior: const SnappingSheetHeight.fixed(),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor),
-              child: sheet,
-            )),
-        child: child,
+  Widget build(_) => Scaffold(
+          body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) =>
+            SnappingSheet(
+          lockOverflowDrag: true,
+          snappingPositions: const [
+            _snappingPositionClosed,
+            _snappingPositionOpen
+          ],
+          controller: controller._snappingSheetController,
+          onSheetMoved: (double position) =>
+              controller._savePosition(position, constraints.maxHeight),
+          grabbingHeight: _grabbingHeight,
+          grabbing: _Grabbing(),
+          sheetBelow: SnappingSheetContent(
+              child: Container(
+            decoration:
+                BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
+            child: sheet,
+          )),
+          child: child,
+        ),
       ));
 }
 
 class CoveringSheetController extends ChangeNotifier {
   final _snappingSheetController = SnappingSheetController();
+  double _openness = 0.0;
 
-  bool get open =>
-      _snappingSheetController.currentSnapPosition == _snapPositionOpen;
+  double get openness => _openness;
 
-  void toggle() =>
-      _snapToPosition(open ? _snapPositionClosed : _snapPositionOpen);
+  void toggle() => _snapToPosition(
+      _snappingSheetController.currentSnappingPosition == _snappingPositionOpen
+          ? _snappingPositionClosed
+          : _snappingPositionOpen);
 
-  void close() => _snapToPosition(_snapPositionClosed);
+  void close() => _snapToPosition(_snappingPositionClosed);
 
-  void _snapToPosition(SnapPosition snapPosition) {
-    _snappingSheetController.snapToPosition(snapPosition);
+  void _snapToPosition(SnappingPosition snappingPosition) {
+    _snappingSheetController.snapToPosition(snappingPosition);
+    notifyListeners();
+  }
+
+  void _savePosition(double position, double maxHeight) {
+    final double openPosition =
+        _snappingPositionOpen.getPositionInPixels(maxHeight, _grabbingHeight);
+    final double closedPosition =
+        _snappingPositionClosed.getPositionInPixels(maxHeight, _grabbingHeight);
+
+    _openness = (closedPosition - position) / (closedPosition - openPosition);
     notifyListeners();
   }
 }

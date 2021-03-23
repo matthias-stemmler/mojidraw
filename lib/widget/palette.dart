@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mojidraw/widget/covering_sheet.dart';
 import 'package:provider/provider.dart';
@@ -180,7 +182,23 @@ class _ExpandButton extends StatelessWidget {
       renderBorder: false,
       isSelected: const [false],
       onPressed: (_) => context.read<CoveringSheetController>().toggle(),
-      children: [_Text('+', size: textSize)]);
+      children: [_ExpandIcon(size: textSize)]);
+}
+
+@immutable
+class _ExpandIcon extends StatelessWidget {
+  final Size size;
+
+  const _ExpandIcon({Key key, @required this.size}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final double openness =
+        context.select((CoveringSheetController state) => state.openness);
+
+    return Transform.rotate(
+        angle: -openness * pi * 0.25, child: _Text('+', size: size));
+  }
 }
 
 @immutable
