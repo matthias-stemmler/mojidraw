@@ -3,6 +3,7 @@ import 'package:extended_tabs/extended_tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:mojidraw/state/drawing_state.dart';
 import 'package:mojidraw/util/emoji.dart';
+import 'package:mojidraw/widget/covering_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../util/fitting_text_renderer.dart';
@@ -18,17 +19,15 @@ final Map<IconData, Iterable<String>> _emojiTabs = {
   Icons.emoji_transportation_outlined: Emoji.byGroup(EmojiGroup.travelPlaces),
   Icons.emoji_objects_outlined: Emoji.byGroup(EmojiGroup.objects),
   Icons.emoji_symbols_outlined: Emoji.byGroup(EmojiGroup.symbols),
-  Icons.emoji_flags_outlined: Emoji.byGroup(EmojiGroup.flags),
+  Icons.emoji_flags_outlined: Emoji.byGroup(EmojiGroup.flags)
 }.map((IconData icon, Iterable<Emoji> emojis) =>
     MapEntry(icon, emojis.map((Emoji emoji) => emoji.char).where(isNeutral)));
 
 @immutable
 class EmojiPicker extends StatelessWidget {
   final String fontFamily;
-  final void Function() onEmojiPicked;
 
-  const EmojiPicker({Key key, this.fontFamily, this.onEmojiPicked})
-      : super(key: key);
+  const EmojiPicker({Key key, this.fontFamily}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
@@ -47,10 +46,7 @@ class EmojiPicker extends StatelessWidget {
             cacheExtent: _emojiTabs.length,
             children: _emojiTabs.values
                 .map((emojiChars) => _CategoryTab(
-                      emojiChars: emojiChars,
-                      fontFamily: fontFamily,
-                      onEmojiPicked: onEmojiPicked,
-                    ))
+                    emojiChars: emojiChars, fontFamily: fontFamily))
                 .toList()),
       ));
 }
@@ -62,21 +58,16 @@ class _CategoryTabButton extends StatelessWidget {
   const _CategoryTabButton({Key key, this.icon}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Tab(
-          icon: Icon(
-        icon,
-        color: Theme.of(context).iconTheme.color,
-      ));
+  Widget build(BuildContext context) =>
+      Tab(icon: Icon(icon, color: Theme.of(context).iconTheme.color));
 }
 
 @immutable
 class _CategoryTab extends StatelessWidget {
   final Iterable<String> emojiChars;
   final String fontFamily;
-  final void Function() onEmojiPicked;
 
-  const _CategoryTab(
-      {Key key, @required this.emojiChars, this.fontFamily, this.onEmojiPicked})
+  const _CategoryTab({Key key, @required this.emojiChars, this.fontFamily})
       : super(key: key);
 
   @override
@@ -98,7 +89,7 @@ class _CategoryTab extends StatelessWidget {
               style: TextButton.styleFrom(padding: _padding),
               onPressed: () {
                 context.read<DrawingState>().addPen(char);
-                onEmojiPicked?.call();
+                context.read<CoveringSheetController>().close();
               },
               child: Text(char, style: textStyle));
         });

@@ -10,7 +10,7 @@ import 'emoji_picker.dart';
 import 'palette.dart';
 
 @immutable
-class DrawingPage extends StatefulWidget {
+class DrawingPage extends StatelessWidget {
   final GridSize size;
   final String fontFamily;
 
@@ -18,15 +18,13 @@ class DrawingPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State createState() => _DrawingPageState();
-}
-
-class _DrawingPageState extends State<DrawingPage> {
-  final _coveringSheetController = CoveringSheetController();
-
-  @override
-  Widget build(_) => ChangeNotifierProvider(
-        create: (_) => DrawingState(size: widget.size),
+  Widget build(_) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => DrawingState(size: size),
+          ),
+          ChangeNotifierProvider(create: (_) => CoveringSheetController())
+        ],
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Mojidraw'),
@@ -36,26 +34,9 @@ class _DrawingPageState extends State<DrawingPage> {
               child: Column(children: [
                 Container(
                     padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Palette(
-                        fontFamily: widget.fontFamily,
-                        onPenSwitched: _coveringSheetController.close,
-                        onExpandToggled: _coveringSheetController.toggle)),
+                    child: Palette(fontFamily: fontFamily)),
                 Flexible(
-                  child: CoveringSheet(
-                    controller: _coveringSheetController,
-                    sheet: EmojiPicker(
-                        fontFamily: widget.fontFamily,
-                        onEmojiPicked: _coveringSheetController.close),
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: EmojiGrid(
-                              size: widget.size, fontFamily: widget.fontFamily),
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: _EmojiPickerSheet(size: size, fontFamily: fontFamily),
                 )
               ])),
           bottomNavigationBar: BottomAppBar(
@@ -64,6 +45,28 @@ class _DrawingPageState extends State<DrawingPage> {
                 const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Row(children: [CopyButton()]),
           )),
+        ),
+      );
+}
+
+class _EmojiPickerSheet extends StatelessWidget {
+  final GridSize size;
+  final String fontFamily;
+
+  const _EmojiPickerSheet({Key key, this.size, this.fontFamily})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => CoveringSheet(
+        controller: context.read<CoveringSheetController>(),
+        sheet: EmojiPicker(fontFamily: fontFamily),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: EmojiGrid(size: size, fontFamily: fontFamily),
+            ),
+          ],
         ),
       );
 }

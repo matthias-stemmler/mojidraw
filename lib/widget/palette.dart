@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mojidraw/widget/covering_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../state/drawing_state.dart';
@@ -12,14 +13,11 @@ const Curve _scrollCurve = Curves.easeInOut;
 
 @immutable
 class Palette extends StatelessWidget {
-  final void Function() onPenSwitched;
-  final void Function() onExpandToggled;
   final String fontFamily;
 
   final ScrollController _scrollController = ScrollController();
 
-  Palette({Key key, this.onPenSwitched, this.onExpandToggled, this.fontFamily})
-      : super(key: key);
+  Palette({Key key, this.fontFamily}) : super(key: key);
 
   void _handlePenSelected(
       int penIndex, double scrollWidth, double buttonWidth) {
@@ -73,16 +71,12 @@ class Palette extends StatelessWidget {
                   constraints: buttonConstraints,
                   textSize: textSize,
                   fontFamily: fontFamily,
-                  onPenSwitched: onPenSwitched,
                   onPenSelected: (penIndex) =>
                       _handlePenSelected(penIndex, scrollWidth, buttonWidth),
                 ),
               ),
             ),
-            _ExpandButton(
-                constraints: buttonConstraints,
-                textSize: textSize,
-                onPressed: onExpandToggled)
+            _ExpandButton(constraints: buttonConstraints, textSize: textSize)
           ],
         );
       }));
@@ -93,7 +87,6 @@ class _PenButtons extends StatelessWidget {
   final BoxConstraints constraints;
   final Size textSize;
   final String fontFamily;
-  final void Function() onPenSwitched;
   final void Function(int penIndex) onPenSelected;
 
   const _PenButtons({
@@ -102,7 +95,6 @@ class _PenButtons extends StatelessWidget {
     @required this.constraints,
     @required this.textSize,
     this.fontFamily,
-    this.onPenSwitched,
     this.onPenSelected,
   }) : super(key: key);
 
@@ -116,7 +108,6 @@ class _PenButtons extends StatelessWidget {
       constraints: constraints,
       textSize: textSize,
       fontFamily: fontFamily,
-      onPenSwitched: onPenSwitched,
       onPenSelected: onPenSelected,
     );
   }
@@ -128,7 +119,6 @@ class _ToggleButtons extends StatefulWidget {
   final BoxConstraints constraints;
   final Size textSize;
   final String fontFamily;
-  final void Function() onPenSwitched;
   final void Function(int penIndex) onPenSelected;
 
   const _ToggleButtons(
@@ -138,7 +128,6 @@ class _ToggleButtons extends StatefulWidget {
       @required this.constraints,
       @required this.textSize,
       this.fontFamily,
-      this.onPenSwitched,
       this.onPenSelected})
       : super(key: key);
 
@@ -158,7 +147,7 @@ class _ToggleButtonsState extends State<_ToggleButtons> {
       isSelected: isSelected.toList(),
       onPressed: (int index) {
         context.read<DrawingState>().switchPen(index);
-        widget.onPenSwitched?.call();
+        context.read<CoveringSheetController>().close();
         widget.onPenSelected?.call(index);
       },
       children: widget.chars
@@ -180,21 +169,17 @@ class _ToggleButtonsState extends State<_ToggleButtons> {
 class _ExpandButton extends StatelessWidget {
   final BoxConstraints constraints;
   final Size textSize;
-  final void Function() onPressed;
 
   const _ExpandButton(
-      {Key key,
-      @required this.constraints,
-      @required this.textSize,
-      @required this.onPressed})
+      {Key key, @required this.constraints, @required this.textSize})
       : super(key: key);
 
   @override
-  Widget build(_) => ToggleButtons(
+  Widget build(BuildContext context) => ToggleButtons(
       constraints: constraints,
       renderBorder: false,
       isSelected: const [false],
-      onPressed: (_) => onPressed(),
+      onPressed: (_) => context.read<CoveringSheetController>().toggle(),
       children: [_Text('+', size: textSize)]);
 }
 

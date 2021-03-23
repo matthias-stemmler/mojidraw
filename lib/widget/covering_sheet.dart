@@ -36,15 +36,21 @@ class CoveringSheet extends StatelessWidget {
       ));
 }
 
-class CoveringSheetController {
+class CoveringSheetController extends ChangeNotifier {
   final _snappingSheetController = SnappingSheetController();
 
-  void toggle() => _snappingSheetController.snapToPosition(
-      _snappingSheetController.currentSnapPosition == _snapPositionOpen
-          ? _snapPositionClosed
-          : _snapPositionOpen);
+  bool get open =>
+      _snappingSheetController.currentSnapPosition == _snapPositionOpen;
 
-  void close() => _snappingSheetController.snapToPosition(_snapPositionClosed);
+  void toggle() =>
+      _snapToPosition(open ? _snapPositionClosed : _snapPositionOpen);
+
+  void close() => _snapToPosition(_snapPositionClosed);
+
+  void _snapToPosition(SnapPosition snapPosition) {
+    _snappingSheetController.snapToPosition(snapPosition);
+    notifyListeners();
+  }
 }
 
 class _Grabbing extends StatelessWidget {
