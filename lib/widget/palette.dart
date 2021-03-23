@@ -73,6 +73,7 @@ class Palette extends StatelessWidget {
                   constraints: buttonConstraints,
                   textSize: textSize,
                   fontFamily: fontFamily,
+                  onPenSwitched: onPenSwitched,
                   onPenSelected: (penIndex) =>
                       _handlePenSelected(penIndex, scrollWidth, buttonWidth),
                 ),
