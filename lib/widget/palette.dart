@@ -45,7 +45,7 @@ class Palette extends StatelessWidget {
   }
 
   @override
-  Widget build(_) => Container(
+  Widget build(_) => Align(
       alignment: Alignment.topLeft,
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {

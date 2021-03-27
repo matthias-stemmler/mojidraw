@@ -26,6 +26,6 @@ class GridLayout {
     final int y = (offset.dy / _cellSize.height).floor();
     final cell = GridCell(x, y);
 
-    return gridSize.contains(cell) ? cell : null;
+    return gridSize.clamp(cell);
   }
 }

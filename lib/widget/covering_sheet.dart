@@ -38,7 +38,7 @@ class CoveringSheet extends StatelessWidget {
           grabbingHeight: _grabbingHeight,
           grabbing: _Grabbing(),
           sheetBelow: SnappingSheetContent(
-              child: Container(
+              child: DecoratedBox(
             decoration:
                 BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
             child: sheet,

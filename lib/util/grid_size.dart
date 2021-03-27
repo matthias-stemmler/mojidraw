@@ -16,8 +16,8 @@ class GridSize {
 
   double get aspectRatio => _width / _height;
 
-  bool contains(GridCell cell) =>
-      cell.x >= 0 && cell.x < _width && cell.y >= 0 && cell.y < _height;
+  GridCell clamp(GridCell cell) => GridCell(cell.x.clamp(0, _width - 1).toInt(),
+      cell.y.clamp(0, _height - 1).toInt());
 
   Iterable<GridCell> get cells sync* {
     for (final int y in Iterable.generate(_height)) {

@@ -13,20 +13,35 @@ void main() {
     expect(size.aspectRatio, 0.5);
   });
 
-  group('contains returns whether grid contains cell', () {
+  group('clamp clamps cell', () {
     test('within grid', () {
-      expect(size.contains(const GridCell(1, 3)), true);
+      const cell = GridCell(1, 3);
+
+      expect(size.clamp(cell), cell);
     });
 
-    <String, GridCell>{
-      'left': const GridCell(-1, 3),
-      'right': const GridCell(2, 3),
-      'top': const GridCell(1, -1),
-      'bottom': const GridCell(1, 4),
-    }.forEach((direction, cell) {
-      test('$direction of grid', () {
-        expect(size.contains(cell), false);
-      });
+    test('left of grid', () {
+      const cell = GridCell(-1, 3);
+
+      expect(size.clamp(cell), const GridCell(0, 3));
+    });
+
+    test('right of grid', () {
+      const cell = GridCell(2, 3);
+
+      expect(size.clamp(cell), const GridCell(1, 3));
+    });
+
+    test('top of grid', () {
+      const cell = GridCell(1, -1);
+
+      expect(size.clamp(cell), const GridCell(1, 0));
+    });
+
+    test('bottom of grid', () {
+      const cell = GridCell(1, 4);
+
+      expect(size.clamp(cell), const GridCell(1, 3));
     });
   });
 

@@ -26,15 +26,28 @@ void main() {
       expect(layout.offsetToCell(offset), const GridCell(2, 3));
     });
 
-    <String, Offset>{
-      'left': const Offset(-0.1, 12.0),
-      'right': const Offset(10.0, 12.0),
-      'top': const Offset(5.0, -0.1),
-      'bottom': const Offset(5.0, 20.0),
-    }.forEach((direction, offset) {
-      test('$direction of grid', () {
-        expect(layout.offsetToCell(offset), null);
-      });
+    test('left of grid', () {
+      const offset = Offset(-0.1, 12.0);
+
+      expect(layout.offsetToCell(offset), const GridCell(0, 3));
+    });
+
+    test('right of grid', () {
+      const offset = Offset(10.0, 12.0);
+
+      expect(layout.offsetToCell(offset), const GridCell(3, 3));
+    });
+
+    test('top of grid', () {
+      const offset = Offset(5.0, -0.1);
+
+      expect(layout.offsetToCell(offset), const GridCell(2, 0));
+    });
+
+    test('bottom of grid', () {
+      const offset = Offset(5.0, 20.0);
+
+      expect(layout.offsetToCell(offset), const GridCell(2, 4));
     });
   });
 }

@@ -11,36 +11,45 @@ import '../util/grid_size.dart';
 class EmojiGrid extends StatelessWidget {
   final GridSize size;
   final String fontFamily;
+  final EdgeInsets padding;
 
-  const EmojiGrid({Key key, @required this.size, this.fontFamily})
+  const EmojiGrid(
+      {Key key,
+      @required this.size,
+      this.fontFamily,
+      this.padding = EdgeInsets.zero})
       : super(key: key);
 
   void _handlePan(Offset position, BuildContext context) {
-    final layout = GridLayout(size: context.size, gridSize: size);
-    final GridCell cell = layout.offsetToCell(position);
+    final layout =
+        GridLayout(size: padding.deflateSize(context.size), gridSize: size);
+    final GridCell cell = layout.offsetToCell(
+        Offset(position.dx - padding.left, position.dy - padding.top));
 
-    if (cell != null) {
-      context.read<DrawingState>().draw(cell);
-    }
+    context.read<DrawingState>().draw(cell);
   }
 
   @override
   Widget build(BuildContext context) => GestureDetector(
       onPanStart: (details) => _handlePan(details.localPosition, context),
       onPanUpdate: (details) => _handlePan(details.localPosition, context),
-      child: AspectRatio(
-          aspectRatio: size.aspectRatio,
-          child: CustomMultiChildLayout(
-              delegate: _GridLayoutDelegate(size),
-              children: size.cells
-                  .map((cell) => LayoutId(
-                      id: cell,
-                      child: RepaintBoundary(
-                          child: _EmojiGridCell(
-                        cell: cell,
-                        fontFamily: fontFamily,
-                      ))))
-                  .toList())));
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: padding,
+        child: AspectRatio(
+            aspectRatio: size.aspectRatio,
+            child: CustomMultiChildLayout(
+                delegate: _GridLayoutDelegate(size),
+                children: size.cells
+                    .map((cell) => LayoutId(
+                        id: cell,
+                        child: RepaintBoundary(
+                            child: _EmojiGridCell(
+                          cell: cell,
+                          fontFamily: fontFamily,
+                        ))))
+                    .toList())),
+      ));
 }
 
 class _GridLayoutDelegate extends MultiChildLayoutDelegate {

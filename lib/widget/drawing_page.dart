@@ -29,18 +29,16 @@ class DrawingPage extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Mojidraw'),
           ),
-          body: Container(
-              padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-              child: Column(children: [
-                Container(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Palette(fontFamily: fontFamily)),
-                Flexible(
-                  child: _EmojiPickerSheet(size: size, fontFamily: fontFamily),
-                )
-              ])),
+          body: Column(children: [
+            Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 15.0),
+                child: Palette(fontFamily: fontFamily)),
+            Flexible(
+              child: _EmojiPickerSheet(size: size, fontFamily: fontFamily),
+            )
+          ]),
           bottomNavigationBar: BottomAppBar(
-              child: Container(
+              child: Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
             child: Row(children: [CopyButton()]),
@@ -59,12 +57,20 @@ class _EmojiPickerSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) => CoveringSheet(
         controller: context.read<CoveringSheetController>(),
-        sheet: EmojiPicker(fontFamily: fontFamily),
+        sheet: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: EmojiPicker(fontFamily: fontFamily),
+        ),
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: EmojiGrid(size: size, fontFamily: fontFamily),
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15.0),
+                child: EmojiGrid(
+                    size: size,
+                    fontFamily: fontFamily,
+                    padding: const EdgeInsets.all(20.0)),
+              ),
             ),
           ],
         ),
