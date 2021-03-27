@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 
 const double _grabbingHeight = 25.0;
+const double _grabbingCorrection = 1.0;
+
 const _snappingPositionOpen = SnappingPosition.factor(
     positionFactor: 1.0, grabbingContentOffset: GrabbingContentOffset.bottom);
 const _snappingPositionClosed = SnappingPosition.pixels(
-    positionPixels: 0.0, grabbingContentOffset: GrabbingContentOffset.bottom);
+    positionPixels: -_grabbingCorrection,
+    grabbingContentOffset: GrabbingContentOffset.bottom);
 
 @immutable
 class CoveringSheet extends StatelessWidget {
@@ -77,7 +80,7 @@ class CoveringSheetController extends ChangeNotifier {
 class _Grabbing extends StatelessWidget {
   @override
   Widget build(BuildContext context) => OverflowBox(
-        maxHeight: _grabbingHeight + 1.0,
+        maxHeight: _grabbingHeight + _grabbingCorrection,
         child: Container(
           alignment: Alignment.center,
           decoration:
