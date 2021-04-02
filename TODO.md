@@ -4,12 +4,12 @@ TODO
 * Refactor, add tests
 * Splash screen
 
+* Trim grid when exporting (text + image)
 
 Features
 ========
 
 * Emoji search
-* Export as image
 * Share as text or image
 * Imprint
 * Logo
@@ -18,6 +18,7 @@ Features
 * Settings:
   * grid size
   * Emoji font
+  * for image export: cell size, background color, padding
 * Custom grid background
   * Image from gallery
   * Image from camera
@@ -25,6 +26,7 @@ Features
   * Clear
   * Chessboard
   * Frame
+  * Remove from palette
 * Save in local storage:
   * Settings
   * Current grid

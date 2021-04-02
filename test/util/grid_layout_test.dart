@@ -6,20 +6,33 @@ import 'package:mojidraw/util/grid_size.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final layout =
-      GridLayout(size: const Size(10.0, 20.0), gridSize: const GridSize(4, 5));
+  test('given size, cellSize returns size of a single cell', () {
+    final layout = GridLayout.fromSize(
+        size: const Size(10.0, 20.0), gridSize: const GridSize(4, 5));
 
-  test('cellsize returns size of a single cell', () {
     expect(layout.cellSize, const Size(2.5, 4.0));
   });
 
+  test('given cellSize, size returns total size of grid', () {
+    final layout = GridLayout.fromCellSize(
+        cellSize: const Size(2.5, 4.0), gridSize: const GridSize(4, 5));
+
+    expect(layout.size, const Size(10.0, 20.0));
+  });
+
   test('cellToOffset returns offset for cell', () {
+    final layout = GridLayout.fromSize(
+        size: const Size(10.0, 20.0), gridSize: const GridSize(4, 5));
+
     const cell = GridCell(2, 3);
 
     expect(layout.cellToOffset(cell), const Offset(5.0, 12.0));
   });
 
   group('offsetToCell returns cell for offset', () {
+    final layout = GridLayout.fromSize(
+        size: const Size(10.0, 20.0), gridSize: const GridSize(4, 5));
+
     test('within grid', () {
       const offset = Offset(5.0, 12.0);
 

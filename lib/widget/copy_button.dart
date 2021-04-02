@@ -12,11 +12,11 @@ class CopyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
       icon: const Icon(Icons.copy),
-      tooltip: 'Copy to clipboard',
-      onPressed: () {
-        _copy(context.read<DrawingState>().gridAsText);
+      tooltip: 'Copy text to clipboard',
+      onPressed: () async {
+        _copy(context.read<DrawingState>().grid.text);
 
-        Fluttertoast.showToast(
+        await Fluttertoast.showToast(
           msg: 'Copied to clipboard',
         );
       });

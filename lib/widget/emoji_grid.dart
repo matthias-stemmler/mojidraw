@@ -21,10 +21,9 @@ class EmojiGrid extends StatelessWidget {
       : super(key: key);
 
   void _handlePan(Offset position, BuildContext context) {
-    final layout =
-        GridLayout(size: padding.deflateSize(context.size), gridSize: size);
-    final GridCell cell = layout.offsetToCell(
-        Offset(position.dx - padding.left, position.dy - padding.top));
+    final layout = GridLayout.fromSize(
+        size: padding.deflateSize(context.size), gridSize: size);
+    final GridCell cell = layout.offsetToCell(position - padding.topLeft);
 
     context.read<DrawingState>().draw(cell);
   }
@@ -59,7 +58,7 @@ class _GridLayoutDelegate extends MultiChildLayoutDelegate {
 
   @override
   void performLayout(Size size) {
-    final layout = GridLayout(size: size, gridSize: _gridSize);
+    final layout = GridLayout.fromSize(size: size, gridSize: _gridSize);
 
     for (final cell in layout.cells) {
       layoutChild(cell, BoxConstraints.tight(layout.cellSize));
@@ -84,7 +83,7 @@ class _EmojiGridCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) => CustomPaint(
       painter: _GridCellPainter(
-          text: context.select((DrawingState state) => state.getCellChar(cell)),
+          text: context.select((DrawingState state) => state.grid.get(cell)),
           fontFamily: fontFamily));
 }
 

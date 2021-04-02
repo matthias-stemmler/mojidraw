@@ -12,6 +12,7 @@ class DrawingState extends ChangeNotifier {
   final List<_PaletteEntry> _palette;
   int _penIndex;
   int _nextScore;
+  bool _saved = false;
 
   DrawingState({@required GridSize size})
       : _grid = CharGrid(size: size, background: '🍀'),
@@ -34,9 +35,9 @@ class DrawingState extends ChangeNotifier {
 
   int get penIndex => _penIndex;
 
-  String get gridAsText => _grid.text;
+  CharGrid get grid => _grid;
 
-  String getCellChar(GridCell cell) => _grid.get(cell);
+  bool get saved => _saved;
 
   void switchPen(int penIndex) {
     _switchPen(penIndex);
@@ -50,8 +51,11 @@ class DrawingState extends ChangeNotifier {
 
   void draw(GridCell cell) {
     _grid.set(cell, _palette[_penIndex].char);
+    _saved = false;
     notifyListeners();
   }
+
+  void markSaved() => _saved = true;
 
   void _switchPen(int penIndex) {
     _penIndex = penIndex;

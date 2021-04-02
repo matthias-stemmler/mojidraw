@@ -8,6 +8,7 @@ import 'covering_sheet.dart';
 import 'emoji_grid.dart';
 import 'emoji_picker.dart';
 import 'palette.dart';
+import 'save_image_button.dart';
 
 @immutable
 class DrawingPage extends StatelessWidget {
@@ -41,7 +42,10 @@ class DrawingPage extends StatelessWidget {
               child: Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-            child: Row(children: [CopyButton()]),
+            child: Row(children: [
+              CopyButton(),
+              SaveImageButton(fontFamily: fontFamily)
+            ]),
           )),
         ),
       );
