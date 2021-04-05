@@ -11,24 +11,17 @@ class DrawingState extends ChangeNotifier {
   final CharGrid _grid;
   final List<_PaletteEntry> _palette;
   int _penIndex;
-  int _nextScore;
+  int _nextScore = 3;
   bool _saved = false;
 
-  DrawingState({@required GridSize size})
+  DrawingState({required GridSize size})
       : _grid = CharGrid(size: size, background: '🍀'),
         _palette = List.empty(growable: true),
         _penIndex = 0 {
-    _palette.add(_PaletteEntry()..char = ' ');
-    _palette.add(_PaletteEntry()
-      ..char = '🍀'
-      ..score = 2);
-    _palette.add(_PaletteEntry()
-      ..char = '🦦'
-      ..score = 1);
-    _palette.add(_PaletteEntry()
-      ..char = '❤'
-      ..score = 0);
-    _nextScore = 3;
+    _palette.add(_PaletteEntry(' '));
+    _palette.add(_PaletteEntry('🍀')..score = 2);
+    _palette.add(_PaletteEntry('🦦')..score = 1);
+    _palette.add(_PaletteEntry('❤')..score = 0);
   }
 
   Iterable<String> get paletteChars => _palette.map((entry) => entry.char);
@@ -68,7 +61,7 @@ class DrawingState extends ChangeNotifier {
   }
 
   int _ensureInPalette(String pen) {
-    int minScore;
+    int? minScore;
     int minScoreIndex = -1;
 
     for (final int index in Iterable.generate(_palette.length)) {
@@ -85,7 +78,7 @@ class DrawingState extends ChangeNotifier {
     }
 
     if (_palette.length < _maxPaletteLength) {
-      _palette.add(_PaletteEntry()..char = pen);
+      _palette.add(_PaletteEntry(pen));
       return _palette.length - 1;
     } else {
       _palette[minScoreIndex].char = pen;
@@ -96,5 +89,7 @@ class DrawingState extends ChangeNotifier {
 
 class _PaletteEntry {
   String char;
-  int score;
+  late int score;
+
+  _PaletteEntry(this.char);
 }

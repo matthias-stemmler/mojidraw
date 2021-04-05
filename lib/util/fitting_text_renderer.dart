@@ -1,15 +1,14 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
 class FittingTextRenderer {
   final String text;
-  final String fontFamily;
-  double _widthFactor, _heightFactor;
+  final String? fontFamily;
+  late double _widthFactor, _heightFactor;
 
-  FittingTextRenderer({@required this.text, this.fontFamily}) {
+  FittingTextRenderer({required this.text, this.fontFamily}) {
     _calculateSizeFactors();
   }
 

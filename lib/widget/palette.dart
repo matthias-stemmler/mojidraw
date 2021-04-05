@@ -15,11 +15,11 @@ const Curve _scrollCurve = Curves.easeInOut;
 
 @immutable
 class Palette extends StatelessWidget {
-  final String fontFamily;
+  final String? fontFamily;
 
   final ScrollController _scrollController = ScrollController();
 
-  Palette({Key key, this.fontFamily}) : super(key: key);
+  Palette({Key? key, this.fontFamily}) : super(key: key);
 
   void _handlePenSelected(
       int penIndex, double scrollWidth, double buttonWidth) {
@@ -88,14 +88,14 @@ class _PenButtons extends StatelessWidget {
   final Iterable<String> chars;
   final BoxConstraints constraints;
   final Size textSize;
-  final String fontFamily;
-  final void Function(int penIndex) onPenSelected;
+  final String? fontFamily;
+  final void Function(int penIndex)? onPenSelected;
 
   const _PenButtons({
-    Key key,
-    @required this.chars,
-    @required this.constraints,
-    @required this.textSize,
+    Key? key,
+    required this.chars,
+    required this.constraints,
+    required this.textSize,
     this.fontFamily,
     this.onPenSelected,
   }) : super(key: key);
@@ -120,15 +120,15 @@ class _ToggleButtons extends StatefulWidget {
   final int penIndex;
   final BoxConstraints constraints;
   final Size textSize;
-  final String fontFamily;
-  final void Function(int penIndex) onPenSelected;
+  final String? fontFamily;
+  final void Function(int penIndex)? onPenSelected;
 
   const _ToggleButtons(
-      {Key key,
-      @required this.chars,
-      @required this.penIndex,
-      @required this.constraints,
-      @required this.textSize,
+      {Key? key,
+      required this.chars,
+      required this.penIndex,
+      required this.constraints,
+      required this.textSize,
       this.fontFamily,
       this.onPenSelected})
       : super(key: key);
@@ -173,7 +173,7 @@ class _ExpandButton extends StatelessWidget {
   final Size textSize;
 
   const _ExpandButton(
-      {Key key, @required this.constraints, @required this.textSize})
+      {Key? key, required this.constraints, required this.textSize})
       : super(key: key);
 
   @override
@@ -189,7 +189,7 @@ class _ExpandButton extends StatelessWidget {
 class _ExpandIcon extends StatelessWidget {
   final Size size;
 
-  const _ExpandIcon({Key key, @required this.size}) : super(key: key);
+  const _ExpandIcon({Key? key, required this.size}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -205,9 +205,9 @@ class _ExpandIcon extends StatelessWidget {
 class _Text extends StatelessWidget {
   final String text;
   final Size size;
-  final String fontFamily;
+  final String? fontFamily;
 
-  const _Text(this.text, {Key key, @required this.size, this.fontFamily})
+  const _Text(this.text, {Key? key, required this.size, this.fontFamily})
       : super(key: key);
 
   @override

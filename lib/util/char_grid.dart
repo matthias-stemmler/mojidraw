@@ -8,7 +8,7 @@ class CharGrid {
   final GridSize size;
   final List<String> _chars;
 
-  CharGrid({@required this.size, String background = ' '})
+  CharGrid({required this.size, String background = ' '})
       : _chars = List.filled(size.cellCount, background);
 
   String get(GridCell cell) => _chars[_getIndex(cell)];

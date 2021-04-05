@@ -1,16 +1,15 @@
 import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class GalleryService {
   static const platform = MethodChannel('mojidraw.app/gallery');
 
   static Future<void> saveImageToGallery(
-      {@required ByteData imageData,
-      @required String mimeType,
-      @required String displayName,
-      @required String album}) async {
+      {required ByteData imageData,
+      required String mimeType,
+      required String displayName,
+      required String album}) async {
     try {
       await platform.invokeMethod('saveImageToGallery', {
         'imageData': _toByteArray(imageData),
@@ -28,7 +27,7 @@ class GalleryService {
 }
 
 class GalleryServiceException implements Exception {
-  final String message;
+  final String? message;
 
   GalleryServiceException(this.message);
 }

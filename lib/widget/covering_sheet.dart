@@ -16,10 +16,10 @@ class CoveringSheet extends StatelessWidget {
   final Widget child, sheet;
 
   const CoveringSheet(
-      {Key key,
-      @required this.controller,
-      @required this.sheet,
-      @required this.child})
+      {Key? key,
+      required this.controller,
+      required this.sheet,
+      required this.child})
       : super(key: key);
 
   @override

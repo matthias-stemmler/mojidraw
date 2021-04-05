@@ -25,9 +25,9 @@ final Map<IconData, Iterable<String>> _emojiTabs = {
 
 @immutable
 class EmojiPicker extends StatelessWidget {
-  final String fontFamily;
+  final String? fontFamily;
 
-  const EmojiPicker({Key key, this.fontFamily}) : super(key: key);
+  const EmojiPicker({Key? key, this.fontFamily}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
@@ -55,7 +55,7 @@ class EmojiPicker extends StatelessWidget {
 class _CategoryTabButton extends StatelessWidget {
   final IconData icon;
 
-  const _CategoryTabButton({Key key, this.icon}) : super(key: key);
+  const _CategoryTabButton({Key? key, required this.icon}) : super(key: key);
 
   @override
   Widget build(BuildContext context) =>
@@ -65,9 +65,9 @@ class _CategoryTabButton extends StatelessWidget {
 @immutable
 class _CategoryTab extends StatelessWidget {
   final Iterable<String> emojiChars;
-  final String fontFamily;
+  final String? fontFamily;
 
-  const _CategoryTab({Key key, @required this.emojiChars, this.fontFamily})
+  const _CategoryTab({Key? key, required this.emojiChars, this.fontFamily})
       : super(key: key);
 
   @override

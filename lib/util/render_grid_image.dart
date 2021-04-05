@@ -7,9 +7,9 @@ import 'fitting_text_renderer.dart';
 import 'grid_layout.dart';
 
 Future<Image> renderGridImage(
-    {@required CharGrid grid,
-    @required Size cellSize,
-    String fontFamily,
+    {required CharGrid grid,
+    required Size cellSize,
+    String? fontFamily,
     Color backgroundColor = Colors.transparent,
     EdgeInsets padding = EdgeInsets.zero}) async {
   final layout =

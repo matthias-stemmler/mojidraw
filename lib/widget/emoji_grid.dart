@@ -10,19 +10,19 @@ import '../util/grid_size.dart';
 @immutable
 class EmojiGrid extends StatelessWidget {
   final GridSize size;
-  final String fontFamily;
+  final String? fontFamily;
   final EdgeInsets padding;
 
   const EmojiGrid(
-      {Key key,
-      @required this.size,
+      {Key? key,
+      required this.size,
       this.fontFamily,
       this.padding = EdgeInsets.zero})
       : super(key: key);
 
   void _handlePan(Offset position, BuildContext context) {
     final layout = GridLayout.fromSize(
-        size: padding.deflateSize(context.size), gridSize: size);
+        size: padding.deflateSize(context.size ?? Size.zero), gridSize: size);
     final GridCell cell = layout.offsetToCell(position - padding.topLeft);
 
     context.read<DrawingState>().draw(cell);
@@ -75,9 +75,9 @@ class _GridLayoutDelegate extends MultiChildLayoutDelegate {
 @immutable
 class _EmojiGridCell extends StatelessWidget {
   final GridCell cell;
-  final String fontFamily;
+  final String? fontFamily;
 
-  const _EmojiGridCell({Key key, @required this.cell, this.fontFamily})
+  const _EmojiGridCell({Key? key, required this.cell, this.fontFamily})
       : super(key: key);
 
   @override
@@ -90,9 +90,9 @@ class _EmojiGridCell extends StatelessWidget {
 @immutable
 class _GridCellPainter extends CustomPainter {
   final String text;
-  final String fontFamily;
+  final String? fontFamily;
 
-  const _GridCellPainter({@required this.text, this.fontFamily});
+  const _GridCellPainter({required this.text, this.fontFamily});
 
   @override
   void paint(Canvas canvas, Size size) {

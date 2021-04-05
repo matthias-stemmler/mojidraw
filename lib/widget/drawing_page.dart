@@ -13,9 +13,9 @@ import 'save_image_button.dart';
 @immutable
 class DrawingPage extends StatelessWidget {
   final GridSize size;
-  final String fontFamily;
+  final String? fontFamily;
 
-  const DrawingPage({Key key, @required this.size, this.fontFamily})
+  const DrawingPage({Key? key, required this.size, this.fontFamily})
       : super(key: key);
 
   @override
@@ -53,9 +53,9 @@ class DrawingPage extends StatelessWidget {
 
 class _EmojiPickerSheet extends StatelessWidget {
   final GridSize size;
-  final String fontFamily;
+  final String? fontFamily;
 
-  const _EmojiPickerSheet({Key key, this.size, this.fontFamily})
+  const _EmojiPickerSheet({Key? key, required this.size, this.fontFamily})
       : super(key: key);
 
   @override

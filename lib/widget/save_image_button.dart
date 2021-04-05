@@ -13,9 +13,9 @@ import '../platform/gallery_service.dart';
 const double _cellWidth = 128.0;
 
 class SaveImageButton extends StatefulWidget {
-  final String fontFamily;
+  final String? fontFamily;
 
-  const SaveImageButton({Key key, this.fontFamily}) : super(key: key);
+  const SaveImageButton({Key? key, this.fontFamily}) : super(key: key);
 
   @override
   State createState() => _SaveImageButtonState();
@@ -57,8 +57,13 @@ class _SaveImageButtonState extends State<SaveImageButton> {
           fontFamily: widget.fontFamily,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           padding: const EdgeInsets.all(_cellWidth / 4));
-      final ByteData imageData =
+      final ByteData? imageData =
           await image.toByteData(format: ImageByteFormat.png);
+
+      if (imageData == null) {
+        throw GalleryServiceException("Failed to encode image");
+      }
+
       final timestamp = DateFormat("yyyy-MM-dd-HHmmss").format(DateTime.now());
 
       await GalleryService.saveImageToGallery(

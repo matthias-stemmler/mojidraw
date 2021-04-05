@@ -10,11 +10,11 @@ class GridLayout {
   final GridSize gridSize;
   final Size cellSize, size;
 
-  GridLayout.fromSize({@required this.size, @required this.gridSize})
+  GridLayout.fromSize({required this.size, required this.gridSize})
       : cellSize =
             Size(size.width / gridSize.width, size.height / gridSize.height);
 
-  GridLayout.fromCellSize({@required this.cellSize, @required this.gridSize})
+  GridLayout.fromCellSize({required this.cellSize, required this.gridSize})
       : size = Size(
             cellSize.width * gridSize.width, cellSize.height * gridSize.height);
 
