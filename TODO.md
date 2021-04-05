@@ -1,10 +1,7 @@
 TODO
 ====
 
-* Refactor, add tests
 * Splash screen
-
-* Trim grid when exporting (text + image)
 
 Features
 ========
@@ -35,3 +32,4 @@ Features
 * Multiline palette (configurable?)
 * Pin emojis in palette
 * Zoom in grid
+* Horizontally flipped emojis

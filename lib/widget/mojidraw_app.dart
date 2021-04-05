@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../theme/theme_colors.dart';
 import '../util/grid_size.dart';
 import 'drawing_page.dart';
 
@@ -9,7 +10,7 @@ class MojiDrawApp extends StatelessWidget {
   Widget build(_) => MaterialApp(
         title: 'Mojidraw',
         theme: ThemeData(
-            primarySwatch: Colors.blue,
+            primarySwatch: ThemeColors.mojidraw,
             visualDensity: VisualDensity.adaptivePlatformDensity),
         home:
             const DrawingPage(size: GridSize(12, 13), fontFamily: 'JoyPixels'),
