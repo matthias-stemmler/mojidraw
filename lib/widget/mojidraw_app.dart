@@ -10,6 +10,8 @@ class MojiDrawApp extends StatelessWidget {
   Widget build(_) => MaterialApp(
         title: 'Mojidraw',
         theme: ThemeData(
+            // this causes the OS status bar text to be rendered in a light color
+            appBarTheme: const AppBarTheme(brightness: Brightness.dark),
             primarySwatch: ThemeColors.mojidraw,
             visualDensity: VisualDensity.adaptivePlatformDensity),
         home:
