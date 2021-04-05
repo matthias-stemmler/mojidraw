@@ -1,17 +1,14 @@
 TODO
 ====
 
-* Splash screen
+* Ignore pointer during splash screen
 
 Features
 ========
 
 * Emoji search
 * Share as text or image
-* Imprint
-* Logo
-  * in imprint
-  * as icon
+* Imprint w/ logo
 * Settings:
   * grid size
   * Emoji font
@@ -24,12 +21,12 @@ Features
   * Chessboard
   * Frame
   * Remove from palette
+  * Pin to palette
 * Save in local storage:
   * Settings
   * Current grid
   * Current palette
   * Individual drawings
 * Multiline palette (configurable?)
-* Pin emojis in palette
 * Zoom in grid
 * Horizontally flipped emojis
