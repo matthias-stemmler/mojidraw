@@ -1,6 +1,8 @@
 TODO
 ====
 
+* try snap during zoom
+* make padding touchable or move padding to parent
 * Ignore pointer during splash screen
 
 Features
@@ -10,9 +12,9 @@ Features
 * Share as text or image
 * Imprint w/ logo
 * Settings:
-  * grid size
   * Emoji font
   * for image export: cell size, background color, padding
+  (* grid size)
 * Custom grid background
   * Image from gallery
   * Image from camera
@@ -28,5 +30,4 @@ Features
   * Current palette
   * Individual drawings
 * Multiline palette (configurable?)
-* Zoom in grid
 * Horizontally flipped emojis

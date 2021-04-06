@@ -1,14 +1,17 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart'
+    hide InteractiveViewer, TransformationController;
 import 'package:provider/provider.dart';
 
 import '../state/drawing_state.dart';
+import '../temp_flutter_master/interactive_viewer.dart';
 import '../util/fitting_text_renderer.dart';
 import '../util/grid_cell.dart';
 import '../util/grid_layout.dart';
 import '../util/grid_size.dart';
+import '../util/pan_disambiguator.dart';
 
 @immutable
-class EmojiGrid extends StatelessWidget {
+class EmojiGrid extends StatefulWidget {
   final GridSize size;
   final String? fontFamily;
   final EdgeInsets padding;
@@ -20,35 +23,50 @@ class EmojiGrid extends StatelessWidget {
       this.padding = EdgeInsets.zero})
       : super(key: key);
 
-  void _handlePan(Offset position, BuildContext context) {
+  @override
+  State createState() => _EmojiGridState();
+}
+
+class _EmojiGridState extends State<EmojiGrid> {
+  late final _panDisambiguator = PanDisambiguator(_handleDraw);
+  final _transformationController = TransformationController();
+
+  void _handleDraw(Offset position) {
     final layout = GridLayout.fromSize(
-        size: padding.deflateSize(context.size ?? Size.zero), gridSize: size);
-    final GridCell cell = layout.offsetToCell(position - padding.topLeft);
+        size: widget.padding.deflateSize(context.size ?? Size.zero),
+        gridSize: widget.size);
+    final GridCell cell =
+        layout.offsetToCell(_transformationController.toScene(position));
 
     context.read<DrawingState>().draw(cell);
   }
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-      onPanStart: (details) => _handlePan(details.localPosition, context),
-      onPanUpdate: (details) => _handlePan(details.localPosition, context),
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: padding,
-        child: AspectRatio(
-            aspectRatio: size.aspectRatio,
-            child: CustomMultiChildLayout(
-                delegate: _GridLayoutDelegate(size),
-                children: size.cells
-                    .map((cell) => LayoutId(
-                        id: cell,
-                        child: RepaintBoundary(
-                            child: _EmojiGridCell(
-                          cell: cell,
-                          fontFamily: fontFamily,
-                        ))))
-                    .toList())),
-      ));
+  Widget build(BuildContext context) => Padding(
+        padding: widget.padding,
+        child: InteractiveViewer(
+          minScale: 1.0,
+          maxScale: 4.0,
+          panEnabled: false,
+          transformationController: _transformationController,
+          onInteractionStart: _panDisambiguator.start,
+          onInteractionUpdate: _panDisambiguator.update,
+          onInteractionEnd: _panDisambiguator.end,
+          child: AspectRatio(
+              aspectRatio: widget.size.aspectRatio,
+              child: CustomMultiChildLayout(
+                  delegate: _GridLayoutDelegate(widget.size),
+                  children: widget.size.cells
+                      .map((cell) => LayoutId(
+                          id: cell,
+                          child: RepaintBoundary(
+                              child: _EmojiGridCell(
+                            cell: cell,
+                            fontFamily: widget.fontFamily,
+                          ))))
+                      .toList())),
+        ),
+      );
 }
 
 class _GridLayoutDelegate extends MultiChildLayoutDelegate {
