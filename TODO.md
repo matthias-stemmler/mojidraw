@@ -2,7 +2,6 @@ TODO
 ====
 
 * try snap during zoom
-* make padding touchable or move padding to parent
 * Ignore pointer during splash screen
 
 Features

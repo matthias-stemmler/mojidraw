@@ -14,13 +14,8 @@ import '../util/pan_disambiguator.dart';
 class EmojiGrid extends StatefulWidget {
   final GridSize size;
   final String? fontFamily;
-  final EdgeInsets padding;
 
-  const EmojiGrid(
-      {Key? key,
-      required this.size,
-      this.fontFamily,
-      this.padding = EdgeInsets.zero})
+  const EmojiGrid({Key? key, required this.size, this.fontFamily})
       : super(key: key);
 
   @override
@@ -33,8 +28,7 @@ class _EmojiGridState extends State<EmojiGrid> {
 
   void _handleDraw(Offset position) {
     final layout = GridLayout.fromSize(
-        size: widget.padding.deflateSize(context.size ?? Size.zero),
-        gridSize: widget.size);
+        size: context.size ?? Size.zero, gridSize: widget.size);
     final GridCell cell =
         layout.offsetToCell(_transformationController.toScene(position));
 
@@ -42,30 +36,27 @@ class _EmojiGridState extends State<EmojiGrid> {
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: widget.padding,
-        child: InteractiveViewer(
-          minScale: 1.0,
-          maxScale: 3.25,
-          panEnabled: false,
-          transformationController: _transformationController,
-          onInteractionStart: _panDisambiguator.start,
-          onInteractionUpdate: _panDisambiguator.update,
-          onInteractionEnd: _panDisambiguator.end,
-          child: AspectRatio(
-              aspectRatio: widget.size.aspectRatio,
-              child: CustomMultiChildLayout(
-                  delegate: _GridLayoutDelegate(widget.size),
-                  children: widget.size.cells
-                      .map((cell) => LayoutId(
-                          id: cell,
-                          child: RepaintBoundary(
-                              child: _EmojiGridCell(
-                            cell: cell,
-                            fontFamily: widget.fontFamily,
-                          ))))
-                      .toList())),
-        ),
+  Widget build(BuildContext context) => InteractiveViewer(
+        minScale: 1.0,
+        maxScale: 3.25,
+        panEnabled: false,
+        transformationController: _transformationController,
+        onInteractionStart: _panDisambiguator.start,
+        onInteractionUpdate: _panDisambiguator.update,
+        onInteractionEnd: _panDisambiguator.end,
+        child: AspectRatio(
+            aspectRatio: widget.size.aspectRatio,
+            child: CustomMultiChildLayout(
+                delegate: _GridLayoutDelegate(widget.size),
+                children: widget.size.cells
+                    .map((cell) => LayoutId(
+                        id: cell,
+                        child: RepaintBoundary(
+                            child: _EmojiGridCell(
+                          cell: cell,
+                          fontFamily: widget.fontFamily,
+                        ))))
+                    .toList())),
       );
 }
 
