@@ -46,7 +46,7 @@ class _EmojiGridState extends State<EmojiGrid> {
         padding: widget.padding,
         child: InteractiveViewer(
           minScale: 1.0,
-          maxScale: 4.0,
+          maxScale: 3.25,
           panEnabled: false,
           transformationController: _transformationController,
           onInteractionStart: _panDisambiguator.start,

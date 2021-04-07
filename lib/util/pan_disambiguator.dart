@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 
 // maximal duration between changes in the two pointers
 // when starting or ending a scale
-const _maxScalePointerDelay = Duration(milliseconds: 50);
+const _maxScalePointerDelay = Duration(milliseconds: 100);
 
 class PanDisambiguator {
   final void Function(Offset localPosition)? onPan;
