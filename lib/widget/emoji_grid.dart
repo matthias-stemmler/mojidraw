@@ -36,27 +36,28 @@ class _EmojiGridState extends State<EmojiGrid> {
   }
 
   @override
-  Widget build(BuildContext context) => InteractiveViewer(
-        minScale: 1.0,
-        maxScale: 3.25,
-        panEnabled: false,
-        transformationController: _transformationController,
-        onInteractionStart: _panDisambiguator.start,
-        onInteractionUpdate: _panDisambiguator.update,
-        onInteractionEnd: _panDisambiguator.end,
-        child: AspectRatio(
-            aspectRatio: widget.size.aspectRatio,
-            child: CustomMultiChildLayout(
-                delegate: _GridLayoutDelegate(widget.size),
-                children: widget.size.cells
-                    .map((cell) => LayoutId(
-                        id: cell,
-                        child: RepaintBoundary(
-                            child: _EmojiGridCell(
-                          cell: cell,
-                          fontFamily: widget.fontFamily,
-                        ))))
-                    .toList())),
+  Widget build(_) => AspectRatio(
+        aspectRatio: widget.size.aspectRatio,
+        child: InteractiveViewer(
+          minScale: 1.0,
+          maxScale: 3.25,
+          panEnabled: false,
+          transformationController: _transformationController,
+          onInteractionStart: _panDisambiguator.start,
+          onInteractionUpdate: _panDisambiguator.update,
+          onInteractionEnd: _panDisambiguator.end,
+          child: CustomMultiChildLayout(
+              delegate: _GridLayoutDelegate(widget.size),
+              children: widget.size.cells
+                  .map((cell) => LayoutId(
+                      id: cell,
+                      child: RepaintBoundary(
+                          child: _EmojiGridCell(
+                        cell: cell,
+                        fontFamily: widget.fontFamily,
+                      ))))
+                  .toList()),
+        ),
       );
 }
 
