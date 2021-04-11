@@ -12,6 +12,7 @@ import '../platform/gallery_service.dart';
 
 const double _cellWidth = 128.0;
 
+@immutable
 class SaveImageButton extends StatefulWidget {
   final String? fontFamily;
 
@@ -48,7 +49,7 @@ class _SaveImageButtonState extends State<SaveImageButton> {
       }
 
       await Fluttertoast.showToast(
-        msg: 'Saving to gallery',
+        msg: 'Saved to gallery',
       );
 
       final Image image = await renderGridImage(
