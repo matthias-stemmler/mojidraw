@@ -80,16 +80,19 @@ class DrawingState extends ChangeNotifier {
   }
 
   void finishResizing() {
-    _grid = CharGrid.generate(
-        _resizingSection!.size,
-        (GridCell cell) =>
-            _grid.get(
-                cell + resizingSection!.topLeft - sceneGridSection.topLeft) ??
-            ' ');
+    if (_resizingSection != sceneGridSection) {
+      _grid = CharGrid.generate(
+          _resizingSection!.size,
+          (GridCell cell) =>
+              _grid.get(
+                  cell + resizingSection!.topLeft - sceneGridSection.topLeft) ??
+              ' ');
+
+      _saved = false;
+    }
 
     _resizingSection = null;
     _resizing = false;
-    _saved = false;
 
     resizeFinishNotifier.notifyListeners();
     notifyListeners();
