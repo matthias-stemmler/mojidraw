@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../state/drawing_state.dart';
-import '../util/grid_size.dart';
 import 'controls.dart';
 import 'covering_sheet.dart';
 import 'emoji_grid.dart';
@@ -11,17 +10,15 @@ import 'palette.dart';
 
 @immutable
 class DrawingPage extends StatelessWidget {
-  final GridSize size;
   final String? fontFamily;
 
-  const DrawingPage({Key? key, required this.size, this.fontFamily})
-      : super(key: key);
+  const DrawingPage({Key? key, this.fontFamily}) : super(key: key);
 
   @override
   Widget build(_) => MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => DrawingState(size: size),
+            create: (_) => DrawingState(),
           ),
           ChangeNotifierProvider(create: (_) => CoveringSheetController())
         ],

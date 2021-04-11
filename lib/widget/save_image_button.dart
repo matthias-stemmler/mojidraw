@@ -4,11 +4,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart' hide Image;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:mojidraw/state/drawing_state.dart';
-import 'package:mojidraw/util/render_grid_image.dart';
 import 'package:provider/provider.dart';
 
 import '../platform/gallery_service.dart';
+import '../state/drawing_state.dart';
+import '../util/render_grid_image.dart';
 
 const double _cellWidth = 128.0;
 

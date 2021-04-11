@@ -5,7 +5,7 @@ import '../util/grid_size.dart';
 import 'drawing_page.dart';
 
 @immutable
-class MojiDrawApp extends StatelessWidget {
+class MojidrawApp extends StatelessWidget {
   @override
   Widget build(_) => MaterialApp(
         title: 'Mojidraw',
@@ -15,6 +15,6 @@ class MojiDrawApp extends StatelessWidget {
             primarySwatch: ThemeColors.mojidraw,
             visualDensity: VisualDensity.adaptivePlatformDensity),
         home:
-            const DrawingPage(size: GridSize(13, 13), fontFamily: 'JoyPixels'),
+            const DrawingPage(fontFamily: 'JoyPixels'),
       );
 }

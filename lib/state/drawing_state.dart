@@ -6,8 +6,9 @@ import '../util/grid_cell.dart';
 import '../util/grid_section.dart';
 import '../util/grid_size.dart';
 
-const _resizeSceneGridSize = GridSize(20, 20);
-const int _maxPaletteLength = 10;
+const _initialGridSize = GridSize(10, 10);
+const _resizeSceneGridSize = GridSize(22, 22);
+const int _maxPaletteLength = 20;
 
 class DrawingState extends ChangeNotifier {
   final resizeStartNotifier = ChangeNotifier();
@@ -24,8 +25,8 @@ class DrawingState extends ChangeNotifier {
   GridSection? _resizingSection;
   bool _saved = false;
 
-  DrawingState({required GridSize size})
-      : _grid = CharGrid(size, background: '🍀'),
+  DrawingState()
+      : _grid = CharGrid(_initialGridSize, background: '🍀'),
         _palette = List.empty(growable: true),
         _penIndex = 0 {
     _palette.add(_PaletteEntry(' '));
