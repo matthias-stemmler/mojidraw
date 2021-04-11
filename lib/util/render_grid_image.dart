@@ -20,7 +20,7 @@ Future<Image> renderGridImage(
 
     for (final cell in grid.size.cells) {
       final renderer =
-          FittingTextRenderer(text: grid.get(cell), fontFamily: fontFamily);
+          FittingTextRenderer(text: grid.get(cell)!, fontFamily: fontFamily);
       final painter = renderer.getTextPainter(cellSize);
       final offset = padding.topLeft + layout.cellToOffset(cell);
       painter.paint(canvas, offset);

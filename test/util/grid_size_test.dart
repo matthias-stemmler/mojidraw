@@ -13,6 +13,38 @@ void main() {
     expect(size.aspectRatio, 0.5);
   });
 
+  test('contains returns true for cell within grid', () {
+    const cell = GridCell(1, 3);
+
+    expect(size.contains(cell), isTrue);
+  });
+
+  group('contains returns false for cell', () {
+    test('left of grid', () {
+      const cell = GridCell(-1, 3);
+
+      expect(size.contains(cell), isFalse);
+    });
+
+    test('right of grid', () {
+      const cell = GridCell(2, 3);
+
+      expect(size.contains(cell), isFalse);
+    });
+
+    test('top of grid', () {
+      const cell = GridCell(1, -1);
+
+      expect(size.contains(cell), isFalse);
+    });
+
+    test('bottom of grid', () {
+      const cell = GridCell(1, 4);
+
+      expect(size.contains(cell), isFalse);
+    });
+  });
+
   group('clamp clamps cell', () {
     test('within grid', () {
       const cell = GridCell(1, 3);

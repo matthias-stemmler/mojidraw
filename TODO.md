@@ -1,19 +1,24 @@
 TODO
 ====
 
-* try snap during zoom
+* Zoom when switching to/from resize mode
 * Ignore pointer during splash screen
+* Limit zoom so that emojis don't get blurred
+* Cropping functionality in resize mode
+* Initial grid background
+* Visualize empty cells
 
 Features
 ========
 
+* Export text with multiple spaces for empty cells
+* Use navigator push/pop for resize state and maybe emoji picker
 * Emoji search
 * Share as text or image
 * Imprint w/ logo
 * Settings:
   * Emoji font
   * for image export: cell size, background color, padding
-  (* grid size)
 * Custom grid background
   * Image from gallery
   * Image from camera

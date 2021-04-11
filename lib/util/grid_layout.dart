@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 
 import 'grid_cell.dart';
+import 'grid_section.dart';
 import 'grid_size.dart';
 
 @immutable
@@ -18,8 +19,6 @@ class GridLayout {
       : size = Size(
             cellSize.width * gridSize.width, cellSize.height * gridSize.height);
 
-  Iterable<GridCell> get cells => gridSize.cells;
-
   Offset cellToOffset(GridCell cell) =>
       Offset(cell.x * cellSize.width, cell.y * cellSize.height);
 
@@ -30,4 +29,7 @@ class GridLayout {
 
     return gridSize.clamp(cell);
   }
+
+  Rect sectionToRect(GridSection section) => Rect.fromPoints(
+      cellToOffset(section.topLeft), cellToOffset(section.bottomRight));
 }

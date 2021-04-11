@@ -7,48 +7,127 @@ import '../temp_flutter_master/interactive_viewer.dart';
 import '../util/fitting_text_renderer.dart';
 import '../util/grid_cell.dart';
 import '../util/grid_layout.dart';
+import '../util/grid_section.dart';
 import '../util/grid_size.dart';
 import '../util/pan_disambiguator.dart';
+import '../widget/grid_sizer.dart';
 
 @immutable
 class EmojiGrid extends StatefulWidget {
-  final GridSize size;
   final String? fontFamily;
 
-  const EmojiGrid({Key? key, required this.size, this.fontFamily})
-      : super(key: key);
+  const EmojiGrid({Key? key, this.fontFamily}) : super(key: key);
 
   @override
   State createState() => _EmojiGridState();
 }
 
 class _EmojiGridState extends State<EmojiGrid> {
-  late final _panDisambiguator = PanDisambiguator(_handleDraw);
+  late final _panDisambiguator = PanDisambiguator(
+      onPanStart: _handlePanStart,
+      onPanUpdate: _handlePanUpdate,
+      onPanEnd: _handlePanEnd);
+  final _gridSizerController = GridSizerController();
   final _transformationController = TransformationController();
 
-  void _handleDraw(Offset position) {
+  Matrix4? _transformationBeforeResizing;
+
+  bool get _resizing => context.read<DrawingState>().resizing;
+
+  void _handlePanStart(Offset position) {
+    final scenePosition = _transformationController.toScene(position);
+
+    if (_resizing) {
+      _gridSizerController.handlePanStart(scenePosition);
+    } else {
+      _draw(scenePosition);
+    }
+  }
+
+  void _handlePanUpdate(Offset position) {
+    final scenePosition = _transformationController.toScene(position);
+
+    if (_resizing) {
+      _gridSizerController.handlePanUpdate(scenePosition);
+    } else {
+      _draw(scenePosition);
+    }
+  }
+
+  void _handlePanEnd() {
+    if (_resizing) {
+      _gridSizerController.handlePanEnd();
+    }
+  }
+
+  void _draw(Offset position) {
     final layout = GridLayout.fromSize(
-        size: context.size ?? Size.zero, gridSize: widget.size);
-    final GridCell cell =
-        layout.offsetToCell(_transformationController.toScene(position));
+        size: context.size ?? Size.zero,
+        gridSize: context.read<DrawingState>().grid.size);
+    final GridCell cell = layout.offsetToCell(position);
 
     context.read<DrawingState>().draw(cell);
   }
 
+  void _handleResizeStart() {
+    _transformationBeforeResizing = _transformationController.value;
+    _transformationController.value = Matrix4.identity();
+  }
+
+  void _handleResizeFinish() {
+    _transformationController.value = Matrix4.identity();
+  }
+
+  void _handleResizeCancel() {
+    _transformationController.value =
+        _transformationBeforeResizing ?? Matrix4.identity();
+  }
+
   @override
-  Widget build(_) => AspectRatio(
-        aspectRatio: widget.size.aspectRatio,
-        child: InteractiveViewer(
-          minScale: 1.0,
-          maxScale: 3.25,
-          panEnabled: false,
-          transformationController: _transformationController,
-          onInteractionStart: _panDisambiguator.start,
-          onInteractionUpdate: _panDisambiguator.update,
-          onInteractionEnd: _panDisambiguator.end,
+  void initState() {
+    super.initState();
+
+    final DrawingState state = context.read();
+    state.resizeStartNotifier.addListener(_handleResizeStart);
+    state.resizeFinishNotifier.addListener(_handleResizeFinish);
+    state.resizeCancelNotifier.addListener(_handleResizeCancel);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    final DrawingState state = context.read();
+    state.resizeStartNotifier.removeListener(_handleResizeStart);
+    state.resizeFinishNotifier.removeListener(_handleResizeFinish);
+    state.resizeCancelNotifier.removeListener(_handleResizeCancel);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final GridSize gridSize =
+        context.select((DrawingState state) => state.grid.size);
+    final GridSize sceneGridSize =
+        context.select((DrawingState state) => state.sceneGridSize);
+    final sceneGridSection =
+        context.select((DrawingState state) => state.sceneGridSection);
+
+    return AspectRatio(
+      aspectRatio: sceneGridSize.aspectRatio,
+      child: InteractiveViewer(
+        minScale: 1.0,
+        maxScale: 3.25,
+        panEnabled: false,
+        transformationController: _transformationController,
+        onInteractionStart: _panDisambiguator.start,
+        onInteractionUpdate: _panDisambiguator.update,
+        onInteractionEnd: _panDisambiguator.end,
+        child: GridSizer(
+          controller: _gridSizerController,
           child: CustomMultiChildLayout(
-              delegate: _GridLayoutDelegate(widget.size),
-              children: widget.size.cells
+              delegate: _GridLayoutDelegate(
+                  gridSize: sceneGridSize, gridSection: sceneGridSection),
+              children: gridSize.cells
                   .map((cell) => LayoutId(
                       id: cell,
                       child: RepaintBoundary(
@@ -58,28 +137,33 @@ class _EmojiGridState extends State<EmojiGrid> {
                       ))))
                   .toList()),
         ),
-      );
+      ),
+    );
+  }
 }
 
 class _GridLayoutDelegate extends MultiChildLayoutDelegate {
-  final GridSize _gridSize;
+  final GridSize gridSize;
+  final GridSection gridSection;
 
-  _GridLayoutDelegate(this._gridSize);
+  _GridLayoutDelegate({required this.gridSize, required this.gridSection});
 
   @override
   void performLayout(Size size) {
-    final layout = GridLayout.fromSize(size: size, gridSize: _gridSize);
+    final layout = GridLayout.fromSize(size: size, gridSize: gridSize);
 
-    for (final cell in layout.cells) {
+    for (final cell in gridSection.size.cells) {
       layoutChild(cell, BoxConstraints.tight(layout.cellSize));
-      positionChild(cell, layout.cellToOffset(cell));
+      positionChild(cell, layout.cellToOffset(cell + gridSection.topLeft));
     }
   }
 
   @override
   bool shouldRelayout(MultiChildLayoutDelegate oldDelegate) =>
       oldDelegate is! _GridLayoutDelegate ||
-      oldDelegate is _GridLayoutDelegate && oldDelegate._gridSize != _gridSize;
+      oldDelegate is _GridLayoutDelegate &&
+          (oldDelegate.gridSize != gridSize ||
+              oldDelegate.gridSection != gridSection);
 }
 
 @immutable
@@ -93,7 +177,7 @@ class _EmojiGridCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) => CustomPaint(
       painter: _GridCellPainter(
-          text: context.select((DrawingState state) => state.grid.get(cell)),
+          text: context.select((DrawingState state) => state.grid.get(cell))!,
           fontFamily: fontFamily));
 }
 

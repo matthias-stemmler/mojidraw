@@ -3,12 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../state/drawing_state.dart';
 import '../util/grid_size.dart';
-import 'copy_button.dart';
+import 'controls.dart';
 import 'covering_sheet.dart';
 import 'emoji_grid.dart';
 import 'emoji_picker.dart';
 import 'palette.dart';
-import 'save_image_button.dart';
 
 @immutable
 class DrawingPage extends StatelessWidget {
@@ -35,28 +34,23 @@ class DrawingPage extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 15.0),
                 child: Palette(fontFamily: fontFamily)),
             Flexible(
-              child: _EmojiPickerSheet(size: size, fontFamily: fontFamily),
+              child: _EmojiPickerSheet(fontFamily: fontFamily),
             )
           ]),
           bottomNavigationBar: BottomAppBar(
               child: Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-            child: Row(children: [
-              CopyButton(),
-              SaveImageButton(fontFamily: fontFamily)
-            ]),
+            child: Controls(fontFamily: fontFamily),
           )),
         ),
       );
 }
 
 class _EmojiPickerSheet extends StatelessWidget {
-  final GridSize size;
   final String? fontFamily;
 
-  const _EmojiPickerSheet({Key? key, required this.size, this.fontFamily})
-      : super(key: key);
+  const _EmojiPickerSheet({Key? key, this.fontFamily}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => CoveringSheet(
@@ -70,7 +64,7 @@ class _EmojiPickerSheet extends StatelessWidget {
             Flexible(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(15.0, 35.0, 15.0, 15.0),
-                child: EmojiGrid(size: size, fontFamily: fontFamily),
+                child: EmojiGrid(fontFamily: fontFamily),
               ),
             ),
           ],

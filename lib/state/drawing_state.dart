@@ -3,19 +3,29 @@ import 'package:flutter/foundation.dart';
 
 import '../util/char_grid.dart';
 import '../util/grid_cell.dart';
+import '../util/grid_section.dart';
 import '../util/grid_size.dart';
 
+const _resizeSceneGridSize = GridSize(20, 20);
 const int _maxPaletteLength = 10;
 
 class DrawingState extends ChangeNotifier {
-  final CharGrid _grid;
+  final resizeStartNotifier = ChangeNotifier();
+  final resizeFinishNotifier = ChangeNotifier();
+  final resizeCancelNotifier = ChangeNotifier();
+
+  CharGrid _grid;
+
   final List<_PaletteEntry> _palette;
   int _penIndex;
   int _nextScore = 3;
+
+  bool _resizing = false;
+  GridSection? _resizingSection;
   bool _saved = false;
 
   DrawingState({required GridSize size})
-      : _grid = CharGrid(size: size, background: '🍀'),
+      : _grid = CharGrid(size, background: '🍀'),
         _palette = List.empty(growable: true),
         _penIndex = 0 {
     _palette.add(_PaletteEntry(' '));
@@ -24,13 +34,16 @@ class DrawingState extends ChangeNotifier {
     _palette.add(_PaletteEntry('❤')..score = 0);
   }
 
+  CharGrid get grid => _grid;
+
+  GridSize get sceneGridSize => resizing ? _resizeSceneGridSize : grid.size;
+
+  GridSection get sceneGridSection =>
+      GridSection.centered(outerSize: sceneGridSize, innerSize: grid.size);
+
   Iterable<String> get paletteChars => _palette.map((entry) => entry.char);
 
   int get penIndex => _penIndex;
-
-  CharGrid get grid => _grid;
-
-  bool get saved => _saved;
 
   void switchPen(int penIndex) {
     _switchPen(penIndex);
@@ -47,6 +60,50 @@ class DrawingState extends ChangeNotifier {
     _saved = false;
     notifyListeners();
   }
+
+  bool get resizing => _resizing;
+
+  GridSection? get resizingSection => _resizingSection;
+
+  set resizingSection(GridSection? value) {
+    _resizingSection = value;
+
+    notifyListeners();
+  }
+
+  void startResizing() {
+    _resizing = true;
+    _resizingSection = sceneGridSection;
+
+    resizeStartNotifier.notifyListeners();
+    notifyListeners();
+  }
+
+  void finishResizing() {
+    _grid = CharGrid.generate(
+        _resizingSection!.size,
+        (GridCell cell) =>
+            _grid.get(
+                cell + resizingSection!.topLeft - sceneGridSection.topLeft) ??
+            ' ');
+
+    _resizingSection = null;
+    _resizing = false;
+    _saved = false;
+
+    resizeFinishNotifier.notifyListeners();
+    notifyListeners();
+  }
+
+  void cancelResizing() {
+    _resizingSection = null;
+    _resizing = false;
+
+    resizeCancelNotifier.notifyListeners();
+    notifyListeners();
+  }
+
+  bool get saved => _saved;
 
   void markSaved() => _saved = true;
 

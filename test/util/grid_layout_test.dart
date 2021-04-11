@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:mojidraw/util/grid_cell.dart';
 import 'package:mojidraw/util/grid_layout.dart';
+import 'package:mojidraw/util/grid_section.dart';
 import 'package:mojidraw/util/grid_size.dart';
 import 'package:test/test.dart';
 
@@ -62,5 +63,14 @@ void main() {
 
       expect(layout.offsetToCell(offset), const GridCell(2, 4));
     });
+  });
+
+  test('sectionToRect returns rectangle for section', () {
+    final layout = GridLayout.fromSize(
+        size: const Size(10.0, 20.0), gridSize: const GridSize(4, 5));
+    final section = GridSection.fromLTRB(1, 2, 3, 4);
+
+    expect(layout.sectionToRect(section),
+        const Rect.fromLTRB(2.5, 8.0, 7.5, 16.0));
   });
 }

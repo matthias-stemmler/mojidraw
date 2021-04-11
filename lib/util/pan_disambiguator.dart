@@ -8,40 +8,45 @@ import 'package:flutter/gestures.dart';
 const _maxScalePointerDelay = Duration(milliseconds: 100);
 
 class PanDisambiguator {
-  final void Function(Offset localPosition)? onPan;
+  final void Function(Offset localPosition)? onPanStart;
+  final void Function(Offset localPosition)? onPanUpdate;
+  final void Function()? onPanEnd;
 
   final _panBacklog = _Backlog();
   final _panSuspense = _Suspense();
 
-  PanDisambiguator(this.onPan);
+  PanDisambiguator({this.onPanStart, this.onPanUpdate, this.onPanEnd});
 
   void start(ScaleStartDetails details) {
-    _handleInteraction(details.pointerCount, details.localFocalPoint,
-        isStart: true);
-  }
-
-  void update(ScaleUpdateDetails details) {
-    _handleInteraction(details.pointerCount, details.localFocalPoint);
-  }
-
-  void _handleInteraction(int pointerCount, Offset point,
-      {bool isStart = false}) {
     // interaction with multiple pointers -> scale, else -> pan
-    final bool isScale = pointerCount > 1;
+    final bool isScale = details.pointerCount > 1;
 
     if (isScale || _panSuspense.isSuspended) {
       // scale -> queued pans have become obsolete
       _panBacklog.clear();
     } else {
-      if (isStart) {
-        // start of pan -> temporarily suspend pans (but queue them for later)
-        // because it might turn out to be the start of a scale instead
-        _panBacklog.suspend(_maxScalePointerDelay);
-      }
+      // start of pan -> temporarily suspend pans (but queue them for later)
+      // because it might turn out to be the start of a scale instead
+      _panBacklog.suspend(_maxScalePointerDelay);
 
       // pan -> queue if pans are currently suspended, else run immediately
       _panBacklog.add(() {
-        onPan?.call(point);
+        onPanStart?.call(details.localFocalPoint);
+      });
+    }
+  }
+
+  void update(ScaleUpdateDetails details) {
+    // interaction with multiple pointers -> scale, else -> pan
+    final bool isScale = details.pointerCount > 1;
+
+    if (isScale || _panSuspense.isSuspended) {
+      // scale -> queued pans have become obsolete
+      _panBacklog.clear();
+    } else {
+      // pan -> queue if pans are currently suspended, else run immediately
+      _panBacklog.add(() {
+        onPanUpdate?.call(details.localFocalPoint);
       });
     }
   }
@@ -50,10 +55,17 @@ class PanDisambiguator {
     // end of interaction with leftover pointers -> scale, else -> pan
     final bool isScale = details.pointerCount > 0;
 
-    if (isScale) {
-      // end of scale -> temporarily suspend pans (and forget them)
+    if (isScale || _panSuspense.isSuspended) {
+      // end of scale -> queued pans have become obsolete
+      // also, temporarily suspend pans (and forget them)
       // because they are just artifacts of ending the scale
+      _panBacklog.clear();
       _panSuspense.suspend(_maxScalePointerDelay);
+    } else {
+      // end of pan -> queue if pans are currently suspended, else run immediately
+      _panBacklog.add(() {
+        onPanEnd?.call();
+      });
     }
   }
 }

@@ -6,6 +6,10 @@ class GridCell {
 
   const GridCell(this.x, this.y);
 
+  GridCell operator +(GridCell other) => GridCell(x + other.x, y + other.y);
+
+  GridCell operator -(GridCell other) => GridCell(x - other.x, y - other.y);
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
