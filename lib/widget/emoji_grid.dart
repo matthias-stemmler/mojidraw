@@ -4,12 +4,9 @@ import 'package:provider/provider.dart';
 
 import '../state/drawing_state.dart';
 import '../temp_flutter_master/interactive_viewer.dart';
-import '../util/fitting_text_renderer.dart';
-import '../util/grid_cell.dart';
-import '../util/grid_layout.dart';
-import '../util/grid_section.dart';
 import '../util/grid_size.dart';
 import '../util/pan_disambiguator.dart';
+import '../widget/grid_canvas.dart';
 import '../widget/grid_sizer.dart';
 
 @immutable
@@ -27,6 +24,7 @@ class _EmojiGridState extends State<EmojiGrid> {
       onPanStart: _handlePanStart,
       onPanUpdate: _handlePanUpdate,
       onPanEnd: _handlePanEnd);
+  final _gridCanvasController = GridCanvasController();
   final _gridSizerController = GridSizerController();
   final _transformationController = TransformationController();
 
@@ -40,7 +38,7 @@ class _EmojiGridState extends State<EmojiGrid> {
     if (_resizing) {
       _gridSizerController.handlePanStart(scenePosition);
     } else {
-      _draw(scenePosition);
+      _gridCanvasController.handlePan(scenePosition);
     }
   }
 
@@ -50,7 +48,7 @@ class _EmojiGridState extends State<EmojiGrid> {
     if (_resizing) {
       _gridSizerController.handlePanUpdate(scenePosition);
     } else {
-      _draw(scenePosition);
+      _gridCanvasController.handlePan(scenePosition);
     }
   }
 
@@ -58,15 +56,6 @@ class _EmojiGridState extends State<EmojiGrid> {
     if (_resizing) {
       _gridSizerController.handlePanEnd();
     }
-  }
-
-  void _draw(Offset position) {
-    final layout = GridLayout.fromSize(
-        size: context.size ?? Size.zero,
-        gridSize: context.read<DrawingState>().grid.size);
-    final GridCell cell = layout.offsetToCell(position);
-
-    context.read<DrawingState>().draw(cell);
   }
 
   void _handleResizeStart() {
@@ -105,12 +94,8 @@ class _EmojiGridState extends State<EmojiGrid> {
 
   @override
   Widget build(BuildContext context) {
-    final GridSize gridSize =
-        context.select((DrawingState state) => state.grid.size);
     final GridSize sceneGridSize =
         context.select((DrawingState state) => state.sceneGridSize);
-    final sceneGridSection =
-        context.select((DrawingState state) => state.sceneGridSection);
 
     return AspectRatio(
       aspectRatio: sceneGridSize.aspectRatio,
@@ -124,80 +109,10 @@ class _EmojiGridState extends State<EmojiGrid> {
         onInteractionEnd: _panDisambiguator.end,
         child: GridSizer(
           controller: _gridSizerController,
-          child: CustomMultiChildLayout(
-              delegate: _GridLayoutDelegate(
-                  gridSize: sceneGridSize, gridSection: sceneGridSection),
-              children: gridSize.cells
-                  .map((cell) => LayoutId(
-                      id: cell,
-                      child: RepaintBoundary(
-                          child: _EmojiGridCell(
-                        cell: cell,
-                        fontFamily: widget.fontFamily,
-                      ))))
-                  .toList()),
+          child: GridCanvas(
+              controller: _gridCanvasController, fontFamily: widget.fontFamily),
         ),
       ),
     );
   }
-}
-
-class _GridLayoutDelegate extends MultiChildLayoutDelegate {
-  final GridSize gridSize;
-  final GridSection gridSection;
-
-  _GridLayoutDelegate({required this.gridSize, required this.gridSection});
-
-  @override
-  void performLayout(Size size) {
-    final layout = GridLayout.fromSize(size: size, gridSize: gridSize);
-
-    for (final cell in gridSection.size.cells) {
-      layoutChild(cell, BoxConstraints.tight(layout.cellSize));
-      positionChild(cell, layout.cellToOffset(cell + gridSection.topLeft));
-    }
-  }
-
-  @override
-  bool shouldRelayout(MultiChildLayoutDelegate oldDelegate) =>
-      oldDelegate is! _GridLayoutDelegate ||
-      oldDelegate is _GridLayoutDelegate &&
-          (oldDelegate.gridSize != gridSize ||
-              oldDelegate.gridSection != gridSection);
-}
-
-@immutable
-class _EmojiGridCell extends StatelessWidget {
-  final GridCell cell;
-  final String? fontFamily;
-
-  const _EmojiGridCell({Key? key, required this.cell, this.fontFamily})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => CustomPaint(
-      painter: _GridCellPainter(
-          text: context.select((DrawingState state) => state.grid.get(cell))!,
-          fontFamily: fontFamily));
-}
-
-@immutable
-class _GridCellPainter extends CustomPainter {
-  final String text;
-  final String? fontFamily;
-
-  const _GridCellPainter({required this.text, this.fontFamily});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final renderer = FittingTextRenderer(text: text, fontFamily: fontFamily);
-    final TextPainter painter = renderer.getTextPainter(size);
-    painter.paint(canvas, Offset.zero);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) =>
-      oldDelegate is! _GridCellPainter ||
-      oldDelegate is _GridCellPainter &&
-          (oldDelegate.text != text || oldDelegate.fontFamily != fontFamily);
 }
