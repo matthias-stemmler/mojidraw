@@ -14,6 +14,7 @@ void main() {
       section: GridSection.fromLTRB(1, 1, 9, 11),
       color: Colors.blue,
       backgroundColor: Colors.white,
+      sizeFactor: 1.0,
     );
 
     final Widget widget = CustomPaint(

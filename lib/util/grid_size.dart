@@ -8,6 +8,8 @@ class GridSize {
 
   const GridSize(this._width, this._height);
 
+  static const GridSize zero = GridSize(0, 0);
+
   int get width => _width;
 
   int get height => _height;

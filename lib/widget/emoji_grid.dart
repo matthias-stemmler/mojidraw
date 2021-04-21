@@ -1,13 +1,17 @@
-import 'package:flutter/widgets.dart'
+import 'dart:math';
+
+import 'package:flutter/material.dart'
     hide InteractiveViewer, TransformationController;
 import 'package:provider/provider.dart';
 
 import '../state/drawing_state.dart';
-import '../temp_flutter_master/interactive_viewer.dart';
 import '../util/grid_size.dart';
 import '../util/pan_disambiguator.dart';
 import '../widget/grid_canvas.dart';
 import '../widget/grid_sizer.dart';
+import '../widget/scale_viewer.dart';
+
+const _minGridSize = GridSize(2, 2);
 
 @immutable
 class EmojiGrid extends StatefulWidget {
@@ -26,14 +30,14 @@ class _EmojiGridState extends State<EmojiGrid> {
       onPanEnd: _handlePanEnd);
   final _gridCanvasController = GridCanvasController();
   final _gridSizerController = GridSizerController();
-  final _transformationController = TransformationController();
+  final _scaleController = ScaleController();
 
   Matrix4? _transformationBeforeResizing;
 
   bool get _resizing => context.read<DrawingState>().resizing;
 
   void _handlePanStart(Offset position) {
-    final scenePosition = _transformationController.toScene(position);
+    final scenePosition = _scaleController.toScene(position);
 
     if (_resizing) {
       _gridSizerController.handlePanStart(scenePosition);
@@ -43,7 +47,7 @@ class _EmojiGridState extends State<EmojiGrid> {
   }
 
   void _handlePanUpdate(Offset position) {
-    final scenePosition = _transformationController.toScene(position);
+    final scenePosition = _scaleController.toScene(position);
 
     if (_resizing) {
       _gridSizerController.handlePanUpdate(scenePosition);
@@ -59,16 +63,16 @@ class _EmojiGridState extends State<EmojiGrid> {
   }
 
   void _handleResizeStart() {
-    _transformationBeforeResizing = _transformationController.value;
-    _transformationController.value = Matrix4.identity();
+    _transformationBeforeResizing = _scaleController.value;
+    _scaleController.value = Matrix4.identity();
   }
 
   void _handleResizeFinish() {
-    _transformationController.value = Matrix4.identity();
+    _scaleController.value = Matrix4.identity();
   }
 
   void _handleResizeCancel() {
-    _transformationController.value =
+    _scaleController.value =
         _transformationBeforeResizing ?? Matrix4.identity();
   }
 
@@ -96,19 +100,21 @@ class _EmojiGridState extends State<EmojiGrid> {
   Widget build(BuildContext context) {
     final GridSize sceneGridSize =
         context.select((DrawingState state) => state.sceneGridSize);
+    final double maxScale = min(sceneGridSize.width / _minGridSize.width,
+        sceneGridSize.height / _minGridSize.height);
 
     return AspectRatio(
       aspectRatio: sceneGridSize.aspectRatio,
-      child: InteractiveViewer(
-        minScale: 1.0,
-        maxScale: 3.25,
-        panEnabled: false,
-        transformationController: _transformationController,
+      child: ScaleViewer(
         onInteractionStart: _panDisambiguator.start,
         onInteractionUpdate: _panDisambiguator.update,
         onInteractionEnd: _panDisambiguator.end,
+        maxScale: maxScale,
+        scaleController: _scaleController,
         child: GridSizer(
           controller: _gridSizerController,
+          minGridSize: _minGridSize,
+          sizeFactor: maxScale,
           child: GridCanvas(
               controller: _gridCanvasController, fontFamily: widget.fontFamily),
         ),

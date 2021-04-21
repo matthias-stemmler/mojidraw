@@ -15,17 +15,20 @@ const double _borderWidth = 3.0;
 const double _handleRadius = 4.0;
 const double _maxHandleDistance = 30.0;
 
-const int _minSectionWidth = 2;
-const int _minSectionHeight = 2;
-
-Rect _inflateRect(Rect rect) => rect.inflate(_borderWidth / 2.0);
-
 @immutable
 class GridSizer extends StatefulWidget {
   final GridSizerController? controller;
+  final GridSize minGridSize;
+  final double sizeFactor;
   final Widget? child;
 
-  const GridSizer({Key? key, this.controller, this.child}) : super(key: key);
+  const GridSizer(
+      {Key? key,
+      this.controller,
+      this.minGridSize = GridSize.zero,
+      this.sizeFactor = 1.0,
+      this.child})
+      : super(key: key);
 
   @override
   State createState() => _GridSizerState();
@@ -42,9 +45,11 @@ class _GridSizerState extends State<GridSizer> {
     final GridLayout layout = getLayout(state.sceneGridSize);
     final GridSection section = state.resizingSection!;
 
-    final Rect rect = _inflateRect(layout.sectionToRect(section));
+    final Rect rect = layout
+        .sectionToRect(section)
+        .inflate(_borderWidth * widget.sizeFactor / 2.0);
     final double maxHandleDistance =
-        min(rect.shortestSide / 4.0, _maxHandleDistance);
+        min(rect.shortestSide / 4.0, _maxHandleDistance * widget.sizeFactor);
     final RectHandle? handle =
         getClosestHandle(rect, position, maxHandleDistance);
 
@@ -79,21 +84,22 @@ class _GridSizerState extends State<GridSizer> {
     }
 
     final int left = handle.horizontalSide == RectHorizontalSide.left
-        ? (section.left + dx).clamp(1, section.right - _minSectionWidth)
+        ? (section.left + dx).clamp(1, section.right - widget.minGridSize.width)
         : section.left;
 
     final int top = handle.verticalSide == RectVerticalSide.top
-        ? (section.top + dy).clamp(1, section.bottom - _minSectionHeight)
+        ? (section.top + dy)
+            .clamp(1, section.bottom - widget.minGridSize.height)
         : section.top;
 
     final int right = handle.horizontalSide == RectHorizontalSide.right
-        ? (section.right + dx)
-            .clamp(section.left + _minSectionWidth, sceneGridSize.width - 1)
+        ? (section.right + dx).clamp(
+            section.left + widget.minGridSize.width, sceneGridSize.width - 1)
         : section.right;
 
     final int bottom = handle.verticalSide == RectVerticalSide.bottom
-        ? (section.bottom + dy)
-            .clamp(section.top + _minSectionHeight, sceneGridSize.height - 1)
+        ? (section.bottom + dy).clamp(
+            section.top + widget.minGridSize.height, sceneGridSize.height - 1)
         : section.bottom;
 
     return GridSection.fromLTRB(left, top, right, bottom);
@@ -121,7 +127,8 @@ class _GridSizerState extends State<GridSizer> {
                 context.select((DrawingState state) => state.sceneGridSize),
             section: section,
             color: Theme.of(context).primaryColor,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor);
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            sizeFactor: widget.sizeFactor);
 
     return CustomPaint(foregroundPainter: painter, child: widget.child);
   }
@@ -143,18 +150,23 @@ class GridSizerPainter extends CustomPainter {
   final GridSize gridSize;
   final GridSection section;
   final Color color, backgroundColor;
+  final double sizeFactor;
 
   const GridSizerPainter(
       {required this.gridSize,
       required this.section,
       required this.color,
-      required this.backgroundColor});
+      required this.backgroundColor,
+      required this.sizeFactor});
 
   @override
   void paint(Canvas canvas, Size size) {
+    final double borderWidth = _borderWidth * sizeFactor;
+    final double handleRadius = _handleRadius * sizeFactor;
+
     final layout = GridLayout.fromSize(size: size, gridSize: gridSize);
     final Rect innerRect = layout.sectionToRect(section);
-    final Rect outerRect = _inflateRect(innerRect);
+    final Rect outerRect = innerRect.inflate(borderWidth / 2.0);
 
     canvas.save();
 
@@ -172,7 +184,7 @@ class GridSizerPainter extends CustomPainter {
         Paint()
           ..color = color
           ..style = PaintingStyle.stroke
-          ..strokeWidth = _borderWidth);
+          ..strokeWidth = borderWidth);
 
     // restore clip so that handles don't get clipped
     canvas.restore();
@@ -181,7 +193,7 @@ class GridSizerPainter extends CustomPainter {
     final handlePaint = Paint()..color = color;
 
     for (final position in getHandlePositions(outerRect)) {
-      canvas.drawCircle(position, _handleRadius, handlePaint);
+      canvas.drawCircle(position, handleRadius, handlePaint);
     }
   }
 
