@@ -7,6 +7,7 @@ import '../util/grid_cell.dart';
 import '../util/grid_layout.dart';
 import '../util/grid_section.dart';
 import '../util/grid_size.dart';
+import '../widget/scale_viewer.dart';
 
 class GridCanvas extends StatefulWidget {
   final GridCanvasController? controller;
@@ -24,9 +25,12 @@ class _GridCanvasState extends State<GridCanvas> {
     final layout = GridLayout.fromSize(
         size: context.size ?? Size.zero,
         gridSize: context.read<DrawingState>().grid.size);
-    final GridCell cell = layout.offsetToCell(position);
+    final GridCell? cell =
+        layout.offsetToCell(ScaleViewer.toLocalPosition(context, position));
 
-    context.read<DrawingState>().draw(cell);
+    if (cell != null) {
+      context.read<DrawingState>().draw(cell);
+    }
   }
 
   @override

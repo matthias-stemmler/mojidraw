@@ -60,7 +60,7 @@ class _EmojiPickerSheet extends StatelessWidget {
           children: [
             Flexible(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(15.0, 35.0, 15.0, 15.0),
+                padding: const EdgeInsets.fromLTRB(15.0, 35.0, 15.0, 30.0),
                 child: EmojiGrid(fontFamily: fontFamily),
               ),
             ),

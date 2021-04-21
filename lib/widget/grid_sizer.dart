@@ -10,6 +10,7 @@ import '../util/grid_layout.dart';
 import '../util/grid_section.dart';
 import '../util/grid_size.dart';
 import '../util/rect.dart';
+import '../widget/scale_viewer.dart';
 
 const double _borderWidth = 3.0;
 const double _handleRadius = 4.0;
@@ -41,6 +42,7 @@ class _GridSizerState extends State<GridSizer> {
       size: context.size ?? Size.zero, gridSize: sceneGridSize);
 
   void _handlePanStart(Offset position) {
+    final Offset localPosition = ScaleViewer.toLocalPosition(context, position);
     final DrawingState state = context.read();
     final GridLayout layout = getLayout(state.sceneGridSize);
     final GridSection section = state.resizingSection!;
@@ -51,15 +53,17 @@ class _GridSizerState extends State<GridSizer> {
     final double maxHandleDistance =
         min(rect.shortestSide / 4.0, _maxHandleDistance * widget.sizeFactor);
     final RectHandle? handle =
-        getClosestHandle(rect, position, maxHandleDistance);
+        getClosestHandle(rect, localPosition, maxHandleDistance);
 
-    _panBase = handle == null ? null : _PanBase(section, handle, position);
+    _panBase = handle == null ? null : _PanBase(section, handle, localPosition);
   }
 
   void _handlePanUpdate(Offset position) {
+    final Offset localPosition = ScaleViewer.toLocalPosition(context, position);
+
     if (_panBase != null) {
-      _handleMove(
-          _panBase!.section, _panBase!.handle, position - _panBase!.position);
+      _handleMove(_panBase!.section, _panBase!.handle,
+          localPosition - _panBase!.position);
     }
   }
 
@@ -176,7 +180,7 @@ class GridSizerPainter extends CustomPainter {
 
     // fill region outside outer rect with semi-transparent black
     canvas.clipRect(outerRect, clipOp: ClipOp.difference);
-    canvas.drawRect(Rect.largest, Paint()..color = Colors.black26);
+    canvas.drawRect(Offset.zero & size, Paint()..color = Colors.black26);
 
     // draw outer rect border with foreground color, still clipped by outer rect
     canvas.drawRect(

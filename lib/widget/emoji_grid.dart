@@ -37,22 +37,18 @@ class _EmojiGridState extends State<EmojiGrid> {
   bool get _resizing => context.read<DrawingState>().resizing;
 
   void _handlePanStart(Offset position) {
-    final scenePosition = _scaleController.toScene(position);
-
     if (_resizing) {
-      _gridSizerController.handlePanStart(scenePosition);
+      _gridSizerController.handlePanStart(position);
     } else {
-      _gridCanvasController.handlePan(scenePosition);
+      _gridCanvasController.handlePan(position);
     }
   }
 
   void _handlePanUpdate(Offset position) {
-    final scenePosition = _scaleController.toScene(position);
-
     if (_resizing) {
-      _gridSizerController.handlePanUpdate(scenePosition);
+      _gridSizerController.handlePanUpdate(position);
     } else {
-      _gridCanvasController.handlePan(scenePosition);
+      _gridCanvasController.handlePan(position);
     }
   }
 
@@ -100,23 +96,27 @@ class _EmojiGridState extends State<EmojiGrid> {
   Widget build(BuildContext context) {
     final GridSize sceneGridSize =
         context.select((DrawingState state) => state.sceneGridSize);
-    final double maxScale = min(sceneGridSize.width / _minGridSize.width,
+    final double maxScale = max(sceneGridSize.width / _minGridSize.width,
         sceneGridSize.height / _minGridSize.height);
 
-    return AspectRatio(
-      aspectRatio: sceneGridSize.aspectRatio,
-      child: ScaleViewer(
-        onInteractionStart: _panDisambiguator.start,
-        onInteractionUpdate: _panDisambiguator.update,
-        onInteractionEnd: _panDisambiguator.end,
-        maxScale: maxScale,
-        scaleController: _scaleController,
-        child: GridSizer(
-          controller: _gridSizerController,
-          minGridSize: _minGridSize,
-          sizeFactor: maxScale,
-          child: GridCanvas(
-              controller: _gridCanvasController, fontFamily: widget.fontFamily),
+    return ScaleViewer(
+      onInteractionStart: _panDisambiguator.start,
+      onInteractionUpdate: _panDisambiguator.update,
+      onInteractionEnd: _panDisambiguator.end,
+      maxScale: maxScale,
+      scaleController: _scaleController,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: AspectRatio(
+          aspectRatio: sceneGridSize.aspectRatio,
+          child: GridSizer(
+            controller: _gridSizerController,
+            minGridSize: _minGridSize,
+            sizeFactor: maxScale,
+            child: GridCanvas(
+                controller: _gridCanvasController,
+                fontFamily: widget.fontFamily),
+          ),
         ),
       ),
     );

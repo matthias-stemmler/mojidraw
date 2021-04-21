@@ -30,38 +30,66 @@ void main() {
     expect(layout.cellToOffset(cell), const Offset(5.0, 12.0));
   });
 
-  group('offsetToCell returns cell for offset', () {
+  group('offsetToCell', () {
     final layout = GridLayout.fromSize(
         size: const Size(10.0, 20.0), gridSize: const GridSize(4, 5));
 
-    test('within grid', () {
-      const offset = Offset(5.0, 12.0);
+    group('returns cell for offset within tolerance', () {
+      test('within grid', () {
+        const offset = Offset(5.0, 12.0);
 
-      expect(layout.offsetToCell(offset), const GridCell(2, 3));
+        expect(layout.offsetToCell(offset), const GridCell(2, 3));
+      });
+
+      test('left of grid', () {
+        const offset = Offset(-1.0, 12.0);
+
+        expect(layout.offsetToCell(offset), const GridCell(0, 3));
+      });
+
+      test('right of grid', () {
+        const offset = Offset(11.0, 12.0);
+
+        expect(layout.offsetToCell(offset), const GridCell(3, 3));
+      });
+
+      test('top of grid', () {
+        const offset = Offset(5.0, -1.5);
+
+        expect(layout.offsetToCell(offset), const GridCell(2, 0));
+      });
+
+      test('bottom of grid', () {
+        const offset = Offset(5.0, 21.5);
+
+        expect(layout.offsetToCell(offset), const GridCell(2, 4));
+      });
     });
 
-    test('left of grid', () {
-      const offset = Offset(-0.1, 12.0);
+    group('returns null for offset outside tolerance', () {
+      test('left of grid', () {
+        const offset = Offset(-1.5, 12.0);
 
-      expect(layout.offsetToCell(offset), const GridCell(0, 3));
-    });
+        expect(layout.offsetToCell(offset), isNull);
+      });
 
-    test('right of grid', () {
-      const offset = Offset(10.0, 12.0);
+      test('right of grid', () {
+        const offset = Offset(11.5, 12.0);
 
-      expect(layout.offsetToCell(offset), const GridCell(3, 3));
-    });
+        expect(layout.offsetToCell(offset), isNull);
+      });
 
-    test('top of grid', () {
-      const offset = Offset(5.0, -0.1);
+      test('top of grid', () {
+        const offset = Offset(5.0, -2.5);
 
-      expect(layout.offsetToCell(offset), const GridCell(2, 0));
-    });
+        expect(layout.offsetToCell(offset), isNull);
+      });
 
-    test('bottom of grid', () {
-      const offset = Offset(5.0, 20.0);
+      test('bottom of grid', () {
+        const offset = Offset(5.0, 22.5);
 
-      expect(layout.offsetToCell(offset), const GridCell(2, 4));
+        expect(layout.offsetToCell(offset), isNull);
+      });
     });
   });
 
