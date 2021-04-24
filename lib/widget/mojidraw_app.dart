@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../theme/theme_colors.dart';
-import '../util/grid_size.dart';
 import 'drawing_page.dart';
 
 @immutable
@@ -14,7 +13,6 @@ class MojidrawApp extends StatelessWidget {
             appBarTheme: const AppBarTheme(brightness: Brightness.dark),
             primarySwatch: ThemeColors.mojidraw,
             visualDensity: VisualDensity.adaptivePlatformDensity),
-        home:
-            const DrawingPage(fontFamily: 'JoyPixels'),
+        home: const DrawingPage(fontFamily: 'JoyPixels'),
       );
 }

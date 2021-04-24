@@ -40,11 +40,18 @@ class _SaveImageButtonState extends State<SaveImageButton> {
   }
 
   Future<void> _saveImage(BuildContext context) async {
+    final galleryService = GalleryService(context);
+
     try {
       final DrawingState state = context.read<DrawingState>();
 
       if (state.saved) {
         await Fluttertoast.showToast(msg: 'Already saved to gallery');
+        return;
+      }
+
+      final bool permitted = await galleryService.tryGetGalleryAccess();
+      if (!permitted) {
         return;
       }
 
@@ -67,7 +74,7 @@ class _SaveImageButtonState extends State<SaveImageButton> {
 
       final timestamp = DateFormat("yyyy-MM-dd-HHmmss").format(DateTime.now());
 
-      await GalleryService.saveImageToGallery(
+      await galleryService.saveImageToGallery(
           imageData: imageData,
           mimeType: 'image/png',
           displayName: 'mojidraw-$timestamp',

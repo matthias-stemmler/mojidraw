@@ -2,9 +2,12 @@ package app.mojidraw
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.webkit.MimeTypeMap
 import androidx.annotation.UiThread
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
@@ -13,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
@@ -26,31 +30,47 @@ class GalleryChannelHandler(context: Context) : MethodChannel.MethodCallHandler 
 
     @UiThread
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        if (call.method == "saveImageToGallery") {
-            CoroutineScope(Dispatchers.Default).launch {
+        when (call.method) {
+            "isStoragePermissionRequired" -> {
                 try {
-                    saveImageToGallery(
-                            imageData = call.argument("imageData")!!,
-                            mimeType = call.argument("mimeType")!!,
-                            displayName = call.argument("displayName")!!,
-                            album = call.argument("album")!!
-                    )
-
-                    launch(Dispatchers.Main) {
-                        result.success(null)
-                    }
+                    result.success(isStoragePermissionRequired())
                 } catch (e: Throwable) {
-                    launch(Dispatchers.Main) {
-                        result.error(e.javaClass.name, e.message, null)
+                    result.error(e.javaClass.name, e.message, null)
+                }
+            }
+            "saveImageToGallery" -> {
+                CoroutineScope(Dispatchers.Default).launch {
+                    try {
+                        saveImageToGallery(
+                                imageData = call.argument("imageData")!!,
+                                mimeType = call.argument("mimeType")!!,
+                                displayName = call.argument("displayName")!!,
+                                album = call.argument("album")!!
+                        )
+
+                        launch(Dispatchers.Main) {
+                            result.success(null)
+                        }
+                    } catch (e: Throwable) {
+                        launch(Dispatchers.Main) {
+                            result.error(e.javaClass.name, e.message, null)
+                        }
                     }
                 }
             }
-        } else {
-            result.notImplemented()
+            else -> result.notImplemented()
         }
     }
 
+    private fun isStoragePermissionRequired(): Boolean = !isMediaStoreSupported()
+
+    private fun isMediaStoreSupported(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+
     private fun saveImageToGallery(imageData: ByteArray, mimeType: String, displayName: String, album: String) {
+        if (!isMediaStoreSupported()) {
+            return saveImageToGalleryLegacy(imageData, mimeType, displayName, album)
+        }
+
         val directory: File = File(Environment.DIRECTORY_PICTURES).resolve(album)
 
         val contentValues = ContentValues();
@@ -87,5 +107,31 @@ class GalleryChannelHandler(context: Context) : MethodChannel.MethodCallHandler 
         } finally {
             stream?.close()
         }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun saveImageToGalleryLegacy(imageData: ByteArray, mimeType: String, displayName: String, album: String) {
+        val directory: File = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).resolve(album)
+
+        val extension: String = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
+                ?: throw IOException("Unsupported MIME type: $mimeType")
+
+        val file = File(directory, "$displayName.$extension")
+
+        directory.mkdirs()
+
+        var stream: OutputStream? = null
+
+        try {
+            stream = FileOutputStream(file)
+            stream.write(imageData)
+        } finally {
+            stream?.close()
+        }
+
+        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        val contentUri: Uri = Uri.fromFile(file)
+        mediaScanIntent.data = contentUri
+        context.sendBroadcast(mediaScanIntent)
     }
 }
