@@ -3,7 +3,7 @@ description: Draw your favourite Emoji art
 
 publish_to: 'none'
 
-version: 1.0.0-alpha.1
+version: 1.0.0-alpha.2
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
