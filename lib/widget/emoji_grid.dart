@@ -37,18 +37,22 @@ class _EmojiGridState extends State<EmojiGrid> {
   bool get _resizing => context.read<DrawingState>().resizing;
 
   void _handlePanStart(Offset position) {
+    final Offset scenePosition = _scaleController.toScene(position);
+
     if (_resizing) {
-      _gridSizerController.handlePanStart(position);
+      _gridSizerController.handlePanStart(scenePosition);
     } else {
-      _gridCanvasController.handlePan(position);
+      _gridCanvasController.handlePan(scenePosition);
     }
   }
 
   void _handlePanUpdate(Offset position) {
+    final Offset scenePosition = _scaleController.toScene(position);
+
     if (_resizing) {
-      _gridSizerController.handlePanUpdate(position);
+      _gridSizerController.handlePanUpdate(scenePosition);
     } else {
-      _gridCanvasController.handlePan(position);
+      _gridCanvasController.handlePan(scenePosition);
     }
   }
 
@@ -105,19 +109,12 @@ class _EmojiGridState extends State<EmojiGrid> {
       onInteractionEnd: _panDisambiguator.end,
       maxScale: maxScale,
       scaleController: _scaleController,
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: AspectRatio(
-          aspectRatio: sceneGridSize.aspectRatio,
-          child: GridSizer(
-            controller: _gridSizerController,
-            minGridSize: _minGridSize,
-            sizeFactor: maxScale,
-            child: GridCanvas(
-                controller: _gridCanvasController,
-                fontFamily: widget.fontFamily),
-          ),
-        ),
+      child: GridSizer(
+        controller: _gridSizerController,
+        minGridSize: _minGridSize,
+        sizeFactor: maxScale,
+        child: GridCanvas(
+            controller: _gridCanvasController, fontFamily: widget.fontFamily),
       ),
     );
   }

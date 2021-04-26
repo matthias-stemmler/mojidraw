@@ -10,7 +10,6 @@ import '../util/grid_layout.dart';
 import '../util/grid_section.dart';
 import '../util/grid_size.dart';
 import '../util/rect.dart';
-import '../widget/scale_viewer.dart';
 
 const double _borderWidth = 3.0;
 const double _handleRadius = 4.0;
@@ -42,7 +41,6 @@ class _GridSizerState extends State<GridSizer> {
       size: context.size ?? Size.zero, gridSize: sceneGridSize);
 
   void _handlePanStart(Offset position) {
-    final Offset localPosition = ScaleViewer.toLocalPosition(context, position);
     final DrawingState state = context.read();
     final GridLayout layout = getLayout(state.sceneGridSize);
     final GridSection section = state.resizingSection!;
@@ -53,17 +51,15 @@ class _GridSizerState extends State<GridSizer> {
     final double maxHandleDistance =
         min(rect.shortestSide / 4.0, _maxHandleDistance * widget.sizeFactor);
     final RectHandle? handle =
-        getClosestHandle(rect, localPosition, maxHandleDistance);
+        getClosestHandle(rect, position, maxHandleDistance);
 
-    _panBase = handle == null ? null : _PanBase(section, handle, localPosition);
+    _panBase = handle == null ? null : _PanBase(section, handle, position);
   }
 
   void _handlePanUpdate(Offset position) {
-    final Offset localPosition = ScaleViewer.toLocalPosition(context, position);
-
     if (_panBase != null) {
-      _handleMove(_panBase!.section, _panBase!.handle,
-          localPosition - _panBase!.position);
+      _handleMove(
+          _panBase!.section, _panBase!.handle, position - _panBase!.position);
     }
   }
 
@@ -72,8 +68,8 @@ class _GridSizerState extends State<GridSizer> {
     final GridSize sceneGridSize = state.sceneGridSize;
     final GridLayout layout = getLayout(sceneGridSize);
 
-    final int dx = (delta.dx / layout.cellSize.width).round();
-    final int dy = (delta.dy / layout.cellSize.height).round();
+    final int dx = (delta.dx / layout.cellSideLength).round();
+    final int dy = (delta.dy / layout.cellSideLength).round();
 
     state.resizingSection =
         _moveSection(section, handle, dx, dy, sceneGridSize);

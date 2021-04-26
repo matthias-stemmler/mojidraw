@@ -10,7 +10,7 @@ import '../platform/gallery_service.dart';
 import '../state/drawing_state.dart';
 import '../util/render_grid_image.dart';
 
-const double _cellWidth = 128.0;
+const double _cellSideLength = 128.0;
 
 @immutable
 class SaveImageButton extends StatefulWidget {
@@ -61,10 +61,10 @@ class _SaveImageButtonState extends State<SaveImageButton> {
 
       final Image image = await renderGridImage(
           grid: state.grid,
-          cellSize: const Size.square(_cellWidth),
+          cellSideLength: _cellSideLength,
           fontFamily: widget.fontFamily,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          padding: const EdgeInsets.all(_cellWidth / 4));
+          padding: const EdgeInsets.all(_cellSideLength / 4.0));
       final ByteData? imageData =
           await image.toByteData(format: ImageByteFormat.png);
 

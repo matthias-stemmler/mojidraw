@@ -21,19 +21,6 @@ class ScaleViewer extends StatefulWidget {
       this.child})
       : super(key: key);
 
-  static Offset toLocalPosition(BuildContext context, Offset position) {
-    final state = context.findAncestorStateOfType<_ScaleViewerState>()!;
-    final RenderBox ancestorRenderBox = _findRenderBox(state.context);
-    final RenderBox childRenderBox = _findRenderBox(context);
-    return childRenderBox.globalToLocal(position, ancestor: ancestorRenderBox);
-  }
-
-  static RenderBox _findRenderBox(BuildContext context) {
-    final RenderObject renderObject = context.findRenderObject()!;
-    assert(renderObject is RenderBox);
-    return renderObject as RenderBox;
-  }
-
   @override
   State createState() => _ScaleViewerState();
 }
@@ -89,4 +76,7 @@ class ScaleController extends ChangeNotifier {
 
   set value(Matrix4 newValue) =>
       _transformationController.value = newValue.scaled(1.0 / _maxScale);
+
+  Offset toScene(Offset viewportPoint) =>
+      _transformationController.toScene(viewportPoint);
 }

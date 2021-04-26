@@ -9,30 +9,54 @@ import 'grid_size.dart';
 
 @immutable
 class GridLayout {
+  final double cellSideLength;
   final GridSize gridSize;
-  final Size cellSize, size;
+  final Size size;
+
+  late final Offset _base;
   late final Rect _toleranceRect;
 
-  GridLayout.fromSize({required this.size, required this.gridSize})
-      : cellSize =
-            Size(size.width / gridSize.width, size.height / gridSize.height) {
-    _toleranceRect = sizeToEdgeInsets(cellSize).inflateRect(Offset.zero & size);
+  factory GridLayout.fromSize(
+      {required GridSize gridSize, required Size size}) {
+    double localWidth = size.width;
+    double localHeight = size.width / gridSize.aspectRatio;
+
+    if (localHeight > size.height) {
+      localHeight = size.height;
+      localWidth = localHeight * gridSize.aspectRatio;
+    }
+
+    final Size localSize = Size(localWidth, localHeight);
+    final double cellSideLength = localWidth / gridSize.width;
+
+    return GridLayout._(gridSize, cellSideLength, size, localSize);
   }
 
-  GridLayout.fromCellSize({required this.cellSize, required this.gridSize})
-      : size = Size(
-            cellSize.width * gridSize.width, cellSize.height * gridSize.height);
+  factory GridLayout.fromCellSideLength(
+      {required GridSize gridSize, required double cellSideLength}) {
+    final Size size =
+        Size(cellSideLength * gridSize.width, cellSideLength * gridSize.height);
+    return GridLayout._(gridSize, cellSideLength, size, size);
+  }
+
+  GridLayout._(this.gridSize, this.cellSideLength, this.size, Size localSize) {
+    _base = Offset((size.width - localSize.width) / 2.0, 0.0);
+    _toleranceRect =
+        EdgeInsets.all(cellSideLength / 2.0).inflateRect(_base & localSize);
+  }
 
   Offset cellToOffset(GridCell cell) =>
-      Offset(cell.x * cellSize.width, cell.y * cellSize.height);
+      _base + Offset(cell.x * cellSideLength, cell.y * cellSideLength);
 
   GridCell? offsetToCell(Offset offset) {
     if (!_toleranceRect.contains(offset)) {
       return null;
     }
 
-    final int x = (offset.dx / cellSize.width).floor();
-    final int y = (offset.dy / cellSize.height).floor();
+    final Offset localOffset = offset - _base;
+
+    final int x = (localOffset.dx / cellSideLength).floor();
+    final int y = (localOffset.dy / cellSideLength).floor();
     final cell = GridCell(x, y);
 
     return gridSize.clamp(cell);
@@ -41,6 +65,3 @@ class GridLayout {
   Rect sectionToRect(GridSection section) => Rect.fromPoints(
       cellToOffset(section.topLeft), cellToOffset(section.bottomRight));
 }
-
-EdgeInsets sizeToEdgeInsets(Size size) => EdgeInsets.symmetric(
-    horizontal: size.width / 2.0, vertical: size.height / 2.0);
