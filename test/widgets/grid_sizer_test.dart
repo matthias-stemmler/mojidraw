@@ -14,7 +14,7 @@ void main() {
       section: GridSection.fromLTRB(1, 1, 9, 11),
       color: Colors.blue,
       backgroundColor: Colors.white,
-      sizeFactor: 1.0,
+      sizeFactor: 2.0,
     );
 
     final Widget widget = CustomPaint(
@@ -23,7 +23,7 @@ void main() {
             Container(decoration: const BoxDecoration(color: Colors.yellow)));
 
     await tester.pumpWidgetBuilder(widget,
-        surfaceSize: const Size(600.0, 720.0));
+        surfaceSize: const Size(600.0, 600.0));
 
     await screenMatchesGolden(tester, 'grid_sizer_painter');
   });

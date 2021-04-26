@@ -176,7 +176,7 @@ class GridSizerPainter extends CustomPainter {
 
     // fill region outside outer rect with semi-transparent black
     canvas.clipRect(outerRect, clipOp: ClipOp.difference);
-    canvas.drawRect(Offset.zero & size, Paint()..color = Colors.black26);
+    canvas.drawRect(layout.rect, Paint()..color = Colors.black26);
 
     // draw outer rect border with foreground color, still clipped by outer rect
     canvas.drawRect(

@@ -14,7 +14,7 @@ class GridLayout {
   final Size size;
 
   late final Offset _base;
-  late final Rect _toleranceRect;
+  late final Rect _rect, _toleranceRect;
 
   factory GridLayout.fromSize(
       {required GridSize gridSize, required Size size}) {
@@ -41,9 +41,11 @@ class GridLayout {
 
   GridLayout._(this.gridSize, this.cellSideLength, this.size, Size localSize) {
     _base = Offset((size.width - localSize.width) / 2.0, 0.0);
-    _toleranceRect =
-        EdgeInsets.all(cellSideLength / 2.0).inflateRect(_base & localSize);
+    _rect = _base & localSize;
+    _toleranceRect = EdgeInsets.all(cellSideLength / 2.0).inflateRect(_rect);
   }
+
+  Rect get rect => _rect;
 
   Offset cellToOffset(GridCell cell) =>
       _base + Offset(cell.x * cellSideLength, cell.y * cellSideLength);

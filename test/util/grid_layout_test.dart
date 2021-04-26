@@ -7,6 +7,13 @@ import 'package:mojidraw/util/grid_size.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('rect returns extent of grid within size bounds', () {
+    final layout = GridLayout.fromSize(
+        size: const Size(10.0, 12.0), gridSize: const GridSize(4, 6));
+
+    expect(layout.rect, const Rect.fromLTRB(1.0, 0.0, 9.0, 12.0));
+  });
+
   group('given size, cellSideLength returns side length of a single cell', () {
     test('for full-width grids', () {
       final layout = GridLayout.fromSize(
