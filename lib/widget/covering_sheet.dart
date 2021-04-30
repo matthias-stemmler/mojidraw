@@ -33,8 +33,8 @@ class CoveringSheet extends StatelessWidget {
             _snappingPositionOpen
           ],
           controller: controller._snappingSheetController,
-          onSheetMoved: (double position) =>
-              controller._savePosition(position, constraints.maxHeight),
+          onSheetMoved: (positionData) =>
+              controller._setOpenness(positionData.relativeToSnappingPositions),
           grabbingHeight: _grabbingHeight,
           grabbing: _Grabbing(),
           sheetBelow: SnappingSheetContent(
@@ -54,6 +54,11 @@ class CoveringSheetController extends ChangeNotifier {
 
   double get openness => _openness;
 
+  void _setOpenness(double value) {
+    _openness = value;
+    notifyListeners();
+  }
+
   void toggle() => _snapToPosition(
       _snappingSheetController.currentSnappingPosition == _snappingPositionOpen
           ? _snappingPositionClosed
@@ -63,16 +68,6 @@ class CoveringSheetController extends ChangeNotifier {
 
   void _snapToPosition(SnappingPosition snappingPosition) {
     _snappingSheetController.snapToPosition(snappingPosition);
-    notifyListeners();
-  }
-
-  void _savePosition(double position, double maxHeight) {
-    final double openPosition =
-        _snappingPositionOpen.getPositionInPixels(maxHeight, _grabbingHeight);
-    final double closedPosition =
-        _snappingPositionClosed.getPositionInPixels(maxHeight, _grabbingHeight);
-
-    _openness = (closedPosition - position) / (closedPosition - openPosition);
     notifyListeners();
   }
 }
