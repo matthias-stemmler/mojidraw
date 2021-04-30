@@ -5,6 +5,7 @@ import 'package:mojidraw/util/grid_layout.dart';
 import 'package:mojidraw/util/grid_section.dart';
 import 'package:mojidraw/util/grid_size.dart';
 import 'package:test/test.dart';
+import 'package:vector_math/vector_math_64.dart';
 
 void main() {
   test('rect returns extent of grid within size bounds', () {
@@ -117,4 +118,23 @@ void main() {
     expect(
         layout.sectionToRect(section), const Rect.fromLTRB(3.0, 4.0, 7.0, 8.0));
   });
+
+  test(
+      'sectionToTransformation returns transformation transforming viewport of entire grid to viewport of given section',
+      () {
+    final layout = GridLayout.fromSize(
+        size: const Size(10.0, 12.0), gridSize: const GridSize(4, 6));
+
+    final section = GridSection.fromLTRB(1, 2, 3, 4);
+
+    final Matrix4 transformation = layout.sectionToTransformation(section);
+
+    expect(_transform(transformation, 0.0, 0.0), const Offset(-7.5, -10.0));
+    expect(_transform(transformation, 10.0, 12.0), const Offset(17.5, 20.0));
+  });
+}
+
+Offset _transform(Matrix4 transformation, double x, double y) {
+  final Vector3 transformed = transformation.transform3(Vector3(x, y, 0.0));
+  return Offset(transformed.x, transformed.y);
 }

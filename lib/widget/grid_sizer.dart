@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../state/drawing_state.dart';
@@ -35,10 +34,11 @@ class GridSizer extends StatefulWidget {
 }
 
 class _GridSizerState extends State<GridSizer> {
+  double _opacity = 0.0, _backgroundOpacity = 0.0;
   _PanBase? _panBase;
 
   GridLayout getLayout(GridSize sceneGridSize) => GridLayout.fromSize(
-      size: context.size ?? Size.zero, gridSize: sceneGridSize);
+      gridSize: sceneGridSize, size: context.size ?? Size.zero);
 
   void _handlePanStart(Offset position) {
     final DrawingState state = context.read();
@@ -109,6 +109,22 @@ class _GridSizerState extends State<GridSizer> {
     _panBase = null;
   }
 
+  double get opacity => _opacity;
+
+  set opacity(double value) {
+    setState(() {
+      _opacity = value;
+    });
+  }
+
+  double get backgroundOpacity => _backgroundOpacity;
+
+  set backgroundOpacity(double value) {
+    setState(() {
+      _backgroundOpacity = value;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -128,7 +144,9 @@ class _GridSizerState extends State<GridSizer> {
             section: section,
             color: Theme.of(context).primaryColor,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            sizeFactor: widget.sizeFactor);
+            sizeFactor: widget.sizeFactor,
+            opacity: _opacity,
+            backgroundOpacity: _backgroundOpacity);
 
     return CustomPaint(foregroundPainter: painter, child: widget.child);
   }
@@ -142,6 +160,14 @@ class GridSizerController {
   void handlePanUpdate(Offset position) => _state?._handlePanUpdate(position);
 
   void handlePanEnd() => _state?._handlePanEnd();
+
+  double get opacity => _state?.opacity ?? 0.0;
+
+  set opacity(double value) => _state?.opacity = value;
+
+  double get backgroundOpacity => _state?.backgroundOpacity ?? 0.0;
+
+  set backgroundOpacity(double value) => _state?.backgroundOpacity = value;
 }
 
 @immutable
@@ -150,14 +176,16 @@ class GridSizerPainter extends CustomPainter {
   final GridSize gridSize;
   final GridSection section;
   final Color color, backgroundColor;
-  final double sizeFactor;
+  final double sizeFactor, opacity, backgroundOpacity;
 
   const GridSizerPainter(
       {required this.gridSize,
       required this.section,
       required this.color,
       required this.backgroundColor,
-      required this.sizeFactor});
+      required this.sizeFactor,
+      required this.opacity,
+      required this.backgroundOpacity});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -168,6 +196,21 @@ class GridSizerPainter extends CustomPainter {
     final Rect innerRect = layout.sectionToRect(section);
     final Rect outerRect = innerRect.inflate(borderWidth / 2.0);
 
+    // save canvas to be able to restore the clip later
+    canvas.save();
+
+    // fill region outside inner rect with semi-transparent background color
+    canvas.clipRect(innerRect, clipOp: ClipOp.difference);
+    canvas.drawRect(Rect.largest,
+        Paint()..color = backgroundColor.withOpacity(backgroundOpacity));
+
+    canvas.restore();
+
+    // save layer to apply opacity uniformly
+    canvas.saveLayer(
+        Rect.largest, Paint()..color = Color.fromRGBO(0, 0, 0, opacity));
+
+    // save canvas to be able to restore the clip later
     canvas.save();
 
     // fill region between inner and outer rects with background color
@@ -176,7 +219,7 @@ class GridSizerPainter extends CustomPainter {
 
     // fill region outside outer rect with semi-transparent black
     canvas.clipRect(outerRect, clipOp: ClipOp.difference);
-    canvas.drawRect(layout.rect, Paint()..color = Colors.black26);
+    canvas.drawRect(Rect.largest, Paint()..color = Colors.black26);
 
     // draw outer rect border with foreground color, still clipped by outer rect
     canvas.drawRect(
@@ -195,6 +238,8 @@ class GridSizerPainter extends CustomPainter {
     for (final position in getHandlePositions(outerRect)) {
       canvas.drawCircle(position, handleRadius, handlePaint);
     }
+
+    canvas.restore();
   }
 
   @override
@@ -204,7 +249,10 @@ class GridSizerPainter extends CustomPainter {
           (oldDelegate.gridSize != gridSize ||
               oldDelegate.section != section ||
               oldDelegate.color != color ||
-              oldDelegate.backgroundColor != backgroundColor);
+              oldDelegate.backgroundColor != backgroundColor ||
+              oldDelegate.sizeFactor != sizeFactor ||
+              oldDelegate.opacity != opacity ||
+              oldDelegate.backgroundOpacity != backgroundOpacity);
 }
 
 class _PanBase {

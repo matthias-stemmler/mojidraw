@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 
 import 'grid_cell.dart';
 import 'grid_section.dart';
@@ -66,4 +66,17 @@ class GridLayout {
 
   Rect sectionToRect(GridSection section) => Rect.fromPoints(
       cellToOffset(section.topLeft), cellToOffset(section.bottomRight));
+
+  Matrix4 sectionToTransformation(GridSection section) {
+    final sectionLayout =
+        GridLayout.fromSize(gridSize: section.size, size: size);
+
+    final double scale = sectionLayout.cellSideLength / cellSideLength;
+    final Offset translation =
+        _rect.topCenter - sectionToRect(section).topCenter * scale;
+
+    return Matrix4.identity()
+      ..translate(translation.dx, translation.dy)
+      ..scale(scale);
+  }
 }

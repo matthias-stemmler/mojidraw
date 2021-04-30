@@ -79,4 +79,10 @@ class ScaleController extends ChangeNotifier {
 
   Offset toScene(Offset viewportPoint) =>
       _transformationController.toScene(viewportPoint);
+
+  @override
+  void dispose() {
+    super.dispose();
+    _transformationController.dispose();
+  }
 }

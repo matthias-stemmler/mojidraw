@@ -5,6 +5,8 @@ import 'package:flutter/material.dart'
 import 'package:provider/provider.dart';
 
 import '../state/drawing_state.dart';
+import '../util/grid_layout.dart';
+import '../util/grid_section.dart';
 import '../util/grid_size.dart';
 import '../util/pan_disambiguator.dart';
 import '../widget/grid_canvas.dart';
@@ -23,7 +25,8 @@ class EmojiGrid extends StatefulWidget {
   State createState() => _EmojiGridState();
 }
 
-class _EmojiGridState extends State<EmojiGrid> {
+class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
+  late final _animator = _EmojiGridAnimator(this);
   late final _panDisambiguator = PanDisambiguator(
       onPanStart: _handlePanStart,
       onPanUpdate: _handlePanUpdate,
@@ -32,9 +35,20 @@ class _EmojiGridState extends State<EmojiGrid> {
   final _gridSizerController = GridSizerController();
   final _scaleController = ScaleController();
 
-  Matrix4? _transformationBeforeResizing;
+  late Matrix4 _transformationBeforeResizing;
 
   bool get _resizing => context.read<DrawingState>().resizing;
+
+  GridSection? get _resizingSection =>
+      context.read<DrawingState>().resizingSection;
+
+  GridSize get _sceneGridSize => context.read<DrawingState>().sceneGridSize;
+
+  GridSection get _sceneGridSection =>
+      context.read<DrawingState>().sceneGridSection;
+
+  GridLayout get _gridLayout => GridLayout.fromSize(
+      gridSize: _sceneGridSize, size: context.size ?? Size.zero);
 
   void _handlePanStart(Offset position) {
     final Offset scenePosition = _scaleController.toScene(position);
@@ -64,16 +78,37 @@ class _EmojiGridState extends State<EmojiGrid> {
 
   void _handleResizeStart() {
     _transformationBeforeResizing = _scaleController.value;
-    _scaleController.value = Matrix4.identity();
+
+    _animator.animate(
+        transformationTween: Matrix4Tween(
+            begin: _scaleController.value.multiplied(
+                _gridLayout.sectionToTransformation(_sceneGridSection)),
+            end: Matrix4.identity()),
+        opacityTween: Tween(begin: _gridSizerController.opacity, end: 1.0));
   }
 
-  void _handleResizeFinish() {
-    _scaleController.value = Matrix4.identity();
+  Future<void> _handleResizeCancelPending() async {
+    await _animator.animate(
+        transformationTween: Matrix4Tween(
+            begin: _scaleController.value,
+            end: _transformationBeforeResizing.multiplied(
+                _gridLayout.sectionToTransformation(_sceneGridSection))),
+        opacityTween: Tween(begin: _gridSizerController.opacity, end: 0.0));
+
+    context.read<DrawingState>().commitPendingResizeAction();
+    _scaleController.value = _transformationBeforeResizing;
   }
 
-  void _handleResizeCancel() {
-    _scaleController.value =
-        _transformationBeforeResizing ?? Matrix4.identity();
+  Future<void> _handleResizeFinishPending() async {
+    await _animator.animate(
+        transformationTween: Matrix4Tween(
+            begin: _scaleController.value,
+            end: _gridLayout.sectionToTransformation(_resizingSection!)),
+        opacityTween: Tween(begin: _gridSizerController.opacity, end: 0.0),
+        backgroundOpacityTween: Tween(begin: 0.0, end: 1.0));
+
+    context.read<DrawingState>().commitPendingResizeAction();
+    _scaleController.value = Matrix4.identity();
   }
 
   @override
@@ -82,40 +117,111 @@ class _EmojiGridState extends State<EmojiGrid> {
 
     final DrawingState state = context.read();
     state.resizeStartNotifier.addListener(_handleResizeStart);
-    state.resizeFinishNotifier.addListener(_handleResizeFinish);
-    state.resizeCancelNotifier.addListener(_handleResizeCancel);
+    state.resizeCancelPendingNotifier.addListener(_handleResizeCancelPending);
+    state.resizeFinishPendingNotifier.addListener(_handleResizeFinishPending);
   }
 
   @override
   void dispose() {
     super.dispose();
 
+    _animator.dispose();
+
     final DrawingState state = context.read();
     state.resizeStartNotifier.removeListener(_handleResizeStart);
-    state.resizeFinishNotifier.removeListener(_handleResizeFinish);
-    state.resizeCancelNotifier.removeListener(_handleResizeCancel);
+    state.resizeCancelPendingNotifier
+        .removeListener(_handleResizeCancelPending);
+    state.resizeFinishPendingNotifier
+        .removeListener(_handleResizeFinishPending);
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool resizeActionPending =
+        context.select((DrawingState state) => state.resizeActionPending);
     final GridSize sceneGridSize =
         context.select((DrawingState state) => state.sceneGridSize);
     final double maxScale = max(sceneGridSize.width / _minGridSize.width,
         sceneGridSize.height / _minGridSize.height);
 
-    return ScaleViewer(
-      onInteractionStart: _panDisambiguator.start,
-      onInteractionUpdate: _panDisambiguator.update,
-      onInteractionEnd: _panDisambiguator.end,
-      maxScale: maxScale,
-      scaleController: _scaleController,
-      child: GridSizer(
-        controller: _gridSizerController,
-        minGridSize: _minGridSize,
-        sizeFactor: maxScale,
-        child: GridCanvas(
-            controller: _gridCanvasController, fontFamily: widget.fontFamily),
+    return IgnorePointer(
+      ignoring: resizeActionPending,
+      child: ScaleViewer(
+        onInteractionStart: (details) {
+          _animator.stopTransformationAnimation();
+          _panDisambiguator.start(details);
+        },
+        onInteractionUpdate: (details) {
+          _animator.stopTransformationAnimation();
+          _panDisambiguator.update(details);
+        },
+        onInteractionEnd: (details) {
+          _animator.stopTransformationAnimation();
+          _panDisambiguator.end(details);
+        },
+        maxScale: maxScale,
+        scaleController: _scaleController,
+        child: GridSizer(
+          controller: _gridSizerController,
+          minGridSize: _minGridSize,
+          sizeFactor: maxScale,
+          child: GridCanvas(
+              controller: _gridCanvasController, fontFamily: widget.fontFamily),
+        ),
       ),
     );
+  }
+}
+
+class _EmojiGridAnimator {
+  final _EmojiGridState state;
+
+  final AnimationController _animationController;
+
+  Animatable<Matrix4>? _transformationTween;
+  Animatable<double>? _opacityTween, _backgroundOpacityTween;
+
+  _EmojiGridAnimator(this.state)
+      : _animationController = AnimationController(
+            vsync: state, duration: const Duration(milliseconds: 500)) {
+    _animationController.addListener(_step);
+  }
+
+  void dispose() => _animationController.dispose();
+
+  Future<void> animate(
+      {Animatable<Matrix4>? transformationTween,
+      Animatable<double>? opacityTween,
+      Animatable<double>? backgroundOpacityTween}) async {
+    _transformationTween = transformationTween;
+    _opacityTween = opacityTween;
+    _backgroundOpacityTween = backgroundOpacityTween ?? ConstantTween(0.0);
+
+    _animationController.reset();
+    await _animationController.animateTo(_animationController.upperBound,
+        curve: Curves.easeInOut);
+
+    _transformationTween = null;
+    _opacityTween = null;
+    _backgroundOpacityTween = null;
+  }
+
+  void stopTransformationAnimation() => _transformationTween = null;
+
+  void _step() {
+    final double value = _animationController.value;
+
+    if (_transformationTween != null) {
+      state._scaleController.value = _transformationTween!.transform(value);
+    }
+
+    if (_opacityTween != null) {
+      state._gridSizerController.opacity = _opacityTween!.transform(value);
+    }
+
+    if (_backgroundOpacityTween != null) {
+      state._gridSizerController.backgroundOpacity =
+          _backgroundOpacityTween!.transform(value);
+    }
   }
 }

@@ -12,8 +12,8 @@ const int _maxPaletteLength = 20;
 
 class DrawingState extends ChangeNotifier {
   final resizeStartNotifier = ChangeNotifier();
-  final resizeFinishNotifier = ChangeNotifier();
-  final resizeCancelNotifier = ChangeNotifier();
+  final resizeCancelPendingNotifier = ChangeNotifier();
+  final resizeFinishPendingNotifier = ChangeNotifier();
 
   CharGrid _grid;
 
@@ -22,6 +22,7 @@ class DrawingState extends ChangeNotifier {
   int _nextScore = 3;
 
   bool _resizing = false;
+  _ResizeAction? _pendingResizeAction;
   GridSection? _resizingSection;
   bool _saved = false;
 
@@ -64,6 +65,8 @@ class DrawingState extends ChangeNotifier {
 
   bool get resizing => _resizing;
 
+  bool get resizeActionPending => _pendingResizeAction != null;
+
   GridSection? get resizingSection => _resizingSection;
 
   set resizingSection(GridSection? value) {
@@ -80,7 +83,36 @@ class DrawingState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void finishResizing() {
+  void requestCancelResizing() {
+    _pendingResizeAction = _ResizeAction.cancel;
+    resizeCancelPendingNotifier.notifyListeners();
+    notifyListeners();
+  }
+
+  void requestFinishResizing() {
+    _pendingResizeAction = _ResizeAction.finish;
+    resizeFinishPendingNotifier.notifyListeners();
+    notifyListeners();
+  }
+
+  void commitPendingResizeAction() {
+    if (_pendingResizeAction == _ResizeAction.cancel) {
+      _cancelResizing();
+    } else if (_pendingResizeAction == _ResizeAction.finish) {
+      _finishResizing();
+    }
+
+    _pendingResizeAction = null;
+  }
+
+  void _cancelResizing() {
+    _resizingSection = null;
+    _resizing = false;
+
+    notifyListeners();
+  }
+
+  void _finishResizing() {
     if (_resizingSection != sceneGridSection) {
       _grid = CharGrid.generate(
           _resizingSection!.size,
@@ -95,15 +127,6 @@ class DrawingState extends ChangeNotifier {
     _resizingSection = null;
     _resizing = false;
 
-    resizeFinishNotifier.notifyListeners();
-    notifyListeners();
-  }
-
-  void cancelResizing() {
-    _resizingSection = null;
-    _resizing = false;
-
-    resizeCancelNotifier.notifyListeners();
     notifyListeners();
   }
 
@@ -146,6 +169,15 @@ class DrawingState extends ChangeNotifier {
       return minScoreIndex;
     }
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    resizeStartNotifier.dispose();
+    resizeCancelPendingNotifier.dispose();
+    resizeFinishPendingNotifier.dispose();
+  }
 }
 
 class _PaletteEntry {
@@ -154,3 +186,5 @@ class _PaletteEntry {
 
   _PaletteEntry(this.char);
 }
+
+enum _ResizeAction { cancel, finish }

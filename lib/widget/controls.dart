@@ -15,43 +15,50 @@ class Controls extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool resizing =
         context.select((DrawingState state) => state.resizing);
+    final bool resizeActionPending =
+        context.select((DrawingState state) => state.resizeActionPending);
 
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Visibility(
-        visible: !resizing,
-        child: Row(
-          children: [CopyButton(), SaveImageButton(fontFamily: fontFamily)],
-        ),
-      ),
-      Row(children: [
+    final bool resizeMode = resizing && !resizeActionPending;
+
+    return IgnorePointer(
+      ignoring: resizeActionPending,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Visibility(
-          visible: !resizing,
-          child: IconButton(
-              icon: const Icon(Icons.transform_outlined),
-              tooltip: 'Change size of grid',
-              onPressed: () {
-                context.read<DrawingState>().startResizing();
-              }),
+          visible: !resizeMode,
+          child: Row(
+            children: [CopyButton(), SaveImageButton(fontFamily: fontFamily)],
+          ),
         ),
-        Visibility(
-          visible: resizing,
-          child: IconButton(
-              icon: const Icon(Icons.close_outlined),
-              tooltip: 'Cancel',
-              onPressed: () {
-                context.read<DrawingState>().cancelResizing();
-              }),
-        ),
-        Visibility(
-          visible: resizing,
-          child: IconButton(
-              icon: const Icon(Icons.check_outlined),
-              tooltip: 'Confirm size change',
-              onPressed: () {
-                context.read<DrawingState>().finishResizing();
-              }),
-        )
-      ])
-    ]);
+        Row(children: [
+          Visibility(
+            visible: !resizeMode,
+            child: IconButton(
+                icon: const Icon(Icons.transform_outlined),
+                tooltip: 'Change size of grid',
+                onPressed: () {
+                  context.read<DrawingState>().startResizing();
+                }),
+          ),
+          Visibility(
+            visible: resizeMode,
+            child: IconButton(
+                icon: const Icon(Icons.close_outlined),
+                tooltip: 'Cancel',
+                onPressed: () {
+                  context.read<DrawingState>().requestCancelResizing();
+                }),
+          ),
+          Visibility(
+            visible: resizeMode,
+            child: IconButton(
+                icon: const Icon(Icons.check_outlined),
+                tooltip: 'Confirm size change',
+                onPressed: () {
+                  context.read<DrawingState>().requestFinishResizing();
+                }),
+          )
+        ])
+      ]),
+    );
   }
 }
