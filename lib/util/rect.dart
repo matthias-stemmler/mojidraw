@@ -30,13 +30,19 @@ Iterable<Offset> getHandlePositions(Rect rect) =>
     RectHandle.values.map((handle) => _getHandlePosition(rect, handle));
 
 RectHandle? getClosestHandle(Rect rect, Offset position, double maxDistance) {
+  RectHandle? closestHandle;
+  double smallestDistance = double.infinity;
+
   for (final handle in RectHandle.values) {
-    if ((position - _getHandlePosition(rect, handle)).distance < maxDistance) {
-      return handle;
+    final double distance =
+        (position - _getHandlePosition(rect, handle)).distance;
+    if (distance < maxDistance && distance < smallestDistance) {
+      smallestDistance = distance;
+      closestHandle = handle;
     }
   }
 
-  return null;
+  return closestHandle;
 }
 
 Offset _getHandlePosition(Rect rect, RectHandle handle) => Offset(

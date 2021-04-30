@@ -1,16 +1,12 @@
 TODO
 ====
-
-* Zoom when switching to/from resize mode
 * Ignore pointer during splash screen
-* Limit zoom so that emojis don't get blurred
 * Cropping functionality in resize mode
 * Initial grid background
 * Visualize empty cells
 
 Features
 ========
-
 * Export text with multiple spaces for empty cells
 * Use navigator push/pop for resize state and maybe emoji picker
 * Emoji search

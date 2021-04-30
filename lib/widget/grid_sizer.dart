@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -48,10 +47,8 @@ class _GridSizerState extends State<GridSizer> {
     final Rect rect = layout
         .sectionToRect(section)
         .inflate(_borderWidth * widget.sizeFactor / 2.0);
-    final double maxHandleDistance =
-        min(rect.shortestSide / 4.0, _maxHandleDistance * widget.sizeFactor);
-    final RectHandle? handle =
-        getClosestHandle(rect, position, maxHandleDistance);
+    final RectHandle? handle = getClosestHandle(
+        rect, position, _maxHandleDistance * widget.sizeFactor);
 
     _panBase = handle == null ? null : _PanBase(section, handle, position);
   }
