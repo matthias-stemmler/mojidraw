@@ -29,6 +29,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  assets:
+    - test/dummy.png
+
   fonts:
     - family: JoyPixels
       fonts:
