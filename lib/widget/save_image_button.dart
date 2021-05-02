@@ -63,7 +63,7 @@ class _SaveImageButtonState extends State<SaveImageButton> {
           grid: state.grid,
           cellSideLength: _cellSideLength,
           fontFamily: widget.fontFamily,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Colors.white,
           padding: const EdgeInsets.all(_cellSideLength / 4.0));
       final ByteData? imageData =
           await image.toByteData(format: ImageByteFormat.png);
