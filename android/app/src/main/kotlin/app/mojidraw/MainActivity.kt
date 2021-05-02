@@ -1,6 +1,7 @@
 package app.mojidraw
 
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.SplashScreen
 import io.flutter.embedding.engine.FlutterEngine
 
 class MainActivity : FlutterActivity() {
@@ -10,4 +11,7 @@ class MainActivity : FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
         galleryChannelHandler.register(flutterEngine)
     }
+
+    override fun provideSplashScreen(): SplashScreen =
+            InputAbsorbingSplashScreenDecorator(super.provideSplashScreen())
 }
