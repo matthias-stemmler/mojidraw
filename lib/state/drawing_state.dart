@@ -19,7 +19,7 @@ class DrawingState extends ChangeNotifier {
 
   final List<_PaletteEntry> _palette;
   int _penIndex;
-  int _nextScore = 3;
+  late int _nextScore;
 
   bool _resizing = false;
   _ResizeAction? _pendingResizeAction;
@@ -27,13 +27,13 @@ class DrawingState extends ChangeNotifier {
   bool _saved = false;
 
   DrawingState()
-      : _grid = CharGrid(_initialGridSize, background: '🍀'),
+      : _grid = CharGrid(_initialGridSize, background: '🙂'),
         _palette = List.empty(growable: true),
-        _penIndex = 0 {
+        _penIndex = 2 {
     _palette.add(_PaletteEntry(' '));
-    _palette.add(_PaletteEntry('🍀')..score = 2);
-    _palette.add(_PaletteEntry('🦦')..score = 1);
-    _palette.add(_PaletteEntry('❤')..score = 0);
+    _palette.add(_PaletteEntry('🙂')..score = 0);
+    _palette.add(_PaletteEntry('😊')..score = 1);
+    _nextScore = 2;
   }
 
   CharGrid get grid => _grid;

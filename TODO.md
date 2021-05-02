@@ -1,9 +1,7 @@
 TODO
 ====
-* Ignore pointer during splash screen
 * Cropping functionality in resize mode
-* Initial grid background
-* Visualize empty cells
+* Visualize empty cells / visualize grid boundary
 
 Features
 ========
