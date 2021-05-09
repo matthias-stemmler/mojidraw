@@ -1,12 +1,12 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../state/drawing_state.dart';
-import '../util/fitting_text_renderer.dart';
 import '../util/grid_cell.dart';
 import '../util/grid_layout.dart';
 import '../util/grid_section.dart';
 import '../util/grid_size.dart';
+import '../util/paint_grid_cell.dart';
 
 class GridCanvas extends StatefulWidget {
   final GridCanvasController? controller;
@@ -38,12 +38,18 @@ class _GridCanvasState extends State<GridCanvas> {
   }
 
   @override
+  void dispose() {
+    widget.controller?._state = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final GridSize gridSize =
         context.select((DrawingState state) => state.grid.size);
     final GridSize sceneGridSize =
         context.select((DrawingState state) => state.sceneGridSize);
-    final sceneGridSection =
+    final GridSection sceneGridSection =
         context.select((DrawingState state) => state.sceneGridSection);
 
     return CustomMultiChildLayout(
@@ -101,29 +107,46 @@ class _EmojiGridCell extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => CustomPaint(
-      painter: _GridCellPainter(
-          text: context.select((DrawingState state) => state.grid.get(cell))!,
-          fontFamily: fontFamily));
+  Widget build(BuildContext context) {
+    final String text =
+        context.select((DrawingState state) => state.grid.get(cell))!;
+    final double emptiness =
+        context.select((DrawingState state) => state.grid.emptiness(cell));
+
+    return CustomPaint(
+        painter: _GridCellPainter(
+            text: text,
+            fontFamily: fontFamily,
+            backgroundColor: emptiness == 0.0
+                ? null
+                : Theme.of(context)
+                    .primaryColor
+                    .withOpacity(0.05 * emptiness)));
+  }
 }
 
 @immutable
 class _GridCellPainter extends CustomPainter {
   final String text;
   final String? fontFamily;
+  final Color? backgroundColor;
 
-  const _GridCellPainter({required this.text, this.fontFamily});
+  const _GridCellPainter(
+      {required this.text, this.fontFamily, this.backgroundColor});
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final renderer = FittingTextRenderer(text: text, fontFamily: fontFamily);
-    final TextPainter painter = renderer.getTextPainter(size);
-    painter.paint(canvas, Offset.zero);
-  }
+  void paint(Canvas canvas, Size size) => paintGridCell(
+      canvas: canvas,
+      rect: Offset.zero & size,
+      text: text,
+      fontFamily: fontFamily,
+      backgroundColor: backgroundColor);
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) =>
       oldDelegate is! _GridCellPainter ||
       oldDelegate is _GridCellPainter &&
-          (oldDelegate.text != text || oldDelegate.fontFamily != fontFamily);
+          (oldDelegate.text != text ||
+              oldDelegate.fontFamily != fontFamily ||
+              oldDelegate.backgroundColor != backgroundColor);
 }

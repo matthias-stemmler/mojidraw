@@ -82,7 +82,7 @@ class ScaleController extends ChangeNotifier {
 
   @override
   void dispose() {
-    super.dispose();
     _transformationController.dispose();
+    super.dispose();
   }
 }

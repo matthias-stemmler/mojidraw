@@ -55,6 +55,68 @@ void main() {
     });
   });
 
+  group('isEmpty', () {
+    test('returns false for non-empty cell', () {
+      final charGrid = CharGrid(size);
+      charGrid.set(cell, 'X');
+
+      final bool empty = charGrid.isEmpty(cell);
+
+      expect(empty, isFalse);
+    });
+
+    test('returns true for empty cell', () {
+      final charGrid = CharGrid(size);
+      charGrid.set(cell, ' ');
+
+      final bool empty = charGrid.isEmpty(cell);
+
+      expect(empty, isTrue);
+    });
+
+    test('returns true for cell outside grid', () {
+      final charGrid = CharGrid(size);
+      final cellOutsideGrid = GridCell(size.width, size.height);
+
+      final bool empty = charGrid.isEmpty(cellOutsideGrid);
+
+      expect(empty, isTrue);
+    });
+  });
+
+  test('emptiness returns correct emptiness values', () {
+    const size = GridSize(13, 13);
+    final charGrid = CharGrid(size);
+
+    // set each corner to be non-empty
+    charGrid.set(const GridCell(0, 0), 'X');
+    charGrid.set(GridCell(size.width - 1, 0), 'X');
+    charGrid.set(GridCell(0, size.height - 1), 'X');
+    charGrid.set(GridCell(size.width - 1, size.height - 1), 'X');
+
+    final List<double> emptinessValues =
+        size.cells.map(charGrid.emptiness).toList();
+    final Iterable<Iterable<double>> emptinessValuesByRow =
+        Iterable<int>.generate(size.height)
+            .map((y) => emptinessValues.skip(y * size.width).take(size.width));
+
+    expect(emptinessValuesByRow, [
+      [0.0, 0.0, 0.4, 0.4, 0.6, 0.8, 1.0, 0.8, 0.6, 0.4, 0.4, 0.0, 0.0],
+      [0.0, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 0.8, 0.6, 0.4, 0.2, 0.0, 0.0],
+      [0.4, 0.2, 0.2, 0.4, 0.6, 0.8, 1.0, 0.8, 0.6, 0.4, 0.2, 0.2, 0.4],
+      [0.4, 0.4, 0.4, 0.4, 0.6, 0.8, 1.0, 0.8, 0.6, 0.4, 0.4, 0.4, 0.4],
+      [0.6, 0.6, 0.6, 0.6, 0.6, 0.8, 1.0, 0.8, 0.6, 0.6, 0.6, 0.6, 0.6],
+      [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 1.0, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
+      [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+      [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 1.0, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8],
+      [0.6, 0.6, 0.6, 0.6, 0.6, 0.8, 1.0, 0.8, 0.6, 0.6, 0.6, 0.6, 0.6],
+      [0.4, 0.4, 0.4, 0.4, 0.6, 0.8, 1.0, 0.8, 0.6, 0.4, 0.4, 0.4, 0.4],
+      [0.4, 0.2, 0.2, 0.4, 0.6, 0.8, 1.0, 0.8, 0.6, 0.4, 0.2, 0.2, 0.4],
+      [0.0, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 0.8, 0.6, 0.4, 0.2, 0.0, 0.0],
+      [0.0, 0.0, 0.4, 0.4, 0.6, 0.8, 1.0, 0.8, 0.6, 0.4, 0.4, 0.0, 0.0]
+    ]);
+  });
+
   test('text returns grid rendered as text', () {
     final charGrid = CharGrid(size, background: 'B');
     charGrid.set(cell, 'F');

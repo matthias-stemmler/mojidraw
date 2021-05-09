@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../state/drawing_state.dart';
 import '../util/emoji.dart';
 import '../util/fitting_text_renderer.dart';
-import '../widget/covering_sheet.dart';
+import 'covering_sheet.dart';
 
 const EdgeInsets _padding = EdgeInsets.all(5.0);
 

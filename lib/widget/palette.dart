@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../state/drawing_state.dart';
 import '../util/fitting_text_renderer.dart';
-import '../widget/covering_sheet.dart';
+import 'covering_sheet.dart';
 
 const double _minButtonWidth = 48.0;
 const EdgeInsets _buttonPadding = EdgeInsets.all(5.0);

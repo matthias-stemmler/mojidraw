@@ -16,7 +16,7 @@ class Controls extends StatelessWidget {
     final bool resizing =
         context.select((DrawingState state) => state.resizing);
     final bool resizeActionPending =
-        context.select((DrawingState state) => state.resizeActionPending);
+        context.select((DrawingState state) => state.resizePending);
 
     final bool resizeMode = resizing && !resizeActionPending;
 

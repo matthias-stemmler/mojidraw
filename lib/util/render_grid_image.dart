@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart' hide Image;
 
 import 'char_grid.dart';
-import 'fitting_text_renderer.dart';
 import 'grid_layout.dart';
+import 'paint_grid_cell.dart';
 
 Future<Image> renderGridImage(
     {required CharGrid grid,
@@ -19,11 +19,13 @@ Future<Image> renderGridImage(
     canvas.drawRect(Rect.largest, Paint()..color = backgroundColor);
 
     for (final cell in grid.size.cells) {
-      final renderer =
-          FittingTextRenderer(text: grid.get(cell)!, fontFamily: fontFamily);
-      final painter = renderer.getTextPainter(Size.square(cellSideLength));
-      final offset = padding.topLeft + layout.cellToOffset(cell);
-      painter.paint(canvas, offset);
+      final Offset offset = padding.topLeft + layout.cellToOffset(cell);
+      final Size size = Size.square(cellSideLength);
+      paintGridCell(
+          canvas: canvas,
+          rect: offset & size,
+          text: grid.get(cell)!,
+          fontFamily: fontFamily);
     }
   });
 

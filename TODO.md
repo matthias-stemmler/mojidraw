@@ -1,7 +1,9 @@
 TODO
 ====
-* Cropping functionality in resize mode
-* Visualize empty cells / visualize grid boundary
+* Imprint w/ logo
+* Homepage
+* Play Store
+
 
 Features
 ========
@@ -9,7 +11,6 @@ Features
 * Use navigator push/pop for resize state and maybe emoji picker
 * Emoji search
 * Share as text or image
-* Imprint w/ logo
 * Settings:
   * Emoji font
   * for image export: cell size, background color, padding
@@ -29,3 +30,4 @@ Features
   * Individual drawings
 * Multiline palette (configurable?)
 * Horizontally flipped emojis
+* Cropping functionality in resize mode

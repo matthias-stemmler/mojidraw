@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 import '../util/char_grid.dart';
@@ -22,8 +21,9 @@ class DrawingState extends ChangeNotifier {
   late int _nextScore;
 
   bool _resizing = false;
-  _ResizeAction? _pendingResizeAction;
+  bool _resizePending = false;
   GridSection? _resizingSection;
+  CharGrid? _resizedGrid;
   bool _saved = false;
 
   DrawingState()
@@ -37,6 +37,8 @@ class DrawingState extends ChangeNotifier {
   }
 
   CharGrid get grid => _grid;
+
+  CharGrid get resizedGrid => _resizedGrid ?? _grid;
 
   GridSize get sceneGridSize => resizing ? _resizeSceneGridSize : grid.size;
 
@@ -65,9 +67,9 @@ class DrawingState extends ChangeNotifier {
 
   bool get resizing => _resizing;
 
-  bool get resizeActionPending => _pendingResizeAction != null;
+  bool get resizePending => _resizePending;
 
-  GridSection? get resizingSection => _resizingSection;
+  GridSection get resizingSection => _resizingSection ?? sceneGridSection;
 
   set resizingSection(GridSection? value) {
     _resizingSection = value;
@@ -84,46 +86,32 @@ class DrawingState extends ChangeNotifier {
   }
 
   void requestCancelResizing() {
-    _pendingResizeAction = _ResizeAction.cancel;
+    _resizePending = true;
     resizeCancelPendingNotifier.notifyListeners();
     notifyListeners();
   }
 
   void requestFinishResizing() {
-    _pendingResizeAction = _ResizeAction.finish;
-    resizeFinishPendingNotifier.notifyListeners();
-    notifyListeners();
-  }
-
-  void commitPendingResizeAction() {
-    if (_pendingResizeAction == _ResizeAction.cancel) {
-      _cancelResizing();
-    } else if (_pendingResizeAction == _ResizeAction.finish) {
-      _finishResizing();
-    }
-
-    _pendingResizeAction = null;
-  }
-
-  void _cancelResizing() {
-    _resizingSection = null;
-    _resizing = false;
-
-    notifyListeners();
-  }
-
-  void _finishResizing() {
     if (_resizingSection != sceneGridSection) {
-      _grid = CharGrid.generate(
+      _resizedGrid = CharGrid.generate(
           _resizingSection!.size,
           (GridCell cell) =>
               _grid.get(
-                  cell + resizingSection!.topLeft - sceneGridSection.topLeft) ??
+                  cell + resizingSection.topLeft - sceneGridSection.topLeft) ??
               ' ');
 
       _saved = false;
     }
 
+    _resizePending = true;
+    resizeFinishPendingNotifier.notifyListeners();
+    notifyListeners();
+  }
+
+  void commitPendingResizeAction() {
+    _resizePending = false;
+    _grid = resizedGrid;
+    _resizedGrid = null;
     _resizingSection = null;
     _resizing = false;
 
@@ -172,11 +160,11 @@ class DrawingState extends ChangeNotifier {
 
   @override
   void dispose() {
-    super.dispose();
-
     resizeStartNotifier.dispose();
     resizeCancelPendingNotifier.dispose();
     resizeFinishPendingNotifier.dispose();
+
+    super.dispose();
   }
 }
 
@@ -186,5 +174,3 @@ class _PaletteEntry {
 
   _PaletteEntry(this.char);
 }
-
-enum _ResizeAction { cancel, finish }

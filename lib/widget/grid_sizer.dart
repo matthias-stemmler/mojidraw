@@ -42,7 +42,7 @@ class _GridSizerState extends State<GridSizer> {
   void _handlePanStart(Offset position) {
     final DrawingState state = context.read();
     final GridLayout layout = getLayout(state.sceneGridSize);
-    final GridSection section = state.resizingSection!;
+    final GridSection section = state.resizingSection;
 
     final Rect rect = layout
         .sectionToRect(section)

@@ -9,9 +9,10 @@ import '../util/grid_layout.dart';
 import '../util/grid_section.dart';
 import '../util/grid_size.dart';
 import '../util/pan_disambiguator.dart';
-import '../widget/grid_canvas.dart';
-import '../widget/grid_sizer.dart';
-import '../widget/scale_viewer.dart';
+import 'grid_canvas.dart';
+import 'grid_display.dart';
+import 'grid_sizer.dart';
+import 'scale_viewer.dart';
 
 const _minGridSize = GridSize(2, 2);
 
@@ -32,6 +33,7 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
       onPanUpdate: _handlePanUpdate,
       onPanEnd: _handlePanEnd);
   final _gridCanvasController = GridCanvasController();
+  final _gridDisplayController = GridDisplayController();
   final _gridSizerController = GridSizerController();
   final _scaleController = ScaleController();
 
@@ -123,8 +125,6 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    super.dispose();
-
     _animator.dispose();
 
     final DrawingState state = context.read();
@@ -133,19 +133,23 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
         .removeListener(_handleResizeCancelPending);
     state.resizeFinishPendingNotifier
         .removeListener(_handleResizeFinishPending);
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool resizeActionPending =
-        context.select((DrawingState state) => state.resizeActionPending);
+    final bool resizing =
+        context.select((DrawingState state) => state.resizing);
+    final bool resizePending =
+        context.select((DrawingState state) => state.resizePending);
     final GridSize sceneGridSize =
         context.select((DrawingState state) => state.sceneGridSize);
     final double maxScale = max(sceneGridSize.width / _minGridSize.width,
         sceneGridSize.height / _minGridSize.height);
 
     return IgnorePointer(
-      ignoring: resizeActionPending,
+      ignoring: resizePending,
       child: ScaleViewer(
         onInteractionStart: (details) {
           _animator.stopTransformationAnimation();
@@ -162,12 +166,16 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
         maxScale: maxScale,
         scaleController: _scaleController,
         child: GridSizer(
-          controller: _gridSizerController,
-          minGridSize: _minGridSize,
-          sizeFactor: maxScale,
-          child: GridCanvas(
-              controller: _gridCanvasController, fontFamily: widget.fontFamily),
-        ),
+            controller: _gridSizerController,
+            minGridSize: _minGridSize,
+            sizeFactor: maxScale,
+            child: resizing
+                ? GridDisplay(
+                    controller: _gridDisplayController,
+                    fontFamily: widget.fontFamily)
+                : GridCanvas(
+                    controller: _gridCanvasController,
+                    fontFamily: widget.fontFamily)),
       ),
     );
   }
@@ -216,7 +224,9 @@ class _EmojiGridAnimator {
     }
 
     if (_opacityTween != null) {
-      state._gridSizerController.opacity = _opacityTween!.transform(value);
+      final opacity = _opacityTween!.transform(value);
+      state._gridSizerController.opacity = opacity;
+      state._gridDisplayController.emptyOpacity = 1.0 - opacity;
     }
 
     if (_backgroundOpacityTween != null) {
