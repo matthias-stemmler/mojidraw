@@ -1,5 +1,6 @@
 TODO
 ====
+* Close palette on resize action
 * Imprint w/ logo
 * Homepage
 * Play Store
