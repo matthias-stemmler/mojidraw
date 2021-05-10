@@ -1,6 +1,5 @@
 TODO
 ====
-* Close palette on resize action
 * Imprint w/ logo
 * Homepage
 * Play Store
@@ -8,7 +7,6 @@ TODO
 
 Features
 ========
-* Export text with multiple spaces for empty cells
 * Use navigator push/pop for resize state and maybe emoji picker
 * Emoji search
 * Share as text or image

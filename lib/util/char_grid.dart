@@ -57,7 +57,8 @@ class CharGrid {
 
   String get text => Iterable<int>.generate(size.height)
       .map((y) => _chars.sublist(y * size.width, (y + 1) * size.width).join())
-      .join('\n');
+      .join('\n')
+      .replaceAll(' ', '▫');
 
   int _cellToIndex(GridCell cell) => cell.y * size.width + cell.x;
 

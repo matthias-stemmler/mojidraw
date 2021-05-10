@@ -117,10 +117,12 @@ void main() {
     ]);
   });
 
-  test('text returns grid rendered as text', () {
+  test(
+      'text returns grid rendered as text, replacing empty cells by white squares',
+      () {
     final charGrid = CharGrid(size, background: 'B');
-    charGrid.set(cell, 'F');
+    charGrid.set(cell, ' ');
 
-    expect(charGrid.text, 'BB\nBB\nBB\nBF\nBB\nBB\nBB\nBB');
+    expect(charGrid.text, 'BB\nBB\nBB\nB▫\nBB\nBB\nBB\nBB');
   });
 }
