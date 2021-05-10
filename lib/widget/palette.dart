@@ -138,6 +138,30 @@ class _ToggleButtons extends StatefulWidget {
 }
 
 class _ToggleButtonsState extends State<_ToggleButtons> {
+  void _handleResizeAction() {
+    context.read<CoveringSheetController>().close();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    final DrawingState state = context.read();
+    state.resizeStartNotifier.addListener(_handleResizeAction);
+    state.resizeCancelPendingNotifier.addListener(_handleResizeAction);
+    state.resizeFinishPendingNotifier.addListener(_handleResizeAction);
+  }
+
+  @override
+  void dispose() {
+    final DrawingState state = context.read();
+    state.resizeStartNotifier.removeListener(_handleResizeAction);
+    state.resizeCancelPendingNotifier.removeListener(_handleResizeAction);
+    state.resizeFinishPendingNotifier.removeListener(_handleResizeAction);
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isSelected = Iterable.generate(widget.chars.length)
