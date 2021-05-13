@@ -31,11 +31,10 @@ Iterable<Offset> getHandlePositions(Rect rect) =>
 
 RectHandle? getClosestHandle(Rect rect, Offset position, double maxDistance) {
   RectHandle? closestHandle;
-  double smallestDistance = double.infinity;
+  var smallestDistance = double.infinity;
 
   for (final handle in RectHandle.values) {
-    final double distance =
-        (position - _getHandlePosition(rect, handle)).distance;
+    final distance = (position - _getHandlePosition(rect, handle)).distance;
     if (distance < maxDistance && distance < smallestDistance) {
       smallestDistance = distance;
       closestHandle = handle;

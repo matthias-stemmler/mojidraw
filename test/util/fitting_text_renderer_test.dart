@@ -30,16 +30,16 @@ class _TestPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final TextPainter painter = _renderer.getTextPainter(size);
+    final painter = _renderer.getTextPainter(size);
 
-    final Rect rect = _center(size, painter.size);
+    final rect = _center(size, painter.size);
 
     canvas.drawRect(rect, Paint()..color = Colors.grey);
     painter.paint(canvas, rect.topLeft);
   }
 
   Rect _center(Size outerSize, Size innerSize) {
-    final Offset offset = (outerSize - innerSize as Offset) / 2.0;
+    final offset = (outerSize - innerSize as Offset) / 2.0;
     return offset & innerSize;
   }
 

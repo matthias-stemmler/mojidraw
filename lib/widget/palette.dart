@@ -23,16 +23,16 @@ class Palette extends StatelessWidget {
 
   void _handlePenSelected(
       int penIndex, double scrollWidth, double buttonWidth) {
-    final double focusLeft = penIndex * buttonWidth;
-    final double viewportLeft = _scrollController.offset;
+    final focusLeft = penIndex * buttonWidth;
+    final viewportLeft = _scrollController.offset;
 
     if (focusLeft < viewportLeft) {
       _scrollTo(focusLeft);
       return;
     }
 
-    final double focusRight = focusLeft + buttonWidth;
-    final double viewportRight = viewportLeft + scrollWidth;
+    final focusRight = focusLeft + buttonWidth;
+    final viewportRight = viewportLeft + scrollWidth;
 
     if (focusRight > viewportRight) {
       _scrollTo(focusRight - scrollWidth);
@@ -49,18 +49,18 @@ class Palette extends StatelessWidget {
       alignment: Alignment.topLeft,
       child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-        final Iterable<String> chars =
+        final chars =
             context.select((DrawingState state) => state.paletteChars);
 
-        final double width = constraints.maxWidth;
-        final double buttonCount =
+        final width = constraints.maxWidth;
+        final buttonCount =
             (width / _minButtonWidth - _buttonCutoffRatio).floor() +
                 _buttonCutoffRatio;
-        final double buttonWidth = width / buttonCount;
-        final double scrollWidth = width - buttonWidth;
+        final buttonWidth = width / buttonCount;
+        final scrollWidth = width - buttonWidth;
         final buttonSize = Size.square(buttonWidth);
         final buttonConstraints = BoxConstraints.tight(buttonSize);
-        final Size textSize = _buttonPadding.deflateSize(buttonSize);
+        final textSize = _buttonPadding.deflateSize(buttonSize);
 
         return Row(
           children: [
@@ -102,7 +102,7 @@ class _PenButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int penIndex = context.select((DrawingState state) => state.penIndex);
+    final penIndex = context.select((DrawingState state) => state.penIndex);
 
     return _ToggleButtons(
       chars: chars,
@@ -146,7 +146,7 @@ class _ToggleButtonsState extends State<_ToggleButtons> {
   void initState() {
     super.initState();
 
-    final DrawingState state = context.read();
+    final state = context.read();
     state.resizeStartNotifier.addListener(_handleResizeAction);
     state.resizeCancelPendingNotifier.addListener(_handleResizeAction);
     state.resizeFinishPendingNotifier.addListener(_handleResizeAction);
@@ -154,7 +154,7 @@ class _ToggleButtonsState extends State<_ToggleButtons> {
 
   @override
   void dispose() {
-    final DrawingState state = context.read();
+    final state = context.read();
     state.resizeStartNotifier.removeListener(_handleResizeAction);
     state.resizeCancelPendingNotifier.removeListener(_handleResizeAction);
     state.resizeFinishPendingNotifier.removeListener(_handleResizeAction);
@@ -217,7 +217,7 @@ class _ExpandIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double openness =
+    final openness =
         context.select((CoveringSheetController state) => state.openness);
 
     return Transform.rotate(

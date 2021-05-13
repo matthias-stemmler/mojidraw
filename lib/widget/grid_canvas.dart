@@ -24,7 +24,7 @@ class _GridCanvasState extends State<GridCanvas> {
     final layout = GridLayout.fromSize(
         size: context.size ?? Size.zero,
         gridSize: context.read<DrawingState>().grid.size);
-    final GridCell? cell = layout.offsetToCell(position);
+    final cell = layout.offsetToCell(position);
 
     if (cell != null) {
       context.read<DrawingState>().draw(cell);
@@ -45,11 +45,10 @@ class _GridCanvasState extends State<GridCanvas> {
 
   @override
   Widget build(BuildContext context) {
-    final GridSize gridSize =
-        context.select((DrawingState state) => state.grid.size);
-    final GridSize sceneGridSize =
+    final gridSize = context.select((DrawingState state) => state.grid.size);
+    final sceneGridSize =
         context.select((DrawingState state) => state.sceneGridSize);
-    final GridSection sceneGridSection =
+    final sceneGridSection =
         context.select((DrawingState state) => state.sceneGridSection);
 
     return CustomMultiChildLayout(
@@ -108,9 +107,8 @@ class _EmojiGridCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String text =
-        context.select((DrawingState state) => state.grid.get(cell))!;
-    final double emptiness =
+    final text = context.select((DrawingState state) => state.grid.get(cell))!;
+    final emptiness =
         context.select((DrawingState state) => state.grid.emptiness(cell));
 
     return CustomPaint(

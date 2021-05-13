@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart' hide Image;
@@ -43,14 +42,14 @@ class _SaveImageButtonState extends State<SaveImageButton> {
     final galleryService = GalleryService(context);
 
     try {
-      final DrawingState state = context.read<DrawingState>();
+      final state = context.read<DrawingState>();
 
       if (state.saved) {
         await Fluttertoast.showToast(msg: 'Already saved to gallery');
         return;
       }
 
-      final bool permitted = await galleryService.tryGetGalleryAccess();
+      final permitted = await galleryService.tryGetGalleryAccess();
       if (!permitted) {
         return;
       }
@@ -59,20 +58,19 @@ class _SaveImageButtonState extends State<SaveImageButton> {
         msg: 'Saved to gallery',
       );
 
-      final Image image = await renderGridImage(
+      final image = await renderGridImage(
           grid: state.grid,
           cellSideLength: _cellSideLength,
           fontFamily: widget.fontFamily,
           backgroundColor: Colors.white,
           padding: const EdgeInsets.all(_cellSideLength / 4.0));
-      final ByteData? imageData =
-          await image.toByteData(format: ImageByteFormat.png);
+      final imageData = await image.toByteData(format: ImageByteFormat.png);
 
       if (imageData == null) {
-        throw GalleryServiceException("Failed to encode image");
+        throw GalleryServiceException('Failed to encode image');
       }
 
-      final timestamp = DateFormat("yyyy-MM-dd-HHmmss").format(DateTime.now());
+      final timestamp = DateFormat('yyyy-MM-dd-HHmmss').format(DateTime.now());
 
       await galleryService.saveImageToGallery(
           imageData: imageData,

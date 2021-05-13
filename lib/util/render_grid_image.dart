@@ -15,12 +15,12 @@ Future<Image> renderGridImage(
   final layout = GridLayout.fromCellSideLength(
       cellSideLength: cellSideLength, gridSize: grid.size);
 
-  final Picture picture = _recordPicture((canvas) {
+  final picture = _recordPicture((canvas) {
     canvas.drawRect(Rect.largest, Paint()..color = backgroundColor);
 
     for (final cell in grid.size.cells) {
-      final Offset offset = padding.topLeft + layout.cellToOffset(cell);
-      final Size size = Size.square(cellSideLength);
+      final offset = padding.topLeft + layout.cellToOffset(cell);
+      final size = Size.square(cellSideLength);
       paintGridCell(
           canvas: canvas,
           rect: offset & size,
@@ -29,7 +29,7 @@ Future<Image> renderGridImage(
     }
   });
 
-  final Size imageSize = padding.inflateSize(layout.size);
+  final imageSize = padding.inflateSize(layout.size);
   return picture.toImage(imageSize.width.round(), imageSize.height.round());
 }
 

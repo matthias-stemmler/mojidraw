@@ -33,7 +33,7 @@ class GalleryService {
     }
 
     final permission = Permission.storage;
-    final PermissionStatus status = await permission.status;
+    final status = await permission.status;
 
     if (status.isGranted) {
       return true;
@@ -43,13 +43,13 @@ class GalleryService {
       await _showRequestRationaleDialog();
     }
 
-    final PermissionStatus statusAfterRequest = await permission.request();
+    final statusAfterRequest = await permission.request();
 
     if (!statusAfterRequest.isPermanentlyDenied) {
       return statusAfterRequest.isGranted;
     }
 
-    final bool shouldOpenAppSettings = await _showPermanentlyDeniedDialog();
+    final shouldOpenAppSettings = await _showPermanentlyDeniedDialog();
     if (shouldOpenAppSettings) {
       await openAppSettings();
     }

@@ -13,12 +13,11 @@ class Controls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool resizing =
-        context.select((DrawingState state) => state.resizing);
-    final bool resizeActionPending =
+    final resizing = context.select((DrawingState state) => state.resizing);
+    final resizeActionPending =
         context.select((DrawingState state) => state.resizePending);
 
-    final bool resizeMode = resizing && !resizeActionPending;
+    final resizeMode = resizing && !resizeActionPending;
 
     return IgnorePointer(
       ignoring: resizeActionPending,

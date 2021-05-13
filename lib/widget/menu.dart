@@ -13,7 +13,7 @@ class Menu extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 20.0),
               padding:
                   const EdgeInsets.symmetric(horizontal: 45.0, vertical: 30.0),
-              child: Image.asset("images/mojidraw_banner.png")),
+              child: Image.asset('images/mojidraw_banner.png')),
           ListTile(
               leading: const Icon(Icons.help_outline),
               title: const Text('About'),

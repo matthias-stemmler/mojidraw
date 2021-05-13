@@ -41,7 +41,7 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
 
   bool get _resizing => context.read<DrawingState>().resizing;
 
-  GridSection? get _resizingSection =>
+  GridSection get _resizingSection =>
       context.read<DrawingState>().resizingSection;
 
   GridSize get _sceneGridSize => context.read<DrawingState>().sceneGridSize;
@@ -53,7 +53,7 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
       gridSize: _sceneGridSize, size: context.size ?? Size.zero);
 
   void _handlePanStart(Offset position) {
-    final Offset scenePosition = _scaleController.toScene(position);
+    final scenePosition = _scaleController.toScene(position);
 
     if (_resizing) {
       _gridSizerController.handlePanStart(scenePosition);
@@ -63,7 +63,7 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
   }
 
   void _handlePanUpdate(Offset position) {
-    final Offset scenePosition = _scaleController.toScene(position);
+    final scenePosition = _scaleController.toScene(position);
 
     if (_resizing) {
       _gridSizerController.handlePanUpdate(scenePosition);
@@ -105,7 +105,7 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
     await _animator.animate(
         transformationTween: Matrix4Tween(
             begin: _scaleController.value,
-            end: _gridLayout.sectionToTransformation(_resizingSection!)),
+            end: _gridLayout.sectionToTransformation(_resizingSection)),
         opacityTween: Tween(begin: _gridSizerController.opacity, end: 0.0),
         backgroundOpacityTween: Tween(begin: 0.0, end: 1.0));
 
@@ -117,7 +117,7 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    final DrawingState state = context.read();
+    final state = context.read();
     state.resizeStartNotifier.addListener(_handleResizeStart);
     state.resizeCancelPendingNotifier.addListener(_handleResizeCancelPending);
     state.resizeFinishPendingNotifier.addListener(_handleResizeFinishPending);
@@ -127,7 +127,7 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
   void dispose() {
     _animator.dispose();
 
-    final DrawingState state = context.read();
+    final state = context.read();
     state.resizeStartNotifier.removeListener(_handleResizeStart);
     state.resizeCancelPendingNotifier
         .removeListener(_handleResizeCancelPending);
@@ -139,13 +139,12 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final bool resizing =
-        context.select((DrawingState state) => state.resizing);
-    final bool resizePending =
+    final resizing = context.select((DrawingState state) => state.resizing);
+    final resizePending =
         context.select((DrawingState state) => state.resizePending);
-    final GridSize sceneGridSize =
+    final sceneGridSize =
         context.select((DrawingState state) => state.sceneGridSize);
-    final double maxScale = max(sceneGridSize.width / _minGridSize.width,
+    final maxScale = max(sceneGridSize.width / _minGridSize.width,
         sceneGridSize.height / _minGridSize.height);
 
     return IgnorePointer(
@@ -217,7 +216,7 @@ class _EmojiGridAnimator {
   void stopTransformationAnimation() => _transformationTween = null;
 
   void _step() {
-    final double value = _animationController.value;
+    final value = _animationController.value;
 
     if (_transformationTween != null) {
       state._scaleController.value = _transformationTween!.transform(value);

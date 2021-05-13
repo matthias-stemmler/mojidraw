@@ -27,8 +27,8 @@ class GridSize {
       cell.y.clamp(0, _height - 1).toInt());
 
   Iterable<GridCell> get cells sync* {
-    for (final int y in Iterable.generate(_height)) {
-      for (final int x in Iterable.generate(_width)) {
+    for (final y in Iterable.generate(_height)) {
+      for (final x in Iterable.generate(_width)) {
         yield GridCell(x, y);
       }
     }

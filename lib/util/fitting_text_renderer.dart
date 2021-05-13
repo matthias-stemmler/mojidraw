@@ -21,8 +21,8 @@ class FittingTextRenderer {
       min(size.width * _widthFactor, size.height * _heightFactor);
 
   void _calculateSizeFactors() {
-    const double fontSize = 14.0;
-    final TextPainter painter = _buildPainter(fontSize);
+    const fontSize = 14.0;
+    final painter = _buildPainter(fontSize);
 
     _widthFactor = fontSize / painter.width;
     _heightFactor = fontSize / painter.height;

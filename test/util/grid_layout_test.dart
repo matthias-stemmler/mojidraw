@@ -127,7 +127,7 @@ void main() {
 
     final section = GridSection.fromLTRB(1, 2, 3, 4);
 
-    final Matrix4 transformation = layout.sectionToTransformation(section);
+    final transformation = layout.sectionToTransformation(section);
 
     expect(_transform(transformation, 0.0, 0.0), const Offset(-7.5, -10.0));
     expect(_transform(transformation, 10.0, 12.0), const Offset(17.5, 20.0));
@@ -135,6 +135,6 @@ void main() {
 }
 
 Offset _transform(Matrix4 transformation, double x, double y) {
-  final Vector3 transformed = transformation.transform3(Vector3(x, y, 0.0));
+  final transformed = transformation.transform3(Vector3(x, y, 0.0));
   return Offset(transformed.x, transformed.y);
 }

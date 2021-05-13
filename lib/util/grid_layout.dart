@@ -18,23 +18,23 @@ class GridLayout {
 
   factory GridLayout.fromSize(
       {required GridSize gridSize, required Size size}) {
-    double localWidth = size.width;
-    double localHeight = size.width / gridSize.aspectRatio;
+    var localWidth = size.width;
+    var localHeight = size.width / gridSize.aspectRatio;
 
     if (localHeight > size.height) {
       localHeight = size.height;
       localWidth = localHeight * gridSize.aspectRatio;
     }
 
-    final Size localSize = Size(localWidth, localHeight);
-    final double cellSideLength = localWidth / gridSize.width;
+    final localSize = Size(localWidth, localHeight);
+    final cellSideLength = localWidth / gridSize.width;
 
     return GridLayout._(gridSize, cellSideLength, size, localSize);
   }
 
   factory GridLayout.fromCellSideLength(
       {required GridSize gridSize, required double cellSideLength}) {
-    final Size size =
+    final size =
         Size(cellSideLength * gridSize.width, cellSideLength * gridSize.height);
     return GridLayout._(gridSize, cellSideLength, size, size);
   }
@@ -55,10 +55,10 @@ class GridLayout {
       return null;
     }
 
-    final Offset localOffset = offset - _base;
+    final localOffset = offset - _base;
 
-    final int x = (localOffset.dx / cellSideLength).floor();
-    final int y = (localOffset.dy / cellSideLength).floor();
+    final x = (localOffset.dx / cellSideLength).floor();
+    final y = (localOffset.dy / cellSideLength).floor();
     final cell = GridCell(x, y);
 
     return gridSize.clamp(cell);
@@ -71,8 +71,8 @@ class GridLayout {
     final sectionLayout =
         GridLayout.fromSize(gridSize: section.size, size: size);
 
-    final double scale = sectionLayout.cellSideLength / cellSideLength;
-    final Offset translation =
+    final scale = sectionLayout.cellSideLength / cellSideLength;
+    final translation =
         _rect.topCenter - sectionToRect(section).topCenter * scale;
 
     return Matrix4.identity()

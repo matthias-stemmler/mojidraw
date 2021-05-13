@@ -40,14 +40,14 @@ class _GridSizerState extends State<GridSizer> {
       gridSize: sceneGridSize, size: context.size ?? Size.zero);
 
   void _handlePanStart(Offset position) {
-    final DrawingState state = context.read();
-    final GridLayout layout = getLayout(state.sceneGridSize);
-    final GridSection section = state.resizingSection;
+    final state = context.read();
+    final layout = getLayout(state.sceneGridSize);
+    final section = state.resizingSection;
 
-    final Rect rect = layout
+    final rect = layout
         .sectionToRect(section)
         .inflate(_borderWidth * widget.sizeFactor / 2.0);
-    final RectHandle? handle = getClosestHandle(
+    final handle = getClosestHandle(
         rect, position, _maxHandleDistance * widget.sizeFactor);
 
     _panBase = handle == null ? null : _PanBase(section, handle, position);
@@ -61,12 +61,12 @@ class _GridSizerState extends State<GridSizer> {
   }
 
   void _handleMove(GridSection section, RectHandle handle, Offset delta) {
-    final DrawingState state = context.read();
-    final GridSize sceneGridSize = state.sceneGridSize;
-    final GridLayout layout = getLayout(sceneGridSize);
+    final state = context.read();
+    final sceneGridSize = state.sceneGridSize;
+    final layout = getLayout(sceneGridSize);
 
-    final int dx = (delta.dx / layout.cellSideLength).round();
-    final int dy = (delta.dy / layout.cellSideLength).round();
+    final dx = (delta.dx / layout.cellSideLength).round();
+    final dy = (delta.dy / layout.cellSideLength).round();
 
     state.resizingSection =
         _moveSection(section, handle, dx, dy, sceneGridSize);
@@ -80,21 +80,21 @@ class _GridSizerState extends State<GridSizer> {
           dy.clamp(1 - section.top, sceneGridSize.height - 1 - section.bottom));
     }
 
-    final int left = handle.horizontalSide == RectHorizontalSide.left
+    final left = handle.horizontalSide == RectHorizontalSide.left
         ? (section.left + dx).clamp(1, section.right - widget.minGridSize.width)
         : section.left;
 
-    final int top = handle.verticalSide == RectVerticalSide.top
+    final top = handle.verticalSide == RectVerticalSide.top
         ? (section.top + dy)
             .clamp(1, section.bottom - widget.minGridSize.height)
         : section.top;
 
-    final int right = handle.horizontalSide == RectHorizontalSide.right
+    final right = handle.horizontalSide == RectHorizontalSide.right
         ? (section.right + dx).clamp(
             section.left + widget.minGridSize.width, sceneGridSize.width - 1)
         : section.right;
 
-    final int bottom = handle.verticalSide == RectVerticalSide.bottom
+    final bottom = handle.verticalSide == RectVerticalSide.bottom
         ? (section.bottom + dy).clamp(
             section.top + widget.minGridSize.height, sceneGridSize.height - 1)
         : section.bottom;
@@ -129,24 +129,17 @@ class _GridSizerState extends State<GridSizer> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final GridSection? section =
-        context.select((DrawingState state) => state.resizingSection);
-
-    final CustomPainter? painter = section == null
-        ? null
-        : GridSizerPainter(
-            gridSize:
-                context.select((DrawingState state) => state.sceneGridSize),
-            section: section,
-            color: Theme.of(context).primaryColor,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            sizeFactor: widget.sizeFactor,
-            opacity: _opacity,
-            backgroundOpacity: _backgroundOpacity);
-
-    return CustomPaint(foregroundPainter: painter, child: widget.child);
-  }
+  Widget build(BuildContext context) => CustomPaint(
+      foregroundPainter: GridSizerPainter(
+          gridSize: context.select((DrawingState state) => state.sceneGridSize),
+          section:
+              context.select((DrawingState state) => state.resizingSection),
+          color: Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          sizeFactor: widget.sizeFactor,
+          opacity: _opacity,
+          backgroundOpacity: _backgroundOpacity),
+      child: widget.child);
 }
 
 class GridSizerController {
@@ -186,12 +179,12 @@ class GridSizerPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final double borderWidth = _borderWidth * sizeFactor;
-    final double handleRadius = _handleRadius * sizeFactor;
+    final borderWidth = _borderWidth * sizeFactor;
+    final handleRadius = _handleRadius * sizeFactor;
 
     final layout = GridLayout.fromSize(size: size, gridSize: gridSize);
-    final Rect innerRect = layout.sectionToRect(section);
-    final Rect outerRect = innerRect.inflate(borderWidth / 2.0);
+    final innerRect = layout.sectionToRect(section);
+    final outerRect = innerRect.inflate(borderWidth / 2.0);
 
     // save canvas to be able to restore the clip later
     canvas.save();

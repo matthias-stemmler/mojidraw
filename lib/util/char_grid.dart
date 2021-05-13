@@ -31,7 +31,7 @@ class CharGrid {
       return 0;
     }
 
-    final int emptiness = Iterable<int>.generate(_maxEmptiness).firstWhere(
+    final emptiness = Iterable<int>.generate(_maxEmptiness).firstWhere(
         (n) => !_isEmptyOfDegree(cell, n + 1),
         orElse: () => _maxEmptiness);
 
@@ -40,7 +40,7 @@ class CharGrid {
 
   bool _isEmptyOfDegree(GridCell cell, int degree) {
     final neighborhoodSize = GridSize.square(2 * degree + 1);
-    final GridCell neighborhoodTopLeft = cell - GridCell(degree, degree);
+    final neighborhoodTopLeft = cell - GridCell(degree, degree);
 
     return neighborhoodSize.cells
         .map((c) => neighborhoodTopLeft + c)

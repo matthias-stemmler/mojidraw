@@ -128,16 +128,16 @@ class DrawingState extends ChangeNotifier {
   }
 
   void _addPen(String pen) {
-    final int index = _ensureInPalette(pen);
+    final index = _ensureInPalette(pen);
     _switchPen(index);
   }
 
   int _ensureInPalette(String pen) {
     int? minScore;
-    int minScoreIndex = -1;
+    var minScoreIndex = -1;
 
-    for (final int index in Iterable.generate(_palette.length)) {
-      final _PaletteEntry entry = _palette[index];
+    for (final index in Iterable.generate(_palette.length)) {
+      final entry = _palette[index];
 
       if (entry.char == pen) {
         return index;

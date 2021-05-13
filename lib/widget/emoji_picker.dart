@@ -77,13 +77,13 @@ class _CategoryTab extends StatelessWidget {
           maxCrossAxisExtent: 48.0),
       itemCount: emojiChars.length,
       itemBuilder: (_, int index) {
-        final String char = emojiChars.elementAt(index);
+        final char = emojiChars.elementAt(index);
         final renderer =
             FittingTextRenderer(text: char, fontFamily: fontFamily);
 
         return LayoutBuilder(builder: (_, BoxConstraints constraints) {
-          final Size size = _padding.deflateSize(constraints.biggest);
-          final TextStyle textStyle = renderer.getTextStyle(size);
+          final size = _padding.deflateSize(constraints.biggest);
+          final textStyle = renderer.getTextStyle(size);
 
           return TextButton(
               style: TextButton.styleFrom(padding: _padding),

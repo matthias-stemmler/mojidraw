@@ -19,7 +19,7 @@ class PanDisambiguator {
 
   void start(ScaleStartDetails details) {
     // interaction with multiple pointers -> scale, else -> pan
-    final bool isScale = details.pointerCount > 1;
+    final isScale = details.pointerCount > 1;
 
     if (isScale || _panSuspense.isSuspended) {
       // scale -> queued pans have become obsolete
@@ -38,7 +38,7 @@ class PanDisambiguator {
 
   void update(ScaleUpdateDetails details) {
     // interaction with multiple pointers -> scale, else -> pan
-    final bool isScale = details.pointerCount > 1;
+    final isScale = details.pointerCount > 1;
 
     if (isScale || _panSuspense.isSuspended) {
       // scale -> queued pans have become obsolete
@@ -53,7 +53,7 @@ class PanDisambiguator {
 
   void end(ScaleEndDetails details) {
     // end of interaction with leftover pointers -> scale, else -> pan
-    final bool isScale = details.pointerCount > 0;
+    final isScale = details.pointerCount > 0;
 
     if (isScale || _panSuspense.isSuspended) {
       // end of scale -> queued pans have become obsolete

@@ -17,7 +17,7 @@ void paintGridCell(
 
   if (text != ' ') {
     final renderer = FittingTextRenderer(text: text, fontFamily: fontFamily);
-    final TextPainter painter = renderer.getTextPainter(rect.size);
+    final painter = renderer.getTextPainter(rect.size);
     painter.paint(canvas, rect.topLeft);
   }
 }

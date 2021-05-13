@@ -45,7 +45,7 @@ class _GridDisplayState extends State<GridDisplay> {
   @override
   Widget build(_) => LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final GridSize sceneGridSize =
+          final sceneGridSize =
               context.select((DrawingState state) => state.sceneGridSize);
 
           return CustomPaint(
@@ -102,8 +102,8 @@ abstract class _GridCellsPainter extends CustomPainter {
     final layout = GridLayout.fromSize(size: size, gridSize: sceneGridSize);
 
     for (final cell in grid.size.cells.where(isCellApplicable)) {
-      final Offset offset = layout.cellToOffset(cell + topLeftCell);
-      final Size cellSize = Size.square(layout.cellSideLength);
+      final offset = layout.cellToOffset(cell + topLeftCell);
+      final cellSize = Size.square(layout.cellSideLength);
 
       paintGridCell(
           canvas: canvas,
