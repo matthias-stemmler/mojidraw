@@ -3,7 +3,7 @@ description: Draw your favourite Emoji art
 
 publish_to: 'none'
 
-version: 1.0.0-alpha.3
+version: 1.0.0-alpha.4
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -16,7 +16,6 @@ dependencies:
   fluttertoast: ^8.0.6
   intl: ^0.17.0
   package_info: ^2.0.0
-  pedantic: ^1.11.0
   permission_handler: ^7.1.0
   provider: ^5.0.0
   snapping_sheet: ^3.1.0
@@ -25,7 +24,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   golden_toolkit: ^0.9.0
-  lint: ^1.5.3
+  pedantic: ^1.11.0
   test: ^1.16.5
 
 flutter:
@@ -34,7 +33,6 @@ flutter:
   assets:
     - images/mojidraw_banner.png
     - images/mojidraw_logo.png
-    - test/dummy.png
 
   fonts:
     - family: JoyPixels
