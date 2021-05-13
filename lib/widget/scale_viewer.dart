@@ -1,7 +1,4 @@
-import 'package:flutter/widgets.dart'
-    hide InteractiveViewer, TransformationController;
-
-import '../temp_flutter_master/interactive_viewer.dart';
+import 'package:flutter/widgets.dart';
 
 class ScaleViewer extends StatefulWidget {
   final GestureScaleEndCallback? onInteractionEnd;

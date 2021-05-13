@@ -1,6 +1,7 @@
 TODO
 ====
 * Back button
+* Link to GitHub + Homepage
 * Homepage
 * Play Store
 
