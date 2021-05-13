@@ -40,7 +40,7 @@ class _GridSizerState extends State<GridSizer> {
       gridSize: sceneGridSize, size: context.size ?? Size.zero);
 
   void _handlePanStart(Offset position) {
-    final state = context.read();
+    final state = context.read<DrawingState>();
     final layout = getLayout(state.sceneGridSize);
     final section = state.resizingSection;
 
@@ -61,7 +61,7 @@ class _GridSizerState extends State<GridSizer> {
   }
 
   void _handleMove(GridSection section, RectHandle handle, Offset delta) {
-    final state = context.read();
+    final state = context.read<DrawingState>();
     final sceneGridSize = state.sceneGridSize;
     final layout = getLayout(sceneGridSize);
 

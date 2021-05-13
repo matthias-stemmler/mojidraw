@@ -146,7 +146,7 @@ class _ToggleButtonsState extends State<_ToggleButtons> {
   void initState() {
     super.initState();
 
-    final state = context.read();
+    final state = context.read<DrawingState>();
     state.resizeStartNotifier.addListener(_handleResizeAction);
     state.resizeCancelPendingNotifier.addListener(_handleResizeAction);
     state.resizeFinishPendingNotifier.addListener(_handleResizeAction);
@@ -154,7 +154,7 @@ class _ToggleButtonsState extends State<_ToggleButtons> {
 
   @override
   void dispose() {
-    final state = context.read();
+    final state = context.read<DrawingState>();
     state.resizeStartNotifier.removeListener(_handleResizeAction);
     state.resizeCancelPendingNotifier.removeListener(_handleResizeAction);
     state.resizeFinishPendingNotifier.removeListener(_handleResizeAction);

@@ -117,7 +117,7 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    final state = context.read();
+    final state = context.read<DrawingState>();
     state.resizeStartNotifier.addListener(_handleResizeStart);
     state.resizeCancelPendingNotifier.addListener(_handleResizeCancelPending);
     state.resizeFinishPendingNotifier.addListener(_handleResizeFinishPending);
@@ -127,7 +127,7 @@ class _EmojiGridState extends State<EmojiGrid> with TickerProviderStateMixin {
   void dispose() {
     _animator.dispose();
 
-    final state = context.read();
+    final state = context.read<DrawingState>();
     state.resizeStartNotifier.removeListener(_handleResizeStart);
     state.resizeCancelPendingNotifier
         .removeListener(_handleResizeCancelPending);
