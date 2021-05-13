@@ -6,6 +6,7 @@ import 'controls.dart';
 import 'covering_sheet.dart';
 import 'emoji_grid.dart';
 import 'emoji_picker.dart';
+import 'menu.dart';
 import 'palette.dart';
 
 @immutable
@@ -25,6 +26,9 @@ class DrawingPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Mojidraw'),
+          ),
+          drawer: Drawer(
+            child: Menu(),
           ),
           body: Column(children: [
             Padding(

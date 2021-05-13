@@ -1,6 +1,6 @@
 TODO
 ====
-* Imprint w/ logo
+* Back button
 * Homepage
 * Play Store
 
