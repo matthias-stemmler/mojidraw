@@ -1,14 +1,14 @@
 TODO
 ====
-* Back button
 * Link to GitHub + Homepage
 * Homepage
 * Play Store
+* README
+* Remove iOS
 
 
 Features
 ========
-* Use navigator push/pop for resize state and maybe emoji picker
 * Emoji search
 * Share as text or image
 * Settings:

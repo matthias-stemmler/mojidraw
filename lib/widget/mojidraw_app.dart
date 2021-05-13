@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/theme_colors.dart';
+import 'double_back_to_quit.dart';
 import 'drawing_page.dart';
 
 @immutable
@@ -13,6 +14,7 @@ class MojidrawApp extends StatelessWidget {
             appBarTheme: const AppBarTheme(brightness: Brightness.dark),
             primarySwatch: ThemeColors.mojidraw,
             visualDensity: VisualDensity.adaptivePlatformDensity),
-        home: const DrawingPage(fontFamily: 'JoyPixels'),
+        home:
+            DoubleBackToQuit(child: const DrawingPage(fontFamily: 'JoyPixels')),
       );
 }
