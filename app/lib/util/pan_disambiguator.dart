@@ -82,19 +82,15 @@ class _Backlog {
     }
   }
 
-  void suspend(Duration duration) {
-    _suspense.suspend(duration, callback: () {
-      for (final task in _queue) {
-        task();
-      }
+  void suspend(Duration duration) => _suspense.suspend(duration, callback: () {
+        for (final task in _queue) {
+          task();
+        }
 
-      clear();
-    });
-  }
+        clear();
+      });
 
-  void clear() {
-    _queue.clear();
-  }
+  void clear() => _queue.clear();
 }
 
 class _Suspense {
