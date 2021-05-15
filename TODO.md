@@ -4,7 +4,6 @@ TODO
 * Homepage
 * Play Store
 * README
-* Remove iOS
 
 
 Features
