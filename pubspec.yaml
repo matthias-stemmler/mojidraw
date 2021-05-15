@@ -1,5 +1,6 @@
 name: mojidraw
 description: Draw your favourite Emoji art
+homepage: https://mojidraw.app
 
 publish_to: 'none'
 
@@ -31,10 +32,10 @@ flutter:
   uses-material-design: true
 
   assets:
-    - images/mojidraw_banner.png
-    - images/mojidraw_logo.png
+    - assets/images/mojidraw_banner.png
+    - assets/images/mojidraw_logo.png
 
   fonts:
     - family: JoyPixels
       fonts:
-        - asset: fonts/joypixels-android.ttf
+        - asset: assets/fonts/joypixels-android.ttf

@@ -4,6 +4,7 @@ TODO
 * Homepage
 * Play Store
 * README
+* Add repo to pubspec
 
 
 Features
