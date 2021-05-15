@@ -21,7 +21,7 @@ class _AboutPageState extends State<AboutPage> {
             padding: const EdgeInsets.symmetric(vertical: 30.0),
             child: FractionallySizedBox(
               widthFactor: 0.5,
-              child: Image.asset('images/mojidraw_logo.png'),
+              child: Image.asset('assets/images/mojidraw_logo.png'),
             ),
           ),
           Center(
