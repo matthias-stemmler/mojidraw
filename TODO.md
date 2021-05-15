@@ -1,10 +1,9 @@
 TODO
 ====
-* Link to GitHub + Homepage
 * Homepage
-* Play Store
-* README
+* Link to GitHub + Homepage
 * Add repo to pubspec
+* Play Store (sign)
 
 
 Features
