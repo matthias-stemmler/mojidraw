@@ -30,6 +30,7 @@ class DrawingPage extends StatelessWidget {
           drawer: Drawer(
             child: Menu(),
           ),
+          drawerEnableOpenDragGesture: false,
           body: Column(children: [
             Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 15.0),
