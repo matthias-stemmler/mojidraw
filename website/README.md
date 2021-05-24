@@ -39,3 +39,10 @@ This is the Mojidraw website.
 - Format code
 
 `yarn format`
+
+- Build and run Docker image
+
+```
+docker build . -t website
+docker run -p 8080:80 website
+```

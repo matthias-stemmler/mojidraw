@@ -1,9 +1,10 @@
 TODO
 ====
-* Homepage
-* Link to GitHub + Homepage
+* Homepage SEO
+* Github
+* Link from App to GitHub + Homepage and from Homepage to Github
 * Add repo to pubspec
-* Play Store (sign)
+* Play Store (sign) + Link on Homepage, including QR code
 
 
 Features
