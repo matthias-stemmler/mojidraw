@@ -1,6 +1,6 @@
 .google-play-badge {
   $height: 67px;
-  $margin: $height / 4; // as per Google guidelines
+  $margin: $height * 0.25; // as per Google guidelines
 
   margin-top: $margin;
   margin-bottom: $margin;
