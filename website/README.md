@@ -1,15 +1,41 @@
-# 🚀 Welcome to your new awesome project!
+# Mojidraw website
 
-This project has been created using **webpack-cli**, you can now run
+This is the Mojidraw website.
 
-```
-npm run build
-```
+## Available commands
 
-or
+### Dependency management
 
-```
-yarn build
-```
+- Install dependencies
 
-to bundle your application
+`yarn install`
+
+- List outdated dependencies
+
+`yarn outdated`
+
+- Upgrade dependencies
+
+`yarn upgrade`
+
+### Build
+
+- Build release artifacts
+
+`yarn build`
+
+### Quality assurance
+
+- Run static code analysis
+
+`yarn lint`
+
+### Development
+
+- Run development server
+
+`yarn start`
+
+- Format code
+
+`yarn format`

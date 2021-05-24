@@ -11,3 +11,7 @@ Contains the app itself.
 ### `design`
 
 Contains designs such as logos, icons and banners.
+
+### `website`
+
+Contains the Mojidraw website.
