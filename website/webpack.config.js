@@ -15,6 +15,7 @@ module.exports = () => ({
   devtool: 'source-map',
   plugins: [
     new HtmlWebpackPlugin({
+      favicon: './img/mojidraw-favicon.png',
       template: 'index.html',
     }),
     new MiniCssExtractPlugin({
@@ -30,7 +31,12 @@ module.exports = () => ({
       },
       {
         test: /\.scss$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader',
+        ],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,

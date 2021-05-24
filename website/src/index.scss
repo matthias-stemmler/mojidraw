@@ -4,3 +4,26 @@ $font-family-base: Roboto;
 $primary: #4080C0;
 
 @import "~bootstrap/scss/bootstrap";
+
+body {
+  cursor: default;
+  user-select: none;
+}
+
+.mojidraw-banner {
+  min-width: 0;
+  max-width: 491px;
+}
+
+.google-play-badge {
+  $height: 67px;
+  $margin: $height / 4; // as per Google guidelines
+
+  width: 226px;
+  height: $height;
+
+  margin-top: $margin;
+  margin-bottom: $margin;
+
+  cursor: pointer;
+}

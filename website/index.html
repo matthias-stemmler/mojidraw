@@ -1,10 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mojidraw</title>
   </head>
-  <body>
-    <h1 class="text-primary">Mojidraw</h1>
+  <body class="d-flex flex-column h-100">
+    <header class="container-fluid mb-4 p-4 bg-primary">
+      <div class="row justify-content-center">
+        <div class="col-10 p-0 d-flex">
+          <img
+            src="<%= require('./img/mojidraw-banner.png') %>"
+            alt="Mojidraw banner"
+            class="mojidraw-banner"
+          />
+        </div>
+      </div>
+    </header>
+
+    <main class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-10">
+          <p class="mt-4"><strong>Get the app for Android now!</strong></p>
+          <img
+            src="<%= require('./img/google-play-badge.png') %>"
+            alt="Google Play Badge"
+            class="google-play-badge"
+          />
+        </div>
+      </div>
+    </main>
+
+    <footer class="container-fluid mt-auto py-3 bg-light">
+      <div class="row justify-content-center">
+        <span class="col-10 text-muted">Imprint</span>
+      </div>
+    </footer>
   </body>
 </html>
