@@ -10,20 +10,5 @@ body {
   user-select: none;
 }
 
-.mojidraw-banner {
-  min-width: 0;
-  max-width: 491px;
-}
-
-.google-play-badge {
-  $height: 67px;
-  $margin: $height / 4; // as per Google guidelines
-
-  width: 226px;
-  height: $height;
-
-  margin-top: $margin;
-  margin-bottom: $margin;
-
-  cursor: pointer;
-}
+@import "./components/header/header";
+@import "./components/main/main";

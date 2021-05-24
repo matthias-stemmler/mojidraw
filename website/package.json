@@ -4,16 +4,20 @@
   "private": true,
   "scripts": {
     "build": "rimraf dist && webpack --node-env=production",
-    "format": "prettier --write **/*.html **/*.js **/*.json **/*.md **/*.ts --ignore-path .lintignore",
-    "lint": "eslint **/*.js **/*.json **/*.ts --ignore-path .lintignore",
+    "format": "prettier --write **/*.html **/*.js **/*.json **/*.md **/*.tsx --ignore-path .lintignore",
+    "lint": "eslint **/*.js **/*.json **/*.tsx --ignore-path .lintignore",
     "start": "webpack serve --node-env=development"
   },
   "dependencies": {
     "@fontsource/roboto": "^4.3.0",
     "@popperjs/core": "^2.9.2",
-    "bootstrap": "^5.0.1"
+    "bootstrap": "^5.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@types/react": "^17.0.6",
+    "@types/react-dom": "^17.0.5",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
     "autoprefixer": "^10.2.5",
