@@ -1,27 +1,20 @@
 const path = require('path');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = () => ({
+  devServer: {
+    historyApiFallback: true,
+    host: 'localhost',
+    open: true,
+  },
+  devtool: 'source-map',
   entry: './src/index.tsx',
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
   },
-  devServer: {
-    open: true,
-    host: 'localhost',
-  },
-  devtool: 'source-map',
-  plugins: [
-    new HtmlWebpackPlugin({
-      favicon: './img/mojidraw-favicon.png',
-      template: 'index.html',
-    }),
-    new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
-    }),
-  ],
   module: {
     rules: [
       {
@@ -44,6 +37,15 @@ module.exports = () => ({
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      favicon: './img/mojidraw-favicon.png',
+      template: 'index.html',
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css',
+    }),
+  ],
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
   },

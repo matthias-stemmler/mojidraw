@@ -2,11 +2,11 @@
   $height: 67px;
   $margin: $height / 4; // as per Google guidelines
 
-  width: 226px;
-  height: $height;
-
   margin-top: $margin;
   margin-bottom: $margin;
 
-  cursor: pointer;
+  img {
+    width: 226px;
+    height: $height;
+  }
 }

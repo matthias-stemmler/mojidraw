@@ -1,19 +1,20 @@
 import React, { ReactElement } from 'react';
-import googlePlayBadge from './google-play-badge.png';
+import { Route, Switch } from 'react-router-dom';
+import Imprint from '../imprint/imprint';
+import Info from '../info/info';
 
 const Main = (): ReactElement => (
-  <main className="container-fluid">
+  <main className="container-fluid my-4">
     <div className="row justify-content-center">
-      <div className="col-10">
-        <p className="mt-4">
-          <strong>Get the app for Android now!</strong>
-        </p>
-        <img
-          src={googlePlayBadge}
-          alt="Google Play Badge"
-          className="google-play-badge"
-        />
-      </div>
+      <Switch>
+        <Route path="/imprint">
+          <Imprint />
+        </Route>
+
+        <Route path="/">
+          <Info />
+        </Route>
+      </Switch>
     </div>
   </main>
 );
