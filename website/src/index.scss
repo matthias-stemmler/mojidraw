@@ -1,9 +1,18 @@
-@import "~@fontsource/roboto/index.css";
+@import "~@fontsource/roboto/latin-400.css";
 
 $font-family-base: Roboto;
 $primary: #4080C0;
 
-@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/utilities";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/containers";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/utilities/api";
 
 body {
   cursor: default;

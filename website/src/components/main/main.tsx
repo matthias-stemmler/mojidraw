@@ -1,9 +1,9 @@
-import React, { ReactElement } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Imprint from '../imprint/imprint';
 import Info from '../info/info';
+import { VNode } from 'preact';
 
-const Main = (): ReactElement => (
+const Main = (): VNode => (
   <main className="container-fluid my-4">
     <div className="row justify-content-center">
       <Switch>

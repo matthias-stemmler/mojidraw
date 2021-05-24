@@ -3,11 +3,7 @@
     "browser": true,
     "es2021": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react-hooks/recommended",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "preact", "prettier"],
   "overrides": [
     {
       "files": ["*.config.js"],
@@ -21,7 +17,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "prettier", "react-hooks"],
+  "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
     "prettier/prettier": "error",
     "sort-imports": "error"

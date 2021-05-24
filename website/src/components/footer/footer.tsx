@@ -1,7 +1,7 @@
-import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
+import { VNode } from 'preact';
 
-const Footer = (): ReactElement => (
+const Footer = (): VNode => (
   <footer className="container-fluid mt-auto py-3 bg-light">
     <div className="row justify-content-center">
       <nav className="navbar navbar-expand col-10">

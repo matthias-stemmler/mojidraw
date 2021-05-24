@@ -1,6 +1,6 @@
-import React, { ReactElement } from 'react';
+import { VNode } from 'preact';
 
-const Imprint = (): ReactElement => (
+const Imprint = (): VNode => (
   <div className="col-11 col-lg-10">
     <h3>Impressum</h3>
 

@@ -6,7 +6,8 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "strict": true,
-    "jsx": "react"
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   },
   "files": ["src/index.tsx", "src/image.d.ts"]
 }

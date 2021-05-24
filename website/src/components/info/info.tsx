@@ -1,7 +1,7 @@
-import React, { ReactElement } from 'react';
+import { VNode } from 'preact';
 import googlePlayBadge from './google-play-badge.png';
 
-const Info = (): ReactElement => (
+const Info = (): VNode => (
   <div className="col-10">
     <p>
       <strong>Get the Mojidraw Android app now!</strong>

@@ -1,10 +1,11 @@
-import React, { ReactElement, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'preact/hooks';
 import Footer from '../footer/footer';
 import Header from '../header/header';
 import Main from '../main/main';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { VNode } from 'preact';
 
-const App = (): ReactElement => {
+const App = (): VNode => {
   const appRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
