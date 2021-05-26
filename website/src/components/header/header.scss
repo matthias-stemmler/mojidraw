@@ -1,6 +1,10 @@
 $image-width: 491px;
 $image-height: 128px;
 
+.mojidraw-banner-link {
+  outline: none;
+}
+
 .mojidraw-banner {
   position: relative;
   max-width: $image-width;

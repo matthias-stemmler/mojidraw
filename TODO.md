@@ -1,6 +1,5 @@
 TODO
 ====
-* Homepage SEO
 * Github
 * Link from App to GitHub + Homepage and from Homepage to Github
 * Add repo to pubspec

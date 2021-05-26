@@ -6,7 +6,7 @@ const Header = (): VNode => (
   <header className="container-fluid mb-4 p-4 bg-primary">
     <div className="row justify-content-center">
       <div className="col-10 p-0 d-flex">
-        <Link to="/" tabIndex={-1} className="w-100">
+        <Link to="/" tabIndex={-1} className="mojidraw-banner-link w-100">
           <div className="mojidraw-banner">
             <img src={mojidrawBanner} alt="Mojidraw Banner" />
           </div>
