@@ -56,8 +56,7 @@ class _GridDisplayState extends State<GridDisplay> {
                   topLeftCell: context.select(
                       (DrawingState state) => state.sceneGridSection.topLeft),
                   fontFamily: widget.fontFamily),
-              child: Opacity(
-                opacity: _emptyOpacity,
+              child: RepaintBoundary(
                 child: CustomPaint(
                     size: constraints.biggest,
                     painter: _EmptyGridCellsPainter(
@@ -67,6 +66,7 @@ class _GridDisplayState extends State<GridDisplay> {
                         topLeftCell: context.select((DrawingState state) =>
                             state.resizingSection.topLeft),
                         emptyColor: Theme.of(context).primaryColor,
+                        opacity: _emptyOpacity,
                         fontFamily: widget.fontFamily)),
               ));
         },
@@ -147,12 +147,14 @@ class _NonEmptyGridCellsPainter extends _GridCellsPainter {
 
 class _EmptyGridCellsPainter extends _GridCellsPainter {
   final Color emptyColor;
+  final double opacity;
 
   _EmptyGridCellsPainter(
       {required CharGrid grid,
       required GridSize sceneGridSize,
       required GridCell topLeftCell,
       required this.emptyColor,
+      required this.opacity,
       String? fontFamily})
       : super(
             grid: grid,
@@ -165,12 +167,13 @@ class _EmptyGridCellsPainter extends _GridCellsPainter {
 
   @override
   Color getBackgroundColor(GridCell cell) =>
-      emptyColor.withOpacity(0.05 * grid.emptiness(cell));
+      emptyColor.withOpacity(opacity * 0.05 * grid.emptiness(cell));
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) =>
       oldDelegate is! _EmptyGridCellsPainter ||
       oldDelegate is _EmptyGridCellsPainter &&
-          oldDelegate.emptyColor != emptyColor ||
+          (oldDelegate.emptyColor != emptyColor ||
+              oldDelegate.opacity != opacity) ||
       super.shouldRepaint(oldDelegate);
 }
