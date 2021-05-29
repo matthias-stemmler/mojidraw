@@ -1,8 +1,10 @@
 TODO
 ====
+* Screenshot
+* Description text + screenshot on homepage
 * Github
-* Link from App to GitHub + Homepage and from Homepage to Github
-* Add repo to pubspec
+* Add repo to pubspec and package.json
+* Link from Homepage to Github
 * Play Store (sign) + Link on Homepage, including QR code
 
 

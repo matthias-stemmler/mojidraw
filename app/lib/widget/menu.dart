@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'about_page.dart';
 
@@ -19,6 +20,12 @@ class Menu extends StatelessWidget {
               title: const Text('About'),
               onTap: () {
                 Navigator.of(context).push(AboutPageRoute());
+              }),
+          ListTile(
+              leading: const Icon(Icons.open_in_new_outlined),
+              title: const Text('Visit website'),
+              onTap: () async {
+                await launch('https://mojidraw.app/');
               })
         ],
       );
