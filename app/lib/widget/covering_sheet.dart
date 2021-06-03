@@ -72,6 +72,7 @@ class CoveringSheetController extends ChangeNotifier {
   }
 }
 
+@immutable
 class _Grabbing extends StatelessWidget {
   @override
   Widget build(BuildContext context) => OverflowBox(

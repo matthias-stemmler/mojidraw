@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 
 // maximal duration between changes in the two pointers
 // when starting or ending a scale
 const _maxScalePointerDelay = Duration(milliseconds: 100);
 
+@immutable
 class PanDisambiguator {
   final void Function(Offset localPosition)? onPanStart;
   final void Function(Offset localPosition)? onPanUpdate;
@@ -70,6 +72,7 @@ class PanDisambiguator {
   }
 }
 
+@immutable
 class _Backlog {
   final Queue<void Function()> _queue = Queue();
   final _Suspense _suspense = _Suspense();

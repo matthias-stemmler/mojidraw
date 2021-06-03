@@ -8,6 +8,7 @@ import '../util/grid_layout.dart';
 import '../util/grid_size.dart';
 import '../util/paint_grid_cell.dart';
 
+@immutable
 class GridDisplay extends StatefulWidget {
   final GridDisplayController? controller;
   final String? fontFamily;
@@ -81,6 +82,7 @@ class GridDisplayController {
   set emptyOpacity(double value) => _state?.emptyOpacity = value;
 }
 
+@immutable
 abstract class _GridCellsPainter extends CustomPainter {
   final CharGrid grid;
   final GridSize sceneGridSize;
@@ -124,6 +126,7 @@ abstract class _GridCellsPainter extends CustomPainter {
               oldDelegate.fontFamily != fontFamily);
 }
 
+@immutable
 class _NonEmptyGridCellsPainter extends _GridCellsPainter {
   _NonEmptyGridCellsPainter(
       {required CharGrid grid,
@@ -145,6 +148,7 @@ class _NonEmptyGridCellsPainter extends _GridCellsPainter {
       super.shouldRepaint(oldDelegate);
 }
 
+@immutable
 class _EmptyGridCellsPainter extends _GridCellsPainter {
   final Color emptyColor;
   final double opacity;

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+@immutable
 class ScaleViewer extends StatefulWidget {
   final GestureScaleEndCallback? onInteractionEnd;
   final GestureScaleStartCallback? onInteractionStart;

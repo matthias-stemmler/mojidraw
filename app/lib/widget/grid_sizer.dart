@@ -245,6 +245,7 @@ class GridSizerPainter extends CustomPainter {
               oldDelegate.backgroundOpacity != backgroundOpacity);
 }
 
+@immutable
 class _PanBase {
   final GridSection section;
   final RectHandle handle;

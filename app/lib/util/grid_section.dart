@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
+
 import 'grid_cell.dart';
 import 'grid_size.dart';
 
+@immutable
 class GridSection {
   late final int left, top, right, bottom;
 

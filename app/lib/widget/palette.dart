@@ -84,6 +84,7 @@ class Palette extends StatelessWidget {
       }));
 }
 
+@immutable
 class _PenButtons extends StatelessWidget {
   final Iterable<String> chars;
   final BoxConstraints constraints;
@@ -115,6 +116,7 @@ class _PenButtons extends StatelessWidget {
   }
 }
 
+@immutable
 class _ToggleButtons extends StatefulWidget {
   final Iterable<String> chars;
   final int penIndex;
@@ -192,6 +194,7 @@ class _ToggleButtonsState extends State<_ToggleButtons> {
   }
 }
 
+@immutable
 class _ExpandButton extends StatelessWidget {
   final BoxConstraints constraints;
   final Size textSize;

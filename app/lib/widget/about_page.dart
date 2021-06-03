@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 
+@immutable
 class AboutPage extends StatefulWidget {
   @override
   State createState() => _AboutPageState();
@@ -40,6 +41,7 @@ class _AboutPageState extends State<AboutPage> {
       ));
 }
 
+@immutable
 class _Information extends StatelessWidget {
   final String label;
   final FutureOr<String> data;

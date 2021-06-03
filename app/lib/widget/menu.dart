@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'about_page.dart';
 
+@immutable
 class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListView(

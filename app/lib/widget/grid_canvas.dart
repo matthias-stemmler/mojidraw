@@ -8,6 +8,7 @@ import '../util/grid_section.dart';
 import '../util/grid_size.dart';
 import '../util/paint_grid_cell.dart';
 
+@immutable
 class GridCanvas extends StatefulWidget {
   final GridCanvasController? controller;
   final String? fontFamily;

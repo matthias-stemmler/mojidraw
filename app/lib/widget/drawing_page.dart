@@ -49,6 +49,7 @@ class DrawingPage extends StatelessWidget {
       );
 }
 
+@immutable
 class _EmojiPickerSheet extends StatelessWidget {
   final String? fontFamily;
 

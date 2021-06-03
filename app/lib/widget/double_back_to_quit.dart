@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 const Duration _toastDuration = Duration(seconds: 2);
 
+@immutable
 class DoubleBackToQuit extends StatefulWidget {
   final Widget child;
 

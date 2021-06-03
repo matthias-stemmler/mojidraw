@@ -15,6 +15,7 @@ const String permissionPermanentlyDeniedHint = '''
 You permanently denied the permission to access media files on your device.\n
 To undo this, grant the permission in the app settings and press the save button again.''';
 
+@immutable
 class GalleryService {
   static const platform = MethodChannel('mojidraw.app/gallery');
 
@@ -116,6 +117,7 @@ class GalleryService {
       .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
 }
 
+@immutable
 class GalleryServiceException implements Exception {
   final String? message;
 
