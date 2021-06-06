@@ -20,13 +20,13 @@ import magic1 from './img/magic-1.webp';
 import magic2 from './img/magic-2.webp';
 import paradise from './img/paradise.webp';
 import paradiseStealth from './img/paradise-stealth.webp';
-import piques from './img/piques.webp';
 import rainbow1 from './img/rainbow-1.webp';
 import rainbow2 from './img/rainbow-2.webp';
 import sleepyCity from './img/sleepy-city.webp';
 import softDrink from './img/soft-drink.webp';
 import sunnySideUp from './img/sunny-side-up.webp';
 import surprise from './img/surprise.webp';
+import trefle from './img/trefle.webp';
 import variety from './img/variety.webp';
 import whichCameFirst from './img/which-came-first.webp';
 
@@ -128,8 +128,8 @@ const galleryImages: GalleryImageDescriptor[] = [
     size: [608, 608],
   },
   {
-    title: 'Piques',
-    src: piques,
+    title: 'Trèfle',
+    src: trefle,
     size: [608, 608],
   },
   {
