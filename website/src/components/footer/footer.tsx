@@ -11,6 +11,11 @@ const Footer = (): VNode => (
               Home
             </Link>
           </li>
+          <li className="nav-item me-4">
+            <Link to="/gallery" className="nav-link">
+              Gallery
+            </Link>
+          </li>
           <li className="nav-item">
             <Link to="/imprint" className="nav-link">
               Impressum
