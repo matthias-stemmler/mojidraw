@@ -1,28 +1,28 @@
 import beaverBacklog from './img/beaver-backlog.webp';
+import beware from './img/beware.webp';
 import bigApple from './img/big-apple.webp';
-import blizzard from './img/blizzard.webp';
 import bonneChance from './img/bonne-chance.webp';
 import coco from './img/coco.webp';
-import crystalBall from './img/crystal-ball.webp';
 import earlyBird from './img/early-bird.webp';
 import enjoyTheShow from './img/enjoy-the-show.webp';
 import exotic from './img/exotic.webp';
 import fairyTale from './img/fairy-tale.webp';
 import farAway from './img/far-away.webp';
+import followTheWhiteRabbit from './img/follow-the-white-rabbit.webp';
 import fruityDelight from './img/fruity-delight.webp';
 import goodLuck from './img/good-luck.webp';
-import greenVeggie from './img/green-veggie.webp';
+import greenSmoothie from './img/green-smoothie.webp';
 import happyHamster from './img/happy-hamster.webp';
 import happyNewYear from './img/happy-new-year.webp';
 import iSpy from './img/i-spy.webp';
+import itsMagic from './img/its-magic.webp';
 import justRelax from './img/just-relax.webp';
-import magic1 from './img/magic-1.webp';
-import magic2 from './img/magic-2.webp';
+import magic from './img/magic.webp';
 import paradise from './img/paradise.webp';
 import paradiseStealth from './img/paradise-stealth.webp';
 import rainbow1 from './img/rainbow-1.webp';
 import rainbow2 from './img/rainbow-2.webp';
-import sleepyCity from './img/sleepy-city.webp';
+import shootingStar from './img/shooting-star.webp';
 import softDrink from './img/soft-drink.webp';
 import sunnySideUp from './img/sunny-side-up.webp';
 import surprise from './img/surprise.webp';
@@ -48,8 +48,8 @@ const galleryImages: GalleryImageDescriptor[] = [
     size: [608, 608],
   },
   {
-    title: 'Green Veggie',
-    src: greenVeggie,
+    title: 'Green Smoothie',
+    src: greenSmoothie,
     size: [608, 608],
   },
   {
@@ -103,18 +103,18 @@ const galleryImages: GalleryImageDescriptor[] = [
     size: [672, 608],
   },
   {
-    title: 'Blizzard',
-    src: blizzard,
+    title: 'Beware',
+    src: beware,
     size: [672, 608],
   },
   {
     title: 'Just Relax',
     src: justRelax,
-    size: [672, 608],
+    size: [672, 544],
   },
   {
-    title: 'Sleepy City',
-    src: sleepyCity,
+    title: 'Shooting Star',
+    src: shootingStar,
     size: [672, 608],
   },
   {
@@ -133,8 +133,8 @@ const galleryImages: GalleryImageDescriptor[] = [
     size: [608, 608],
   },
   {
-    title: 'Crystal Ball',
-    src: crystalBall,
+    title: "It's Magic",
+    src: itsMagic,
     size: [608, 608],
   },
   {
@@ -173,18 +173,18 @@ const galleryImages: GalleryImageDescriptor[] = [
     size: [608, 608],
   },
   {
-    title: 'Enjoy The Show',
+    title: 'Enjoy the Show',
     src: enjoyTheShow,
     size: [608, 608],
   },
   {
-    title: 'Magic I',
-    src: magic1,
+    title: 'Magic',
+    src: magic,
     size: [608, 608],
   },
   {
-    title: 'Magic II',
-    src: magic2,
+    title: 'Follow the White Rabbit',
+    src: followTheWhiteRabbit,
     size: [608, 608],
   },
   {
