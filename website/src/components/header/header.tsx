@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { VNode } from 'preact';
 import mojidrawBanner from './mojidraw-banner.webp';
+import { VNode } from 'preact';
 
 const Header = (): VNode => (
   <header className="container-fluid mb-4 p-4 bg-primary">

@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "rimraf dist && webpack --node-env=production",
-    "format": "prettier --write **/*.html **/*.js **/*.json **/*.md **/*.tsx --ignore-path .lintignore",
-    "lint": "eslint **/*.js **/*.json **/*.tsx --ignore-path .lintignore",
+    "format": "prettier --write **/*.html **/*.js **/*.json **/*.md **/*.ts **/*.tsx --ignore-path .lintignore",
+    "lint": "eslint **/*.js **/*.json **/*.ts **/*.tsx --ignore-path .lintignore",
     "start": "webpack serve --node-env=development"
   },
   "dependencies": {

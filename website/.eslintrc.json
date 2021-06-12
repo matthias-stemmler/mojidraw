@@ -6,6 +6,22 @@
   "extends": ["eslint:recommended", "preact", "prettier"],
   "overrides": [
     {
+      "files": ["*.ts", "*.tsx"],
+      "extends": [
+        "eslint:recommended",
+        "preact",
+        "prettier",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+      ],
+      "parserOptions": {
+        "ecmaVersion": 12,
+        "project": "./tsconfig.json",
+        "sourceType": "module"
+      },
+      "plugins": ["@typescript-eslint", "prettier"]
+    },
+    {
       "files": ["*.config.js"],
       "env": {
         "node": true
@@ -17,9 +33,14 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
-    "sort-imports": "error"
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": true
+      }
+    ]
   }
 }

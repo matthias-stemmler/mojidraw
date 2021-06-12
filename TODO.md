@@ -1,7 +1,7 @@
 TODO
 ====
-* Screenshot
-* Description text + screenshot on homepage
+* Screenshots
+* Info with screenshots on homepage
 * Github
 * Add repo to pubspec and package.json
 * Link from Homepage to Github
