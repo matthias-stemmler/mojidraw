@@ -37,7 +37,7 @@ const galleryImageIds: GalleryImageId[] = [
 ];
 
 const Gallery = (): VNode => (
-  <div className="col-11 col-sm-10 container-fluid">
+  <div className="col-11 col-md-10 container-fluid">
     <GalleryImageRow ids={galleryImageIds} showTitle />
   </div>
 );
