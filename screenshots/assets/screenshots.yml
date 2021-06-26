@@ -1,0 +1,37 @@
+aspect-ratio: 16:9
+background-color: '#4080C0'
+bottom-cutoff: 250
+
+text:
+  font: ./fonts/NotoSans-Regular.ttf
+  color: white
+  size: 135
+  height: 200
+
+  margins:
+    left: 100
+    right: 100
+    top: 200
+    bottom: 200
+
+frames:
+  - image: ./images/screenshot-1.png
+    text: Mojidraw — the app that lets you become an emoji artist!
+
+  - image: ./images/screenshot-2.png
+    text: Large selection of emojis powered by JoyPixels®
+
+  - image: ./images/screenshot-3.png
+    text: "Fill your palette\nwith your favorite emojis"
+
+  - image: ./images/screenshot-4.png
+    text: Draw and zoom freely ...
+
+  - image: ./images/screenshot-5.png
+    text: ... producing beautiful patterns
+
+  - image: ./images/screenshot-6.png
+    text: Resize your drawings
+
+  - image: ./images/screenshot-7.png
+    text: "Save to your phone's gallery\nor copy to the clipboard"

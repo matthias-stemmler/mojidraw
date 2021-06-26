@@ -12,6 +12,10 @@ Contains the app itself.
 
 Contains designs such as logos, icons and banners.
 
+### `screenshots`
+
+Contains a tool to prepare screenshots for Google Play Store.
+
 ### `website`
 
 Contains the Mojidraw website.

@@ -1,0 +1,20 @@
+[package]
+name = "mojidraw-screenshots"
+version = "1.0.0"
+edition = "2018"
+
+[dependencies]
+ab_glyph = "0.2.11"
+anyhow = "1.0.41"
+css-color-parser2 = "1.0.1"
+glyph_brush_layout = "0.2.2"
+image = "0.23.14"
+log = "0.4.14"
+num-traits = "0.2.14"
+pretty_env_logger = "0.4.0"
+rayon = "1.5.1"
+relative-path = { version = "1.4.0", features = ["serde"] }
+serde = { version = "1.0.126", features = ["derive"] }
+serde_with = "1.9.4"
+serde_yaml = "0.8.17"
+structopt = "0.3.21"
