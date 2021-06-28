@@ -16,18 +16,18 @@ dependencies:
     sdk: flutter
   fluttertoast: ^8.0.7
   intl: ^0.17.0
-  package_info: ^2.0.0
-  permission_handler: ^7.1.0
+  package_info: ^2.0.2
+  permission_handler: ^8.1.2
   provider: ^5.0.0
   snapping_sheet: ^3.1.0
-  url_launcher: ^6.0.4
+  url_launcher: ^6.0.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   golden_toolkit: ^0.9.0
-  pedantic: ^1.11.0
-  test: ^1.16.5
+  pedantic: ^1.11.1
+  test: ^1.16.8
 
 flutter:
   uses-material-design: true
