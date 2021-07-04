@@ -21,14 +21,16 @@ const Info = (): VNode => (
         <p className="m-0">
           <strong>Get the app for Android now!</strong>
         </p>
-        <button className="google-play-badge border-0 bg-transparent p-0">
-          <img
-            src={googlePlayBadge}
-            alt="Google Play Badge"
-            width={226}
-            height={67}
-          />
-        </button>
+        <a href="https://play.google.com/store/apps/details?id=app.mojidraw">
+          <button className="google-play-badge border-0 bg-transparent p-0">
+            <img
+              src={googlePlayBadge}
+              alt="Google Play Badge"
+              width={226}
+              height={67}
+            />
+          </button>
+        </a>
       </section>
       <section className="sample-gallery container-fluid mx-0 px-0">
         <GalleryImageRow
