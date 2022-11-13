@@ -3,7 +3,6 @@ TODO
 * Github
 * Add repo to pubspec and package.json
 * Link from Homepage to Github
-* Play Store + Link on Homepage
 
 
 Features
