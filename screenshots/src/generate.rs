@@ -63,8 +63,8 @@ impl<'a> Generator<'a> {
         imageops::overlay(
             &mut target_image,
             &source_image,
-            image_position.x,
-            image_position.y,
+            image_position.x.into(),
+            image_position.y.into(),
         );
 
         self.text_renderer

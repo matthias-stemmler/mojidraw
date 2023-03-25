@@ -1,4 +1,4 @@
-use image::{GenericImage, Pixel, Rgba};
+use image::{GenericImage, Rgba};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Color {
@@ -16,7 +16,7 @@ impl Color {
 
 impl From<Color> for Rgba<u8> {
     fn from(Color { r, g, b, a }: Color) -> Self {
-        Self::from_channels(r, g, b, (a * 255.0).round() as u8)
+        Self([r, g, b, (a * 255.0).round() as u8])
     }
 }
 

@@ -203,7 +203,7 @@ impl FromStr for AspectRatio {
 
     fn from_str(aspect_ratio_str: &str) -> Result<Self> {
         parse_aspect_ratio(aspect_ratio_str)
-            .with_context(|| format!("Invalid aspect ratio: {}", aspect_ratio_str))
+            .with_context(|| format!("Invalid aspect ratio: {aspect_ratio_str}"))
     }
 }
 
@@ -225,7 +225,7 @@ impl FromStr for Color {
     fn from_str(color_str: &str) -> Result<Self> {
         let css_color_parser2::Color { r, g, b, a } = color_str
             .parse()
-            .with_context(|| format!("Invalid color: {}", color_str))?;
+            .with_context(|| format!("Invalid color: {color_str}"))?;
         Ok(Color::new(r, g, b, a))
     }
 }

@@ -45,7 +45,7 @@ fn process() -> Result<()> {
         .into_par_iter()
         .enumerate()
         .for_each(|(index, frame)| {
-            let context = format!("FRAME {:0width$}", index, width = width);
+            let context = format!("FRAME {index:0width$}");
 
             match generator.generate(frame, &context) {
                 Ok(..) => info!("[{}] Done", context),

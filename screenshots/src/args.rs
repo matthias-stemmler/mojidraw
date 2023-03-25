@@ -1,15 +1,15 @@
 use std::path::{Path, PathBuf};
 
-use structopt::StructOpt;
+use clap::Parser;
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Parser)]
 pub struct Args {
     input_file: PathBuf,
 }
 
 impl Args {
     pub fn from_args() -> Self {
-        <Self as StructOpt>::from_args()
+        Self::parse()
     }
 
     pub fn input_file(&self) -> &Path {
