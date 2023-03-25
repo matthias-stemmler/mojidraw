@@ -6,6 +6,7 @@ use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
 use anyhow::{Context, Error, Result};
+use funcmap::FuncMap;
 use relative_path::{RelativePath, RelativePathBuf};
 use serde::Deserialize;
 use serde_with::{serde_as, DisplayFromStr};
@@ -14,7 +15,7 @@ use crate::color::Color;
 use crate::layout::{self, AspectRatio};
 use crate::path::dir_of_file;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, FuncMap)]
 pub struct Input<P> {
     #[serde(flatten)]
     config: Config<P>,
@@ -40,49 +41,12 @@ where
     where
         Q: AsRef<Path>,
     {
-        let base_path = base_path.as_ref();
-
-        let Input { config, frames } = self;
-        let Config {
-            aspect_ratio,
-            background_color,
-            bottom_cutoff,
-            text,
-        } = config;
-        let Text {
-            font_path,
-            color,
-            size,
-            height,
-            margins,
-        } = text;
-
-        Input {
-            config: Config {
-                aspect_ratio,
-                background_color,
-                bottom_cutoff,
-                text: Text {
-                    font_path: font_path.as_ref().to_path(base_path),
-                    color,
-                    size,
-                    height,
-                    margins,
-                },
-            },
-            frames: frames
-                .into_iter()
-                .map(|Frame { image_path, text }| Frame {
-                    image_path: image_path.as_ref().to_path(base_path),
-                    text,
-                })
-                .collect(),
-        }
+        self.func_map(|p| p.as_ref().to_path(&base_path))
     }
 }
 
 #[serde_as]
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, FuncMap)]
 #[serde(rename_all = "kebab-case")]
 pub struct Config<P> {
     #[serde_as(as = "DisplayFromStr")]
@@ -114,7 +78,7 @@ impl<P> Config<P> {
 }
 
 #[serde_as]
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, FuncMap)]
 pub struct Text<P> {
     #[serde(rename = "font")]
     font_path: P,
@@ -163,7 +127,7 @@ impl From<Insets> for layout::Insets {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, FuncMap)]
 pub struct Frame<P> {
     #[serde(rename = "image")]
     image_path: P,
