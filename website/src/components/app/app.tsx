@@ -10,7 +10,9 @@ const App = (): VNode => {
 
   useEffect(() => {
     const handleResize = (): void => {
-      appRef.current!.style.height = `${window.innerHeight}px`;
+      if (appRef.current !== null) {
+        appRef.current.style.height = `${window.innerHeight}px`;
+      }
     };
 
     handleResize();

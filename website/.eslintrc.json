@@ -20,12 +20,6 @@
         "sourceType": "module"
       },
       "plugins": ["@typescript-eslint", "prettier"]
-    },
-    {
-      "files": ["*.config.js"],
-      "env": {
-        "node": true
-      }
     }
   ],
   "parser": "@typescript-eslint/parser",
@@ -42,5 +36,10 @@
         "ignoreCase": true
       }
     ]
+  },
+  "settings": {
+    "jest": {
+      "version": "0"
+    }
   }
 }

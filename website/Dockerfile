@@ -1,10 +1,11 @@
-FROM node:16.2.0 AS build
+FROM node:16.20 AS build
 WORKDIR /website
-
+RUN npm install --global pnpm@7.29.1
 COPY . ./
-RUN yarn build
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
 
-FROM nginx:1.20.0 AS runtime
+FROM nginx:1.23 AS runtime
 WORKDIR /website
 COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /website/dist/* ./
+COPY --from=build /website/dist/ ./

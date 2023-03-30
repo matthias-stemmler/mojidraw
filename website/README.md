@@ -8,37 +8,37 @@ This is the Mojidraw website.
 
 - Install dependencies
 
-`yarn install`
+`pnpm install`
 
 - List outdated dependencies
 
-`yarn outdated`
+`pnpm outdated`
 
 - Upgrade dependencies
 
-`yarn upgrade`
+`pnpm upgrade`
 
 ### Build
 
 - Build release artifacts
 
-`yarn build`
+`pnpm build`
 
 ### Quality assurance
 
 - Run static code analysis
 
-`yarn lint`
+`pnpm run lint`
 
 ### Development
 
 - Run development server
 
-`yarn start`
+`pnpm run dev`
 
 - Format code
 
-`yarn format`
+`pnpm run format`
 
 - Build and run Docker image
 
