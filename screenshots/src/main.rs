@@ -20,6 +20,7 @@ fn main() {
     pretty_env_logger::formatted_builder()
         .default_format()
         .format_module_path(false)
+        .format_target(false)
         .filter_level(LevelFilter::Info)
         .init();
 
