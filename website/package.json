@@ -31,5 +31,10 @@
     "sass": "^1.60.0",
     "typescript": "^5.0.2",
     "vite": "^4.2.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "word-wrap": "1.2.4"
+    }
   }
 }
