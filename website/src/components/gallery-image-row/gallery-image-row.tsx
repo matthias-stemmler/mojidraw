@@ -12,7 +12,7 @@ const GalleryImageRow = (props: GalleryImageRowProps): VNode => (
     {props.ids.map(
       (id: GalleryImageId): VNode => (
         <GalleryImage key={id} id={id} showTitle={props.showTitle} />
-      )
+      ),
     )}
   </div>
 );

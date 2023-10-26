@@ -1,27 +1,28 @@
-@import "@fontsource/roboto/latin-400.css";
+@import '@fontsource/roboto/latin-400.css';
 
-@import "bootstrap/scss/functions";
+@import 'bootstrap/scss/functions';
 
 $font-family-base: Roboto;
-$primary: #4080C0;
+$primary: #4080c0;
 
-@import "bootstrap/scss/variables";
-@import "bootstrap/scss/maps";
-@import "bootstrap/scss/mixins";
-@import "bootstrap/scss/root";
-@import "bootstrap/scss/utilities";
-@import "bootstrap/scss/reboot";
-@import "bootstrap/scss/images";
-@import "bootstrap/scss/containers";
-@import "bootstrap/scss/grid";
-@import "bootstrap/scss/nav";
-@import "bootstrap/scss/navbar";
-@import "bootstrap/scss/utilities/api";
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/reboot';
+@import 'bootstrap/scss/images';
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/nav';
+@import 'bootstrap/scss/navbar';
+@import 'bootstrap/scss/utilities/api';
 
 body {
   cursor: default;
   user-select: none;
 }
 
-@import "./components/header/header";
-@import "./components/info/info";
+@import './components/header/header';
+@import './components/info/info';
