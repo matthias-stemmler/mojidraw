@@ -18,11 +18,11 @@ dependencies:
     specifier: ^5.3.2
     version: 5.3.2(@popperjs/core@2.11.8)
   preact:
-    specifier: ^10.18.1
-    version: 10.18.1
+    specifier: ^10.19.3
+    version: 10.19.3
   react-router-dom:
-    specifier: ^6.17.0
-    version: 6.17.0(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^6.21.1
+    version: 6.21.1(react-dom@18.2.0)(react@18.2.0)
 
 devDependencies:
   '@babel/core':
@@ -30,7 +30,7 @@ devDependencies:
     version: 7.23.6
   '@preact/preset-vite':
     specifier: ^2.7.0
-    version: 2.7.0(@babel/core@7.23.6)(preact@10.18.1)(vite@4.5.0)
+    version: 2.7.0(@babel/core@7.23.6)(preact@10.19.3)(vite@4.5.0)
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.16.0
     version: 6.16.0(@typescript-eslint/parser@6.16.0)(eslint@8.56.0)(typescript@5.3.3)
@@ -719,7 +719,7 @@ packages:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: false
 
-  /@preact/preset-vite@2.7.0(@babel/core@7.23.6)(preact@10.18.1)(vite@4.5.0):
+  /@preact/preset-vite@2.7.0(@babel/core@7.23.6)(preact@10.19.3)(vite@4.5.0):
     resolution: {integrity: sha512-m5N0FVtxbCCDxNk55NGhsRpKJChYcupcuQHzMJc/Bll07IKZKn8amwYciyKFS9haU6AgzDAJ/ewvApr6Qg1DHw==}
     peerDependencies:
       '@babel/core': 7.x
@@ -728,7 +728,7 @@ packages:
       '@babel/core': 7.23.6
       '@babel/plugin-transform-react-jsx': 7.22.15(@babel/core@7.23.6)
       '@babel/plugin-transform-react-jsx-development': 7.22.5(@babel/core@7.23.6)
-      '@prefresh/vite': 2.4.1(preact@10.18.1)(vite@4.5.0)
+      '@prefresh/vite': 2.4.1(preact@10.19.3)(vite@4.5.0)
       '@rollup/pluginutils': 4.2.1
       babel-plugin-transform-hook-names: 1.0.2(@babel/core@7.23.6)
       debug: 4.3.4
@@ -744,19 +744,19 @@ packages:
     resolution: {integrity: sha512-joAwpkUDwo7ZqJnufXRGzUb+udk20RBgfA8oLPBh5aJH2LeStmV1luBfeJTztPdyCscC2j2SmZ/tVxFRMIxAEw==}
     dev: true
 
-  /@prefresh/core@1.5.2(preact@10.18.1):
+  /@prefresh/core@1.5.2(preact@10.19.3):
     resolution: {integrity: sha512-A/08vkaM1FogrCII5PZKCrygxSsc11obExBScm3JF1CryK2uDS3ZXeni7FeKCx1nYdUkj4UcJxzPzc1WliMzZA==}
     peerDependencies:
       preact: ^10.0.0
     dependencies:
-      preact: 10.18.1
+      preact: 10.19.3
     dev: true
 
   /@prefresh/utils@1.2.0:
     resolution: {integrity: sha512-KtC/fZw+oqtwOLUFM9UtiitB0JsVX0zLKNyRTA332sqREqSALIIQQxdUCS1P3xR/jT1e2e8/5rwH6gdcMLEmsQ==}
     dev: true
 
-  /@prefresh/vite@2.4.1(preact@10.18.1)(vite@4.5.0):
+  /@prefresh/vite@2.4.1(preact@10.19.3)(vite@4.5.0):
     resolution: {integrity: sha512-vthWmEqu8TZFeyrBNc9YE5SiC3DVSzPgsOCp/WQ7FqdHpOIJi7Z8XvCK06rBPOtG4914S52MjG9Ls22eVAiuqQ==}
     peerDependencies:
       preact: ^10.4.0
@@ -764,17 +764,17 @@ packages:
     dependencies:
       '@babel/core': 7.23.6
       '@prefresh/babel-plugin': 0.5.0
-      '@prefresh/core': 1.5.2(preact@10.18.1)
+      '@prefresh/core': 1.5.2(preact@10.19.3)
       '@prefresh/utils': 1.2.0
       '@rollup/pluginutils': 4.2.1
-      preact: 10.18.1
+      preact: 10.19.3
       vite: 4.5.0(sass@1.69.5)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@remix-run/router@1.10.0:
-    resolution: {integrity: sha512-Lm+fYpMfZoEucJ7cMxgt4dYt8jLfbpwRCzAjm9UgSLOkmlqo9gupxt6YX3DY0Fk155NT9l17d/ydi+964uS9Lw==}
+  /@remix-run/router@1.14.1:
+    resolution: {integrity: sha512-Qg4DMQsfPNAs88rb2xkdk03N3bjK4jgX5fR24eHCTR9q6PrhZQZ4UJBPzCHJkIpTRN1UKxx2DzjZmnC+7Lj0Ow==}
     engines: {node: '>=14.0.0'}
     dev: false
 
@@ -2734,8 +2734,8 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /preact@10.18.1:
-    resolution: {integrity: sha512-mKUD7RRkQQM6s7Rkmi7IFkoEHjuFqRQUaXamO61E6Nn7vqF/bo7EZCmSyrUnp2UWHw0O7XjZ2eeXis+m7tf4lg==}
+  /preact@10.19.3:
+    resolution: {integrity: sha512-nHHTeFVBTHRGxJXKkKu5hT8C/YWBkPso4/Gad6xuj5dbptt9iF9NZr9pHbPhBrnT2klheu7mHTxTZ/LjwJiEiQ==}
 
   /prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -2786,26 +2786,26 @@ packages:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: true
 
-  /react-router-dom@6.17.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-qWHkkbXQX+6li0COUUPKAUkxjNNqPJuiBd27dVwQGDNsuFBdMbrS6UZ0CLYc4CsbdLYTckn4oB4tGDuPZpPhaQ==}
+  /react-router-dom@6.21.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-QCNrtjtDPwHDO+AO21MJd7yIcr41UetYt5jzaB9Y1UYaPTCnVuJq6S748g1dE11OQlCFIQg+RtAA1SEZIyiBeA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
     dependencies:
-      '@remix-run/router': 1.10.0
+      '@remix-run/router': 1.14.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      react-router: 6.17.0(react@18.2.0)
+      react-router: 6.21.1(react@18.2.0)
     dev: false
 
-  /react-router@6.17.0(react@18.2.0):
-    resolution: {integrity: sha512-YJR3OTJzi3zhqeJYADHANCGPUu9J+6fT5GLv82UWRGSxu6oJYCKVmxUcaBQuGm9udpWmPsvpme/CdHumqgsoaA==}
+  /react-router@6.21.1(react@18.2.0):
+    resolution: {integrity: sha512-W0l13YlMTm1YrpVIOpjCADJqEUpz1vm+CMo47RuFX4Ftegwm6KOYsL5G3eiE52jnJpKvzm6uB/vTKTPKM8dmkA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: '>=16.8'
     dependencies:
-      '@remix-run/router': 1.10.0
+      '@remix-run/router': 1.14.1
       react: 18.2.0
     dev: false
 
